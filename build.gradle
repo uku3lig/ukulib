@@ -1,6 +1,7 @@
 plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
+    id "io.freefair.lombok" version "6.5.0.3"
 }
 
 version = project.mod_version
@@ -20,6 +21,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
+    include implementation("com.moandjiezana.toml:toml4j:${project.toml4j_version}")
 }
 
 processResources {
