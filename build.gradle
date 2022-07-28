@@ -16,6 +16,10 @@ repositories {
     // for more information about repositories.
 }
 
+configurations {
+    shadowCommon
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
@@ -23,9 +27,16 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
     compileOnly "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
-    shadow("com.moandjiezana.toml:toml4j:${project.toml4j_version}") {
+    shadowCommon("com.moandjiezana.toml:toml4j:${project.toml4j_version}") {
         exclude(module: "gson")
     }
+}
+
+shadowJar {
+    relocate "com.moandjiezana.toml", "${project.maven_group}.ukulib.shadowed.com.moandjiezana.toml"
+
+    configurations = [project.configurations.shadowCommon]
+    archiveClassifier = "shadow"
 }
 
 processResources {
