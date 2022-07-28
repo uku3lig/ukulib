@@ -1,3 +1,0 @@
-before_install:
-  - sdk install java 18.0.2-amzn
-  - sdk use java 18.0.2-amzn
