@@ -1,0 +1,24 @@
+{
+  "schemaVersion": 1,
+  "id": "ukulib",
+  "version": "${version}",
+  "name": "UkuLib",
+  "description": "small utility library used in my mods",
+  "authors": [
+    "uku"
+  ],
+  "contact": {
+    "repo": "https://github.com/uku3lig/ukulib"
+  },
+  "license": "MIT",
+  "icon": "assets/ukulib/icon.png",
+  "environment": "client",
+  "entrypoints": {},
+  "mixins": [
+    "ukulib.mixins.json"
+  ],
+  "depends": {
+    "fabricloader": ">=0.14.8",
+    "minecraft": "1.19.1"
+  }
+}
