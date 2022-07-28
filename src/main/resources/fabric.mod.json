@@ -2,7 +2,7 @@
   "schemaVersion": 1,
   "id": "ukulib",
   "version": "${version}",
-  "name": "UkuLib",
+  "name": "ukulib",
   "description": "small utility library used in my mods",
   "authors": [
     "uku"

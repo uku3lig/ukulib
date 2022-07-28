@@ -1,14 +1,16 @@
 package net.uku3lig.ukulib.config;
 
-import com.moandjiezana.toml.Toml;
-import com.moandjiezana.toml.TomlWriter;
+import com.google.gson.Gson;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 
 public abstract class AbstractConfig {
+    private static final Gson gson = new Gson();
     protected final Logger logger = LogManager.getLogger(getClass());
 
     public AbstractConfig readConfig(File file) {
@@ -20,13 +22,18 @@ public abstract class AbstractConfig {
             }
             return defaultConfig();
         } else {
-            return new Toml().read(file).to(getClass());
+            try (FileReader reader = new FileReader(file)) {
+                return gson.fromJson(reader, getClass());
+            } catch (IOException e) {
+                logger.warn("Could not read config file {}", file);
+                return defaultConfig();
+            }
         }
     }
 
     protected abstract AbstractConfig defaultConfig();
 
     public void writeConfig(File file) throws IOException {
-        new TomlWriter().write(this, file);
+        gson.toJson(this, new FileWriter(file));
     }
 }
