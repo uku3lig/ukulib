@@ -2,6 +2,7 @@ plugins {
     id 'fabric-loom' version '0.12-SNAPSHOT'
     id 'maven-publish'
     id "io.freefair.lombok" version "6.5.0.3"
+    id "com.github.johnrengelman.shadow" version "7.0.0"
 }
 
 version = project.mod_version
@@ -21,7 +22,10 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    include api("com.moandjiezana.toml:toml4j:${project.toml4j_version}")
+    compileOnly "com.moandjiezana.toml:toml4j:${project.toml4j_version}"
+    shadow("com.moandjiezana.toml:toml4j:${project.toml4j_version}") {
+        exclude(module: "gson")
+    }
 }
 
 processResources {
