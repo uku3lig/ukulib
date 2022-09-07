@@ -4,7 +4,7 @@ plugins {
     id "io.freefair.lombok" version "6.5.0.3"
 }
 
-version = "${project.mod_version}+mc${project.minecraft_version}"
+version = "${project.mod_version}+${project.minecraft_version}"
 group = project.maven_group
 
 dependencies {
@@ -59,11 +59,22 @@ publishing {
         }
     }
 
-    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
     repositories {
-        // Add repositories to publish to here.
-        // Notice: This block does NOT have the same function as the block in the top level.
-        // The repositories here will be used for publishing your artifact, not for
-        // retrieving dependencies.
+        maven {
+            name = "UkuReleases"
+            url "https://maven.uku3lig.net/releases"
+            credentials {
+                username = "uku"
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
+            name = "UkuSnapshots"
+            url = "https://maven.uku3lig.net/snapshots"
+            credentials {
+                username = "uku"
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
     }
 }
