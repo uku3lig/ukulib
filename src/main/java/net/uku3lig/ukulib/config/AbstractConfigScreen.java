@@ -3,12 +3,12 @@ package net.uku3lig.ukulib.config;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.option.SimpleOption;
+import net.minecraft.client.option.Option;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
@@ -30,7 +30,7 @@ public abstract class AbstractConfigScreen<T extends AbstractConfig> extends Gam
         this.configFile = configFile;
     }
 
-    protected abstract SimpleOption<?>[] getOptions();
+    protected abstract Option[] getOptions();
 
     @Override
     protected void init() {

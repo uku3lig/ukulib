@@ -1,16 +1,15 @@
 package net.uku3lig.ukulib.config;
 
-import com.mojang.serialization.Codec;
 import lombok.Getter;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.util.TranslatableOption;
+import net.minecraft.client.option.CyclingOption;
+import net.minecraft.text.LiteralText;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 @Getter // lombok generates the methods that have to be implemented
-public enum Position implements TranslatableOption {
+public enum Position {
     TOP_LEFT(0, "ukulib.position.topLeft"),
     TOP_RIGHT(1, "ukulib.position.topRight"),
     BOTTOM_LEFT(2, "ukulib.position.bottomLeft"),
@@ -32,9 +31,7 @@ public enum Position implements TranslatableOption {
         return Arrays.asList(BOTTOM_LEFT, BOTTOM_RIGHT).contains(this);
     }
 
-    public static SimpleOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
-        return new SimpleOption<>("ukulib.position", SimpleOption.emptyTooltip(), SimpleOption.enumValueText(),
-                new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(Position.values()), Codec.STRING.xmap(Position::valueOf, Position::name)),
-                getter.get(), setter);
+    public static CyclingOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
+        return CyclingOption.create("ukulib.position", values(), p -> new LiteralText(p.name()), opt -> getter.get(), (opt, option, value) -> setter.accept(value));
     }
 }
