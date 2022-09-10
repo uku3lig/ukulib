@@ -4,7 +4,7 @@ plugins {
     id "io.freefair.lombok" version "6.5.0.3"
 }
 
-version = "${project.mod_version}+${project.minecraft_version}"
+version = "${project.mod_version}+${project.minecraft_version}${getMetadata()}"
 group = project.maven_group
 
 dependencies {
@@ -77,4 +77,17 @@ publishing {
             }
         }
     }
+}
+
+static def getMetadata() {
+    if (System.getenv("PUBLISH_RELEASE") != null) return ""
+
+    def build_id = System.getenv("GITHUB_RUN_NUMBER")
+
+    // CI builds only
+    if (build_id != null) {
+        return "-build.${build_id}"
+    }
+    // No tracking information could be found about the build
+    return "-unknown"
 }
