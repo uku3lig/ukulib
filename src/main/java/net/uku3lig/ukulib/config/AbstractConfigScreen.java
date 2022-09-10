@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.config;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,14 +12,12 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
 import java.util.List;
 
+@Slf4j
 public abstract class AbstractConfigScreen<T extends AbstractConfig> extends GameOptionsScreen {
-    protected final Logger logger = LogManager.getLogger(getClass());
     protected final T config;
     protected ButtonListWidget buttonList;
 
@@ -58,7 +57,7 @@ public abstract class AbstractConfigScreen<T extends AbstractConfig> extends Gam
         try {
             config.writeConfig();
         } catch (IOException e) {
-            logger.warn("Could not save configuration file", e);
+            log.warn("Could not save configuration file", e);
         }
     }
 }
