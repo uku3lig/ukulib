@@ -19,4 +19,3 @@ jobs:
         run: ./gradlew publishAllPublicationsToUkuSnapshotsRepository
         env:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          PUBLISH_RELEASE: owo
