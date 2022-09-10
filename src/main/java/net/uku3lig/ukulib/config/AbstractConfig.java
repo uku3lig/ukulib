@@ -9,11 +9,16 @@ import java.io.IOException;
 
 public abstract class AbstractConfig {
     protected final Logger logger = LogManager.getLogger(getClass());
+    protected final File file;
 
-    public AbstractConfig readConfig(File file) {
+    protected AbstractConfig(File file) {
+        this.file = file;
+    }
+
+    public AbstractConfig readConfig() {
         if (!file.exists()) {
             try {
-                defaultConfig().writeConfig(file);
+                defaultConfig().writeConfig();
             } catch (IOException e) {
                 logger.warn("Could not write default configuration file", e);
             }
@@ -29,7 +34,7 @@ public abstract class AbstractConfig {
 
     protected abstract AbstractConfig defaultConfig();
 
-    public void writeConfig(File file) throws IOException {
+    public void writeConfig() throws IOException {
         new TomlMapper().writeValue(file, this);
     }
 }

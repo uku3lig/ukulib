@@ -14,20 +14,17 @@ import net.minecraft.text.Text;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.io.File;
 import java.io.IOException;
 import java.util.List;
 
 public abstract class AbstractConfigScreen<T extends AbstractConfig> extends GameOptionsScreen {
     protected final Logger logger = LogManager.getLogger(getClass());
     protected final T config;
-    private final File configFile;
     protected ButtonListWidget buttonList;
 
-    protected AbstractConfigScreen(Screen parent, Text title, T config, File configFile) {
+    protected AbstractConfigScreen(Screen parent, Text title, T config) {
         super(parent, MinecraftClient.getInstance().options, title);
         this.config = config;
-        this.configFile = configFile;
     }
 
     protected abstract SimpleOption<?>[] getOptions();
@@ -59,7 +56,7 @@ public abstract class AbstractConfigScreen<T extends AbstractConfig> extends Gam
     @Override
     public void removed() {
         try {
-            config.writeConfig(configFile);
+            config.writeConfig();
         } catch (IOException e) {
             logger.warn("Could not save configuration file", e);
         }
