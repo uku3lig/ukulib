@@ -1,18 +1,16 @@
 package net.uku3lig.ukulib.config;
 
 import com.fasterxml.jackson.dataformat.toml.TomlMapper;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.io.File;
 import java.io.IOException;
 
 @Slf4j
+@AllArgsConstructor
 public abstract class AbstractConfig {
     protected final File file;
-
-    protected AbstractConfig(File file) {
-        this.file = file;
-    }
 
     public AbstractConfig readConfig() {
         if (!file.exists()) {
