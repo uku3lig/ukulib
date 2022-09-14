@@ -13,7 +13,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    include implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
+    include implementation("com.moandjiezana.toml:toml4j:0.7.2")
 }
 
 processResources {

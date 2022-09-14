@@ -13,17 +13,16 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
-import java.io.IOException;
 import java.util.List;
 
 @Slf4j
-public abstract class AbstractConfigScreen<T extends AbstractConfig> extends GameOptionsScreen {
-    protected final T config;
+public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
+    protected final ConfigManager<T> manager;
     protected ButtonListWidget buttonList;
 
-    protected AbstractConfigScreen(Screen parent, Text title, T config) {
+    protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
         super(parent, MinecraftClient.getInstance().options, title);
-        this.config = config;
+        this.manager = manager;
     }
 
     protected abstract SimpleOption<?>[] getOptions();
@@ -54,10 +53,6 @@ public abstract class AbstractConfigScreen<T extends AbstractConfig> extends Gam
 
     @Override
     public void removed() {
-        try {
-            config.writeConfig();
-        } catch (IOException e) {
-            log.warn("Could not save configuration file", e);
-        }
+        manager.saveConfig();
     }
 }

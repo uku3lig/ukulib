@@ -9,7 +9,6 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
-import java.io.IOException;
 import java.util.Optional;
 import java.util.function.Consumer;
 
@@ -19,17 +18,17 @@ public abstract class TextInputScreen<T> extends Screen {
     private final Text label;
     private final Consumer<T> callback;
     private final T last;
-    private final AbstractConfig config;
+    private final ConfigManager<?> manager;
 
     private TextFieldWidget textField;
 
-    protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, AbstractConfig config) {
+    protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
         super(title);
         this.parent = parent;
         this.label = label;
         this.callback = callback;
         this.last = last;
-        this.config = config;
+        this.manager = manager;
     }
 
     @Override
@@ -51,11 +50,7 @@ public abstract class TextInputScreen<T> extends Screen {
     public final void removed() {
         convert(textField.getText()).ifPresent(t -> {
             callback.accept(t);
-            try {
-                config.writeConfig();
-            } catch (IOException e) {
-                log.warn("Could not save config", e);
-            }
+            manager.saveConfig();
         });
     }
 
