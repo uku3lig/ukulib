@@ -1,9 +1,7 @@
-name: publish release
+name: gradle ci
 
 on:
-  release:
-    types:
-      - published
+  push
 
 jobs:
   build:
@@ -18,7 +16,6 @@ jobs:
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
       - name: Publish to the maven repo
-        run: ./gradlew publish
+        run: ./gradlew publishAllPublicationsToUkuSnapshotsRepository
         env:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
-          PUBLISH_RELEASE: owo

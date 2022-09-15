@@ -1,10 +1,11 @@
 plugins {
-    id 'fabric-loom' version '0.13-SNAPSHOT'
+    id 'fabric-loom' version '1.0-SNAPSHOT'
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.3'
     id 'maven-publish'
     id "io.freefair.lombok" version "6.5.0.3"
 }
 
-version = "${project.mod_version}+${project.minecraft_version}"
+version = "${project.mod_version}+${project.minecraft_version}${getMetadata()}"
 group = project.maven_group
 
 dependencies {
@@ -13,7 +14,7 @@ dependencies {
     mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
     modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-    include implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-toml:${project.jackson_version}")
+    include implementation("com.moandjiezana.toml:toml4j:0.7.2")
 }
 
 processResources {
@@ -43,6 +44,8 @@ java {
         toolchain.languageVersion = JavaLanguageVersion.of(targetJavaVersion)
     }
     archivesBaseName = project.archives_base_name
+
+    withSourcesJar()
 }
 
 jar {
@@ -77,4 +80,17 @@ publishing {
             }
         }
     }
+}
+
+static def getMetadata() {
+    if (System.getenv("PUBLISH_RELEASE") != null) return ""
+
+    def build_id = System.getenv("GITHUB_RUN_NUMBER")
+
+    // CI builds only
+    if (build_id != null) {
+        return "-build.${build_id}"
+    }
+    // No tracking information could be found about the build
+    return "-unknown"
 }

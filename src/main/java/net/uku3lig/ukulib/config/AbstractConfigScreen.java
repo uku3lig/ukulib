@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.config;
 
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,23 +12,17 @@ import net.minecraft.client.option.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 
-import java.io.File;
-import java.io.IOException;
 import java.util.List;
 
-public abstract class AbstractConfigScreen<T extends AbstractConfig> extends GameOptionsScreen {
-    protected final Logger logger = LogManager.getLogger(getClass());
-    protected final T config;
-    private final File configFile;
+@Slf4j
+public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
+    protected final ConfigManager<T> manager;
     protected ButtonListWidget buttonList;
 
-    protected AbstractConfigScreen(Screen parent, Text title, T config, File configFile) {
+    protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
         super(parent, MinecraftClient.getInstance().options, title);
-        this.config = config;
-        this.configFile = configFile;
+        this.manager = manager;
     }
 
     protected abstract Option[] getOptions();
@@ -58,10 +53,6 @@ public abstract class AbstractConfigScreen<T extends AbstractConfig> extends Gam
 
     @Override
     public void removed() {
-        try {
-            config.writeConfig(configFile);
-        } catch (IOException e) {
-            logger.warn("Could not save configuration file", e);
-        }
+        manager.saveConfig();
     }
 }
