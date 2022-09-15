@@ -26,8 +26,14 @@ class ConfigSerializer<T extends IConfig<T>> {
     public T deserialize() {
         if (!Files.exists(file.toPath())) {
             return defaultConfig.get();
-        } else {
+        }
+
+        try {
             return new Toml().read(file).to(configClass);
+        } catch (Exception e) {
+            log.warn("A corrupted configuration file was found, overwriting it with the default config");
+            serialize(defaultConfig.get());
+            return defaultConfig.get();
         }
     }
 
