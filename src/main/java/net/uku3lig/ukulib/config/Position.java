@@ -5,7 +5,7 @@ import lombok.Getter;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.util.TranslatableOption;
 
-import java.util.Arrays;
+import java.util.*;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -35,8 +35,12 @@ public enum Position implements TranslatableOption {
     }
 
     public static SimpleOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
+        return getOption(EnumSet.allOf(Position.class), getter, setter);
+    }
+
+    public static SimpleOption<Position> getOption(Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
         return new SimpleOption<>("ukulib.position", SimpleOption.emptyTooltip(), SimpleOption.enumValueText(),
-                new SimpleOption.PotentialValuesBasedCallbacks<>(Arrays.asList(Position.values()), Codec.STRING.xmap(Position::valueOf, Position::name)),
+                new SimpleOption.PotentialValuesBasedCallbacks<>(new LinkedList<>(allowedValues), Codec.STRING.xmap(Position::valueOf, Position::name)),
                 getter.get(), setter);
     }
 }
