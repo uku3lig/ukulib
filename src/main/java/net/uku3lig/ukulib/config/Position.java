@@ -14,7 +14,9 @@ public enum Position implements TranslatableOption {
     TOP_LEFT(0, "ukulib.position.topLeft"),
     TOP_RIGHT(1, "ukulib.position.topRight"),
     BOTTOM_LEFT(2, "ukulib.position.bottomLeft"),
-    BOTTOM_RIGHT(3, "ukulib.position.bottomRight");
+    BOTTOM_RIGHT(3, "ukulib.position.bottomRight"),
+    MIDDLE(4, "ukulib.position.middle"),
+    ;
 
     private final int id;
     private final String translationKey;
