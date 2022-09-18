@@ -1,6 +1,7 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.utils;
 
 import lombok.extern.slf4j.Slf4j;
+import net.uku3lig.ukulib.config.IConfig;
 
 import java.lang.reflect.Constructor;
 import java.util.NoSuchElementException;
