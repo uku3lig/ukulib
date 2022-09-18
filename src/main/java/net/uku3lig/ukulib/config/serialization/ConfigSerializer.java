@@ -1,8 +1,9 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.config.serialization;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import lombok.extern.slf4j.Slf4j;
+import net.uku3lig.ukulib.config.IConfig;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
@@ -12,7 +13,7 @@ import java.util.function.Supplier;
 
 @Slf4j
 @ApiStatus.Internal
-class ConfigSerializer<T extends IConfig<T>> {
+public class ConfigSerializer<T extends IConfig<T>> {
     private final Class<T> configClass;
     private final File file;
     private final Supplier<T> defaultConfig;

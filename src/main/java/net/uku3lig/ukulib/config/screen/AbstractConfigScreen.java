@@ -1,4 +1,4 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +12,8 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.config.IConfig;
 
 import java.util.List;
 

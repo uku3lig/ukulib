@@ -1,6 +1,7 @@
 package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
+import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.utils.ReflectionUtils;
 
 import java.io.File;
