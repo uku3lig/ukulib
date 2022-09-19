@@ -27,13 +27,13 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         this.manager = manager;
     }
 
-    protected abstract SimpleOption<?>[] getOptions();
+    protected abstract SimpleOption<?>[] getOptions(T config);
 
     @Override
     protected void init() {
         super.init();
         buttonList = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-        buttonList.addAll(getOptions());
+        buttonList.addAll(getOptions(manager.getConfig()));
         this.addSelectableChild(buttonList);
         drawFooterButtons();
     }
