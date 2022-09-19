@@ -1,5 +1,7 @@
 package net.uku3lig.ukulib.config;
 
-public interface IConfig<T extends IConfig<T>> {
+import java.io.Serializable;
+
+public interface IConfig<T extends IConfig<T>> extends Serializable {
     T defaultConfig();
 }
