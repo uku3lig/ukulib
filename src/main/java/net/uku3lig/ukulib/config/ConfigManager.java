@@ -2,6 +2,7 @@ package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
+import net.uku3lig.ukulib.config.serialization.DefaultConfigSerializer;
 import net.uku3lig.ukulib.utils.ReflectionUtils;
 
 import java.io.File;
@@ -24,7 +25,7 @@ public class ConfigManager<T extends IConfig<T>> {
     public static <T extends IConfig<T>> ConfigManager<T> create(Class<T> configClass, String name) {
         String filename = "./config/" + name + ".toml";
         Supplier<T> defaultConfig = () -> ReflectionUtils.newInstance(configClass).defaultConfig();
-        return new ConfigManager<>(new ConfigSerializer<>(configClass, new File(filename), defaultConfig));
+        return new ConfigManager<>(new DefaultConfigSerializer<>(configClass, new File(filename), defaultConfig));
     }
 
     public void saveConfig() {
