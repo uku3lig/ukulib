@@ -5,6 +5,9 @@ import net.minecraft.client.option.CyclingOption;
 import net.minecraft.text.LiteralText;
 
 import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumSet;
+import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -34,12 +37,11 @@ public enum Position {
     }
 
     public static CyclingOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
-        return CyclingOption.create("ukulib.position", values(), p -> new LiteralText(p.name()), opt -> getter.get(), (opt, option, value) -> setter.accept(value));
+        return getOption(EnumSet.allOf(Position.class), getter, setter);
     }
 
-    public static SimpleOption<Position> getOption(Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
-        return new SimpleOption<>("ukulib.position", SimpleOption.emptyTooltip(), SimpleOption.enumValueText(),
-                new SimpleOption.PotentialValuesBasedCallbacks<>(new LinkedList<>(allowedValues), Codec.STRING.xmap(Position::valueOf, Position::name)),
-                getter.get(), setter);
+    public static CyclingOption<Position> getOption(Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
+        return CyclingOption.create("ukulib.position", new LinkedList<>(allowedValues), p -> new LiteralText(p.name()),
+                opt -> getter.get(), (opt, option, value) -> setter.accept(value));
     }
 }
