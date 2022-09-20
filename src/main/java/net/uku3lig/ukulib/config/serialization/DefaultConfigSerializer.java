@@ -1,8 +1,9 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.config.serialization;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import lombok.extern.slf4j.Slf4j;
+import net.uku3lig.ukulib.config.IConfig;
 import org.jetbrains.annotations.ApiStatus;
 
 import java.io.File;
@@ -12,12 +13,12 @@ import java.util.function.Supplier;
 
 @Slf4j
 @ApiStatus.Internal
-class ConfigSerializer<T extends IConfig<T>> {
+public class DefaultConfigSerializer<T extends IConfig<T>> implements ConfigSerializer<T> {
     private final Class<T> configClass;
     private final File file;
     private final Supplier<T> defaultConfig;
 
-    public ConfigSerializer(Class<T> configClass, File file, Supplier<T> defaultConfig) {
+    public DefaultConfigSerializer(Class<T> configClass, File file, Supplier<T> defaultConfig) {
         this.configClass = configClass;
         this.file = file;
         this.defaultConfig = defaultConfig;
@@ -37,7 +38,7 @@ class ConfigSerializer<T extends IConfig<T>> {
         }
     }
 
-    public void serialize(Object config) {
+    public void serialize(T config) {
         try {
             new TomlWriter().write(config, file);
         } catch (IOException e) {

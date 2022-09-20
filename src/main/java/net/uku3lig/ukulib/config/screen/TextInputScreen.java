@@ -1,4 +1,4 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
+import net.uku3lig.ukulib.config.ConfigManager;
 
 import java.util.Optional;
 import java.util.function.Consumer;

@@ -1,4 +1,4 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
@@ -12,6 +12,8 @@ import net.minecraft.client.option.Option;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.config.IConfig;
 
 import java.util.List;
 
@@ -25,13 +27,13 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         this.manager = manager;
     }
 
-    protected abstract Option[] getOptions();
+    protected abstract Option[] getOptions(T config);
 
     @Override
     protected void init() {
         super.init();
         buttonList = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-        buttonList.addAll(getOptions());
+        buttonList.addAll(getOptions(manager.getConfig()));
         this.addSelectableChild(buttonList);
         drawFooterButtons();
     }
