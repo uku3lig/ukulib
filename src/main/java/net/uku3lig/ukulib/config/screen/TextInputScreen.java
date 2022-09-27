@@ -13,6 +13,11 @@ import net.uku3lig.ukulib.config.ConfigManager;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * A screen used to input a value.
+ * Instances of this class should NOT be reused.
+ * @param <T> The type of the value.
+ */
 @Slf4j
 public abstract class TextInputScreen<T> extends Screen {
     private final Screen parent;
@@ -23,6 +28,16 @@ public abstract class TextInputScreen<T> extends Screen {
 
     private TextFieldWidget textField;
 
+    /**
+     * Creates an input screen.
+     *
+     * @param parent The parent screen
+     * @param title The title of the screen
+     * @param label The label to be shown above the text input field
+     * @param callback The action to be performed when the value is changed
+     * @param last The last known value
+     * @param manager The config manager, used to save the config
+     */
     protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
         super(title);
         this.parent = parent;

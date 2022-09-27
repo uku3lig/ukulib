@@ -6,10 +6,21 @@ import net.uku3lig.ukulib.config.IConfig;
 import java.lang.reflect.Constructor;
 import java.util.NoSuchElementException;
 
+/**
+ * Utility class for reflection
+ */
 @Slf4j
 public class ReflectionUtils {
     private ReflectionUtils() {}
 
+    /**
+     * Creates an instance of a given config class. Only works if the class has a public, no-arg constructor.
+     *
+     * @param klass The class to be instantiated
+     * @return An instance of the class
+     * @param <T> The type of the class
+     * @see net.uku3lig.ukulib.config.ConfigManager#create(Class, String) ConfigManager#create(Class, String)
+     */
     public static <T extends IConfig<T>> T newInstance(Class<T> klass) {
         try {
             Constructor<T> constructor = klass.getConstructor();
