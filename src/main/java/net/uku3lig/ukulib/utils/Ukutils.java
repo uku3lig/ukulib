@@ -6,6 +6,7 @@ import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
+import java.util.function.UnaryOperator;
 
 /**
  * Simple class for various utilities.
@@ -50,6 +51,19 @@ public class Ukutils {
     public static SimpleOption<Boolean> createButton(String key, Text text, Consumer<Screen> callback) {
         return new SimpleOption<>(key, SimpleOption.emptyTooltip(), (optionText, value) -> text,
                 SimpleOption.BOOLEAN, true, v -> callback.accept(MinecraftClient.getInstance().currentScreen));
+    }
+
+    /**
+     * Creates a {@link SimpleOption} which acts as a simple button that opens a screen when clicked.
+     *
+     * @param key The translation key of the button text
+     * @param text The text to be displayed after the colon
+     * @param callback The getter for the screen to be opened when the button is clicked
+     * @return The generated option
+     */
+    public static SimpleOption<Boolean> createButton(String key, Text text, UnaryOperator<Screen> callback) {
+        return new SimpleOption<>(key, SimpleOption.emptyTooltip(), (optionText, value) -> text,
+                SimpleOption.BOOLEAN, true, v -> MinecraftClient.getInstance().setScreen(callback.apply(MinecraftClient.getInstance().currentScreen)));
     }
 
     private Ukutils() {}
