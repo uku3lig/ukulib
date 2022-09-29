@@ -5,6 +5,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.CyclingOption;
 import net.minecraft.client.option.Option;
 import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import java.util.function.Consumer;
 import java.util.function.UnaryOperator;
@@ -51,7 +52,8 @@ public class Ukutils {
      * @return The generated option
      */
     public static Option createButton(String key, Text text, Consumer<Screen> callback) {
-        return CyclingOption.create(key, text, text, opt -> true, (opt, option, value) -> callback.accept(MinecraftClient.getInstance().currentScreen));
+        return new CyclingOption(key, (opt, amount) -> callback.accept(MinecraftClient.getInstance().currentScreen),
+                (opt, option) -> getGenericLabel(key, text));
     }
 
     /**
@@ -63,8 +65,11 @@ public class Ukutils {
      * @return The generated option
      */
     public static Option createOpenButton(String key, Text text, UnaryOperator<Screen> callback) {
-        return CyclingOption.create(key, text, text, opt -> true,
-                (opt, option, value) -> MinecraftClient.getInstance().setScreen(callback.apply(MinecraftClient.getInstance().currentScreen)));
+        return createButton(key, text, parent -> MinecraftClient.getInstance().openScreen(callback.apply(parent)));
+    }
+
+    private static Text getGenericLabel(String key, Text text) {
+        return new TranslatableText("options.generic_value", new TranslatableText(key), text);
     }
 
     private Ukutils() {}

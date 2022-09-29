@@ -1,6 +1,5 @@
 package net.uku3lig.ukulib.config.screen;
 
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -23,7 +22,6 @@ import java.util.List;
  *
  * @param <T> The type of the config
  */
-@Slf4j
 public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
     /**
      * The config manager. Used to load and save the config.
@@ -59,7 +57,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         super.init();
         buttonList = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
         buttonList.addAll(getOptions(manager.getConfig()));
-        this.addSelectableChild(buttonList);
+        this.children.add(buttonList);
         drawFooterButtons();
     }
 
@@ -68,7 +66,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
      */
     @SuppressWarnings("ConstantConditions")
     protected void drawFooterButtons() {
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
+        this.children.add(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.openScreen(this.parent)));
     }
 
     @Override

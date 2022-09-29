@@ -2,12 +2,10 @@ package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
 import net.minecraft.client.option.CyclingOption;
-import net.minecraft.text.LiteralText;
+import net.minecraft.text.Text;
+import net.minecraft.text.TranslatableText;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.EnumSet;
-import java.util.LinkedList;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -47,6 +45,17 @@ public enum Position {
         this.translationKey = translationKey;
     }
 
+    static Position byId(int id) {
+        int finalId = id % Position.values().length;
+        return Arrays.stream(Position.values())
+                .filter(p -> p.id == finalId)
+                .findFirst().orElse(Position.TOP_LEFT);
+    }
+
+    private static Text getGenericLabel(String key) {
+        return new TranslatableText("options.generic_value", new TranslatableText("ukulib.position"), new TranslatableText(key));
+    }
+
     /**
      * Checks if the position is on the right of the screen.
      * @return <code>true</code> if the position is on the right of the screen
@@ -64,27 +73,15 @@ public enum Position {
     }
 
     /**
-     * Creates a {@link CyclingOption} that allows to choose between all of this enum's values.
+     * Creates a {@link CyclingOption} that allows to choose between all the enum's values.
      *
      * @param getter Gets the default value for the option
      * @param setter The action to be performed when the value changes
      * @return The generated option
-     * @see Position#getOption(Collection, Supplier, Consumer)
      */
-    public static CyclingOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
-        return getOption(EnumSet.allOf(Position.class), getter, setter);
-    }
+    public static CyclingOption getOption(Supplier<Position> getter, Consumer<Position> setter) {
+        return new CyclingOption("ukulib.position", (opt, amount) -> setter.accept(byId(getter.get().id + amount)),
+                (opt, option) -> getGenericLabel(getter.get().translationKey));
 
-    /**
-     * Creates a {@link CyclingOption} that allows to choose between all the <code>allowedValues</code>.
-     *
-     * @param allowedValues The values the option will cycle through
-     * @param getter Gets the default value for the option
-     * @param setter The action to be performed when the value changes
-     * @return The generated option
-     */
-    public static CyclingOption<Position> getOption(Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
-        return CyclingOption.create("ukulib.position", new LinkedList<>(allowedValues), p -> new LiteralText(p.name()),
-                opt -> getter.get(), (opt, option, value) -> setter.accept(value));
     }
 }

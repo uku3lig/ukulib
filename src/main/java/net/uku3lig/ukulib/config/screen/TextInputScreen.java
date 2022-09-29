@@ -1,6 +1,5 @@
 package net.uku3lig.ukulib.config.screen;
 
-import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.ScreenTexts;
@@ -18,7 +17,6 @@ import java.util.function.Consumer;
  * Instances of this class should NOT be reused.
  * @param <T> The type of the value.
  */
-@Slf4j
 public abstract class TextInputScreen<T> extends Screen {
     private final Screen parent;
     private final Text label;
@@ -49,10 +47,14 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     protected void init() {
-        final ButtonWidget doneButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, ScreenTexts.DONE, button -> this.onClose()));
-        textField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label));
+        final ButtonWidget doneButton = new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, ScreenTexts.DONE, button -> this.onClose());
+        textField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label);
         textField.setText(String.valueOf(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
+
+        this.children.add(doneButton);
+        this.children.add(textField);
+        this.setInitialFocus(textField);
     }
 
     /**
@@ -72,7 +74,7 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     public void onClose() {
-        MinecraftClient.getInstance().setScreen(parent);
+        MinecraftClient.getInstance().openScreen(parent);
     }
 
     @Override

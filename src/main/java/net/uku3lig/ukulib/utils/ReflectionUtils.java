@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.utils;
 
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.uku3lig.ukulib.config.IConfig;
 
 import java.lang.reflect.Constructor;
@@ -8,7 +8,7 @@ import java.lang.reflect.Constructor;
 /**
  * Utility class for reflection
  */
-@Slf4j
+@Log4j2
 public class ReflectionUtils {
     private ReflectionUtils() {}
 
