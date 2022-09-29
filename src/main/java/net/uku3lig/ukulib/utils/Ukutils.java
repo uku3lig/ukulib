@@ -15,19 +15,6 @@ import java.util.function.UnaryOperator;
 public class Ukutils {
     /**
      * Creates a {@link SimpleOption} which acts as a simple button.
-     * Equivalent to {@link Ukutils#createButton(String, Text, Consumer) createButton(key, Text.empty(), callback)}
-     *
-     * @param key The translation key of the button text
-     * @param callback The action to be performed when the button is clicked
-     * @return The generated option
-     * @see Ukutils#createButton(String, Text, Consumer)
-     */
-    public static SimpleOption<Boolean> createButton(String key, Consumer<Screen> callback) {
-        return createButton(key, Text.empty(), callback);
-    }
-
-    /**
-     * Creates a {@link SimpleOption} which acts as a simple button.
      * Equivalent to {@link Ukutils#createButton(String, Text, Consumer) createButton(key, Text.of(String.valueOf(value)), callback)}.
      *
      * @param key The translation key of the button text
