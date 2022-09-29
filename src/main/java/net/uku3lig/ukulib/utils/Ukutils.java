@@ -40,6 +40,21 @@ public class Ukutils {
         return createButton(key, Text.of(String.valueOf(value)), callback);
     }
 
+
+    /**
+     * Creates a {@link SimpleOption} which acts as a simple button.
+     * Equivalent to {@link Ukutils#createOpenButton(String, Text, UnaryOperator) createOpenButton(key, Text.of(String.valueOf(value)), callback)}.
+     *
+     * @param key The translation key of the button text
+     * @param value The value to be displayed after the colon
+     * @param callback The getter for the screen to be opened when the button is clicked
+     * @return The generated option
+     * @see Ukutils#createButton(String, Text, Consumer)
+     */
+    public static SimpleOption<Boolean> createOpenButton(String key, Object value, UnaryOperator<Screen> callback) {
+        return createOpenButton(key, Text.of(String.valueOf(value)), callback);
+    }
+
     /**
      * Creates a {@link SimpleOption} which acts as a simple button.
      *
@@ -61,7 +76,7 @@ public class Ukutils {
      * @param callback The getter for the screen to be opened when the button is clicked
      * @return The generated option
      */
-    public static SimpleOption<Boolean> createButton(String key, Text text, UnaryOperator<Screen> callback) {
+    public static SimpleOption<Boolean> createOpenButton(String key, Text text, UnaryOperator<Screen> callback) {
         return new SimpleOption<>(key, SimpleOption.emptyTooltip(), (optionText, value) -> text,
                 SimpleOption.BOOLEAN, true, v -> MinecraftClient.getInstance().setScreen(callback.apply(MinecraftClient.getInstance().currentScreen)));
     }
