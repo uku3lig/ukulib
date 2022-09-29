@@ -49,7 +49,7 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     protected void init() {
-        final ButtonWidget doneButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, ScreenTexts.DONE, button -> this.close()));
+        final ButtonWidget doneButton = this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, ScreenTexts.DONE, button -> this.onClose()));
         textField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label));
         textField.setText(String.valueOf(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
@@ -71,7 +71,7 @@ public abstract class TextInputScreen<T> extends Screen {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         MinecraftClient.getInstance().setScreen(parent);
     }
 

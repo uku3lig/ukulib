@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.uku3lig.ukulib.config.IConfig;
 
 import java.lang.reflect.Constructor;
-import java.util.NoSuchElementException;
 
 /**
  * Utility class for reflection
@@ -27,7 +26,7 @@ public class ReflectionUtils {
             return constructor.newInstance();
         } catch (NoSuchMethodException | IllegalAccessException | IllegalArgumentException | InstantiationException e) {
             log.error("{} does not have a public no-arg constructor!", klass.getName());
-            throw new NoSuchElementException(e);
+            throw new IllegalArgumentException(e);
         } catch (Exception e) {
             log.error("Could not instantiate class {}", klass.getName());
             throw new IllegalArgumentException(e);
