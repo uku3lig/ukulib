@@ -17,16 +17,41 @@ import net.uku3lig.ukulib.config.IConfig;
 
 import java.util.List;
 
+/**
+ * A screen used to edit a config.
+ * Instances of this class should NOT be reused.
+ *
+ * @param <T> The type of the config
+ */
 @Slf4j
 public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
+    /**
+     * The config manager. Used to load and save the config.
+     */
     protected final ConfigManager<T> manager;
+
+    /**
+     * The widget used to display the options.
+     * @see AbstractConfigScreen#getOptions(IConfig)
+     */
     protected ButtonListWidget buttonList;
 
+    /**
+     * Creates a config screen.
+     * @param parent The parent screen
+     * @param title The title of the screen
+     * @param manager The config manager
+     */
     protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
         super(parent, MinecraftClient.getInstance().options, title);
         this.manager = manager;
     }
 
+    /**
+     * The list of options that will be shown to the user when this screen is displayed.
+     * @param config The config
+     * @return An array of {@link Option}
+     */
     protected abstract Option[] getOptions(T config);
 
     @Override
@@ -38,6 +63,9 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         drawFooterButtons();
     }
 
+    /**
+     * Draws the buttons in the footer.
+     */
     @SuppressWarnings("ConstantConditions")
     protected void drawFooterButtons() {
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
