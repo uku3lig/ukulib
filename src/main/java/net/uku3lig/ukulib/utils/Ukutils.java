@@ -2,8 +2,9 @@ package net.uku3lig.ukulib.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.option.CyclingOption;
-import net.minecraft.client.option.Option;
+import net.minecraft.client.options.CyclingOption;
+import net.minecraft.client.options.Option;
+import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -26,7 +27,7 @@ public class Ukutils {
      * @see Ukutils#createButton(String, Text, Consumer)
      */
     public static Option createButton(String key, Object value, Consumer<Screen> callback) {
-        return createButton(key, Text.of(String.valueOf(value)), callback);
+        return createButton(key, new LiteralText(String.valueOf(value)), callback);
     }
 
     /**
@@ -40,7 +41,7 @@ public class Ukutils {
      * @see Ukutils#createButton(String, Text, Consumer)
      */
     public static Option createOpenButton(String key, Object value, UnaryOperator<Screen> callback) {
-        return createOpenButton(key, Text.of(String.valueOf(value)), callback);
+        return createOpenButton(key, new LiteralText(String.valueOf(value)), callback);
     }
 
     /**
@@ -53,7 +54,7 @@ public class Ukutils {
      */
     public static Option createButton(String key, Text text, Consumer<Screen> callback) {
         return new CyclingOption(key, (opt, amount) -> callback.accept(MinecraftClient.getInstance().currentScreen),
-                (opt, option) -> getGenericLabel(key, text));
+                (opt, option) -> option.getDisplayPrefix() + text.asFormattedString());
     }
 
     /**

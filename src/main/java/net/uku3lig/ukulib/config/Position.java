@@ -1,9 +1,8 @@
 package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
-import net.minecraft.client.option.CyclingOption;
-import net.minecraft.text.Text;
-import net.minecraft.text.TranslatableText;
+import net.minecraft.client.options.CyclingOption;
+import net.minecraft.client.resource.language.I18n;
 
 import java.util.Arrays;
 import java.util.function.Consumer;
@@ -52,10 +51,6 @@ public enum Position {
                 .findFirst().orElse(Position.TOP_LEFT);
     }
 
-    private static Text getGenericLabel(String key) {
-        return new TranslatableText("options.generic_value", new TranslatableText("ukulib.position"), new TranslatableText(key));
-    }
-
     /**
      * Checks if the position is on the right of the screen.
      * @return <code>true</code> if the position is on the right of the screen
@@ -81,7 +76,7 @@ public enum Position {
      */
     public static CyclingOption getOption(Supplier<Position> getter, Consumer<Position> setter) {
         return new CyclingOption("ukulib.position", (opt, amount) -> setter.accept(byId(getter.get().id + amount)),
-                (opt, option) -> getGenericLabel(getter.get().translationKey));
+                (opt, option) -> option.getDisplayPrefix() + I18n.translate(getter.get().translationKey));
 
     }
 }

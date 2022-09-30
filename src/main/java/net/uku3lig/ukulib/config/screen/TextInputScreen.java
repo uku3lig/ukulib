@@ -2,10 +2,9 @@ package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 
@@ -47,8 +46,8 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     protected void init() {
-        final ButtonWidget doneButton = new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, ScreenTexts.DONE, button -> this.onClose());
-        textField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label);
+        final ButtonWidget doneButton = new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, I18n.translate("gui.done"), button -> this.onClose());
+        textField = new TextFieldWidget(this.font, this.width / 2 - 100, 116, 200, 20, label.asFormattedString());
         textField.setText(String.valueOf(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
 
@@ -78,11 +77,11 @@ public abstract class TextInputScreen<T> extends Screen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        drawTextWithShadow(matrices, this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
-        this.textField.render(matrices, mouseX, mouseY, delta);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground();
+        drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
+        drawString(this.font, label.asFormattedString(), this.width / 2 - 100, 100, 0xA0A0A0);
+        this.textField.render(mouseX, mouseY, delta);
+        super.render(mouseX, mouseY, delta);
     }
 }
