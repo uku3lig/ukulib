@@ -2,7 +2,6 @@ package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.options.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.Option;
@@ -17,7 +16,9 @@ import net.uku3lig.ukulib.config.IConfig;
  *
  * @param <T> The type of the config
  */
-public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
+public abstract class AbstractConfigScreen<T extends IConfig<T>> extends Screen {
+    private final Screen parent;
+
     /**
      * The config manager. Used to load and save the config.
      */
@@ -36,8 +37,9 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
      * @param manager The config manager
      */
     protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
-        super(parent, MinecraftClient.getInstance().options, title);
+        super(title);
         this.manager = manager;
+        this.parent = parent;
     }
 
     /**
