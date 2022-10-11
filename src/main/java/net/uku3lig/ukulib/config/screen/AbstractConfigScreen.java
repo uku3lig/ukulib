@@ -1,6 +1,5 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -52,7 +51,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends Screen 
     @Override
     protected void init() {
         super.init();
-        buttonList = new ButtonListWidget(MinecraftClient.getInstance(), this.width, this.height, 32, this.height - 32, 25);
+        buttonList = new ButtonListWidget(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
         buttonList.addAll(getOptions(manager.getConfig()));
         this.children.add(buttonList);
         drawFooterButtons();
@@ -61,9 +60,10 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends Screen 
     /**
      * Draws the buttons in the footer.
      */
+    @SuppressWarnings("ConstantConditions")
     protected void drawFooterButtons() {
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"),
-                button -> MinecraftClient.getInstance().openScreen(this.parent)));
+                button -> this.minecraft.openScreen(this.parent)));
     }
 
     @Override
