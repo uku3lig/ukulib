@@ -78,7 +78,7 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
-        this.renderBackground();
+        this.renderDirtBackground(0);
         drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
         drawString(this.font, label.asFormattedString(), this.width / 2 - 100, 100, 0xA0A0A0);
         this.textField.render(mouseX, mouseY, delta);
