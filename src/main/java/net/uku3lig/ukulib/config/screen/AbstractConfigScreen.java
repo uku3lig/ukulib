@@ -60,7 +60,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
      * Draws the buttons in the footer.
      */
     protected void drawFooterButtons() {
-        this.children.add(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"),
+        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"),
                 button -> MinecraftClient.getInstance().openScreen(this.parent)));
     }
 
