@@ -76,7 +76,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         DrawableHelper.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
         List<OrderedText> list = GameOptionsScreen.getHoveredButtonTooltip(this.buttonList, mouseX, mouseY);
-        this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
+        if (list != null) this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
     }
 
     @Override
