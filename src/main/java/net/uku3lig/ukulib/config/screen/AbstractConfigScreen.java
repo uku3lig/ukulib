@@ -50,7 +50,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     @Override
     protected void init() {
         super.init();
-        buttonList = new ButtonListWidget(MinecraftClient.getInstance(), this.width, this.height, 32, this.height - 32, 25);
+        buttonList = new ButtonListWidget(this.minecraft, this.width, this.height, 32, this.height - 32, 25);
         buttonList.addAll(getOptions(manager.getConfig()));
         this.children.add(buttonList);
         drawFooterButtons();
@@ -59,9 +59,10 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     /**
      * Draws the buttons in the footer.
      */
+    @SuppressWarnings("ConstantConditions")
     protected void drawFooterButtons() {
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"),
-                button -> MinecraftClient.getInstance().openScreen(this.parent)));
+                button -> this.minecraft.openScreen(this.parent)));
     }
 
     @Override

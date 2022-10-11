@@ -51,7 +51,7 @@ public abstract class TextInputScreen<T> extends Screen {
         textField.setText(String.valueOf(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
 
-        this.children.add(doneButton);
+        this.addButton(doneButton);
         this.children.add(textField);
         this.setInitialFocus(textField);
     }
