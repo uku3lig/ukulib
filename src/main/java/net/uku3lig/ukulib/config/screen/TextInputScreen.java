@@ -52,7 +52,7 @@ public abstract class TextInputScreen<T> extends Screen {
         textField.setText(String.valueOf(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
 
-        this.children.add(doneButton);
+        this.addButton(doneButton);
         this.children.add(textField);
         this.setInitialFocus(textField);
     }
@@ -79,7 +79,7 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
+        this.renderBackgroundTexture(0);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         drawTextWithShadow(matrices, this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
         this.textField.render(matrices, mouseX, mouseY, delta);
