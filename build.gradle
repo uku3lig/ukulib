@@ -1,18 +1,39 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.3'
+    id 'fabric-loom' version '0d0261a'
     id 'maven-publish'
-    id "io.freefair.lombok" version "6.5.0.3"
+    id "io.freefair.lombok" version "5.3.3.3"
 }
 
 version = "${project.mod_version}+${project.minecraft_version}${getMetadata()}"
 group = project.maven_group
 
+repositories {
+    maven {
+        name 'Jitpack'
+        url 'https://jitpack.io/'
+    }
+    maven {
+        name 'HalfOf2'
+        url 'https://storage.googleapis.com/devan-maven/'
+    }
+}
+
+minecraft {
+    // Skip old versions of libraries which Mojang use but we don't need
+    addLibraryFilter {library ->
+        return !(library.startsWith('net.minecraft:launchwrapper:') ||
+                library.startsWith('net.sf.jopt-simple:jopt-simple:') ||
+                library.startsWith('org.ow2.asm:asm-all:'))
+    }
+}
+
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    mappings "io.github.minecraft-cursed-legacy:plasma:b1.7.3-build.${project.plasma_build}"
+    modImplementation("io.github.minecraft-cursed-legacy:cursed-fabric-loader:${project.loader_version}") {
+        transitive false
+    }
 
     include implementation("com.moandjiezana.toml:toml4j:0.7.2")
 }
@@ -26,7 +47,7 @@ processResources {
     }
 }
 
-def targetJavaVersion = 17
+def targetJavaVersion = 8
 tasks.withType(JavaCompile).configureEach {
     // ensure that the encoding is set to UTF-8, no matter what the system default is
     // this fixes some edge cases with special characters not displaying correctly

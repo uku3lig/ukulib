@@ -14,8 +14,11 @@
   "icon": "assets/ukulib/icon.png",
   "environment": "client",
   "depends": {
-    "fabricloader": ">=0.13"
+    "minecraft": "1.0.0-beta.7.3"
   },
+  "mixins": [
+    "ukulib.mixins.json"
+  ],
   "custom": {
     "modmenu": {
       "badges": [ "library" ],

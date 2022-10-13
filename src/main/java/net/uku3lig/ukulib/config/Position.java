@@ -1,11 +1,10 @@
 package net.uku3lig.ukulib.config;
 
-import com.mojang.serialization.Codec;
 import lombok.Getter;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.util.TranslatableOption;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -14,35 +13,36 @@ import java.util.function.Supplier;
  * The actual position is implementation specific.
  */
 @Getter // lombok generates the methods that have to be implemented
-public enum Position implements TranslatableOption {
+@SuppressWarnings("unused")
+public enum Position {
     /**
      * The top left of the screen.
      */
-    TOP_LEFT(0, "ukulib.position.topLeft"),
+    TOP_LEFT(0, "Top Left"),
     /**
      * The top right of the screen.
      */
-    TOP_RIGHT(1, "ukulib.position.topRight"),
+    TOP_RIGHT(1, "Top Right"),
     /**
      * The bottom left of the screen.
      */
-    BOTTOM_LEFT(2, "ukulib.position.bottomLeft"),
+    BOTTOM_LEFT(2, "Bottom Left"),
     /**
      * The bottom right of the screen.
      */
-    BOTTOM_RIGHT(3, "ukulib.position.bottomRight"),
+    BOTTOM_RIGHT(3, "Bottom Right"),
     /**
      * Above the experience bar, usually between the health and hunger bars.
      */
-    MIDDLE(4, "ukulib.position.middle"),
+    MIDDLE(4, "Above XP Bar"),
     ;
 
     private final int id;
-    private final String translationKey;
+    private final String text;
 
-    Position(int id, String translationKey) {
+    Position(int id, String text) {
         this.id = id;
-        this.translationKey = translationKey;
+        this.text = text;
     }
 
     /**
@@ -62,28 +62,32 @@ public enum Position implements TranslatableOption {
     }
 
     /**
-     * Creates a {@link SimpleOption} that allows to choose between all of this enum's values.
+     * Creates a {@link ConfigOption} that allows to choose between all of this enum's values.
      *
      * @param getter Gets the default value for the option
      * @param setter The action to be performed when the value changes
      * @return The generated option
-     * @see Position#getOption(Collection, Supplier, Consumer)
+     * @see Position#getOption(int, Collection, Supplier, Consumer)
      */
-    public static SimpleOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
-        return getOption(EnumSet.allOf(Position.class), getter, setter);
+    public static ConfigOption<Position> getOption(int id, Supplier<Position> getter, Consumer<Position> setter) {
+        return getOption(id, EnumSet.allOf(Position.class), getter, setter);
     }
 
     /**
-     * Creates a {@link SimpleOption} that allows to choose between all the <code>allowedValues</code>.
+     * Creates a {@link ConfigOption} that allows to choose between all the <code>allowedValues</code>.
      *
      * @param allowedValues The values the option will cycle through
      * @param getter Gets the default value for the option
      * @param setter The action to be performed when the value changes
      * @return The generated option
      */
-    public static SimpleOption<Position> getOption(Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
-        return new SimpleOption<>("ukulib.position", SimpleOption.emptyTooltip(), SimpleOption.enumValueText(),
-                new SimpleOption.PotentialValuesBasedCallbacks<>(new LinkedList<>(allowedValues), Codec.STRING.xmap(Position::valueOf, Position::name)),
-                getter.get(), setter);
+    public static ConfigOption<Position> getOption(int id, Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
+        return new ConfigOption<>(id, "Position", false, false, getter, p -> p.text,
+                f -> setter.accept(fromId(getter.get().id + (f.intValue() & allowedValues.size()))));
+
+    }
+
+    private static Position fromId(int id) {
+        return Arrays.stream(values()).filter(p -> p.id == id).findFirst().orElse(TOP_LEFT);
     }
 }

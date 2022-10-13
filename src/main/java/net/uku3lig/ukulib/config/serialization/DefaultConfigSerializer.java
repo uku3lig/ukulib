@@ -2,7 +2,7 @@ package net.uku3lig.ukulib.config.serialization;
 
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.uku3lig.ukulib.config.IConfig;
 
 import java.io.File;
@@ -14,7 +14,7 @@ import java.util.function.Supplier;
  * A default config serializer, which saves the config in a TOML file.
  * @param <T> The type of the config
  */
-@Slf4j
+@Log4j2
 public class DefaultConfigSerializer<T extends IConfig<T>> implements ConfigSerializer<T> {
     private final Class<T> configClass;
     private final File file;
