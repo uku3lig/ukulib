@@ -6,7 +6,24 @@ import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
+/**
+ * A simple button with an icon. Works best when the button is square.
+ */
 public class IconButton extends TexturedButtonWidget {
+    /**
+     * Makes a new button with an icon.
+     * @param x The x position of the button
+     * @param y The y position of the button
+     * @param width The width of the button
+     * @param height The height of the button
+     * @param u The x position of the icon in the texture
+     * @param v The y position of the icon in the texture
+     * @param hoveredVOffset The offset of the icon when hovered
+     * @param texture The texture of the icon
+     * @param textureWidth The width of the texture
+     * @param textureHeight The height of the texture
+     * @param pressAction The action to perform when the button is pressed
+     */
     public IconButton(int x, int y, int width, int height, int u, int v, int hoveredVOffset, Identifier texture, int textureWidth, int textureHeight, PressAction pressAction) {
         super(x, y, width, height, u, v, hoveredVOffset, texture, textureWidth, textureHeight, pressAction);
     }

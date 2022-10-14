@@ -15,7 +15,14 @@ import net.uku3lig.ukulib.api.UkulibAPI;
 import java.util.List;
 import java.util.stream.IntStream;
 
+/**
+ * Ukulib's config screen. Shows all the mods that have integrated with Ukulib.
+ */
 public final class UkulibConfigScreen extends GameOptionsScreen {
+    /**
+     * Creates a config screen.
+     * @param parent The parent screen
+     */
     public UkulibConfigScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of("Ukulib Config"));
     }
