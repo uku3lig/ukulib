@@ -1,4 +1,4 @@
-package net.uku3lig.ukulib;
+package net.uku3lig.ukulib.api;
 
 import net.uku3lig.ukulib.config.screen.AbstractConfigScreen;
 
