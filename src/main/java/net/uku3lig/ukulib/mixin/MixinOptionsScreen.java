@@ -1,10 +1,12 @@
 package net.uku3lig.ukulib.mixin;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.screen.UkulibConfigScreen;
 import net.uku3lig.ukulib.utils.IconButton;
 import org.spongepowered.asm.mixin.Mixin;
@@ -18,6 +20,8 @@ public class MixinOptionsScreen extends Screen {
 
     @Inject(method = "init", at = @At("RETURN"))
     public void addBetterHurtCamButton(CallbackInfo ci) {
+        if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
+
         this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 120 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new UkulibConfigScreen(this))));
     }
 
