@@ -33,3 +33,40 @@ dependencies {
     include "net.uku3lig:ukulib:${project.ukulib_version}"
 }
 ```
+
+<details>
+  <summary><b>Development versions</b></summary>
+
+Development version numbers end with `-build.<build number>`, e.g. `0.2.2+1.19.2-build.65`. <br>
+They are not guaranteed to be stable or even work at all, but they are available if you want to test the latest changes. <br>
+They are also not published to the maven repo, so you have to add the following to your `build.gradle`:
+```groovy
+repositories {
+    maven {
+        url "https://maven.uku3lig.net/snapshots"
+    }
+}
+```
+</details>
+
+## Integrating your config screen
+
+Ukulib provides an api class, `UkulibAPI`, which you can extend to integrate your mod's config screen with ukulib. Example:
+```java
+public class YourUkulibAPIClass implements UkulibAPI {
+    @Override
+    public Function<Screen, AbstractConfigScreen<?>> supplyConfigScreen() {
+        return parent -> new YourConfigScreen(parent, ...);
+    }
+}
+```
+
+You then need to add the `ukulib` entrypoint in your `fabric.mod.json`:
+```json
+"entrypoints": {
+    ...
+    "ukulib": [
+      "your.awesome.mod.YourUkulibAPIClass"
+    ]
+  }
+```

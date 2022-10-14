@@ -14,8 +14,12 @@
   "icon": "assets/ukulib/icon.png",
   "environment": "client",
   "depends": {
-    "fabricloader": ">=0.13"
+    "fabricloader": ">=0.13",
+    "fabric-resource-loader-v0": "*"
   },
+  "mixins": [
+    "ukulib.mixins.json"
+  ],
   "custom": {
     "modmenu": {
       "badges": [ "library" ],
