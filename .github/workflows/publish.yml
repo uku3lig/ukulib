@@ -21,4 +21,5 @@ jobs:
         run: ./gradlew publish
         env:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
           PUBLISH_RELEASE: owo

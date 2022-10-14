@@ -1,7 +1,9 @@
 plugins {
     id 'fabric-loom' version '0d0261a'
-    id 'maven-publish'
     id "io.freefair.lombok" version "5.3.3.3"
+
+    id 'maven-publish'
+    id "com.modrinth.minotaur" version "2.+"
 }
 
 version = "${project.mod_version}+${project.minecraft_version}${getMetadata()}"
@@ -76,6 +78,10 @@ jar {
     }
 }
 
+if (System.getenv("PUBLISH_RELEASE") != null) {
+    publish.finalizedBy "modrinth"
+}
+
 // configure the maven publication
 publishing {
     publications {
@@ -102,6 +108,15 @@ publishing {
             }
         }
     }
+}
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "Y8uFrUil"
+    versionNumber = project.version
+    versionType = "release"
+    uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    gameVersions = [project.minecraft_version] // Must be an array, even with only one version
 }
 
 static def getMetadata() {
