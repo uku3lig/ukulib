@@ -5,6 +5,7 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
+import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
@@ -28,16 +29,18 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
         IntStream.range(0, containers.size()).forEach(i -> {
             EntrypointContainer<UkulibAPI> container = containers.get(i);
             UkulibAPI api = container.getEntrypoint();
-            addDrawableChild(new ButtonWidget(width / 2 - 155 + i % 2 * 160, height / 6 + 24 * (i >> 1), 150, 20,
+            addDrawableChild(new ButtonWidget(width / 2 - 155 + i % 2 * 160, height / 6 + 24 * (i >> 1) - 4, 150, 20,
                     Text.of(container.getProvider().getMetadata().getName()), button -> client.setScreen(api.supplyConfigScreen().apply(this))));
         });
 
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 6 + 168, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
     }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
+        // hacky way to show something shiny
+        new ButtonListWidget(client, width, height, 32, height - 32, 25).render(matrices, mouseX, mouseY, delta);
         drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
