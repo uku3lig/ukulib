@@ -16,6 +16,9 @@
   "depends": {
     "fabricloader": ">=0.13"
   },
+  "mixins": [
+    "ukulib.mixins.json"
+  ],
   "custom": {
     "modmenu": {
       "badges": [ "library" ],
