@@ -29,7 +29,7 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
             EntrypointContainer<UkulibAPI> container = containers.get(i);
             UkulibAPI api = container.getEntrypoint();
             addDrawableChild(new ButtonWidget(width / 2 - 155 + i % 2 * 160, height / 6 + 24 * (i >> 1), 150, 20,
-                    Text.of(container.getProvider().getMetadata().getName()), button -> client.setScreen(api.getConfigScreen())));
+                    Text.of(container.getProvider().getMetadata().getName()), button -> client.setScreen(api.supplyConfigScreen().apply(this))));
         });
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height / 6 + 168, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
