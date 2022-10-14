@@ -1,24 +1,30 @@
-package net.uku3lig.ukulib.config.screen;
+package net.uku3lig.ukulib.config.impl;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.util.OrderableTooltip;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.IntStream;
+import java.util.Optional;
 
 /**
  * Ukulib's config screen. Shows all the mods that have integrated with Ukulib.
  */
 public final class UkulibConfigScreen extends GameOptionsScreen {
+    private EntrypointList entrypointList;
+
     /**
      * Creates a config screen.
      * @param parent The parent screen
@@ -28,17 +34,14 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
     }
 
     @Override
+    @SuppressWarnings("ConstantConditions")
     protected void init() {
         super.init();
-        if (client == null) return;
 
         List<EntrypointContainer<UkulibAPI>> containers = FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class);
-        IntStream.range(0, containers.size()).forEach(i -> {
-            EntrypointContainer<UkulibAPI> container = containers.get(i);
-            UkulibAPI api = container.getEntrypoint();
-            addDrawableChild(new ButtonWidget(width / 2 - 155 + i % 2 * 160, height / 6 + 24 * (i >> 1) - 4, 150, 20,
-                    Text.of(container.getProvider().getMetadata().getName()), button -> client.setScreen(api.supplyConfigScreen().apply(this))));
-        });
+        entrypointList = new EntrypointList(this.client, this.width, this.height, 32, this.height - 32, 25);
+        entrypointList.addAll(containers, this);
+        this.addSelectableChild(entrypointList);
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
     }
@@ -46,9 +49,16 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
-        // hacky way to show something shiny
-        new ButtonListWidget(client, width, height, 32, height - 32, 25).render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xFFFFFF);
+        this.entrypointList.render(matrices, mouseX, mouseY, delta);
+        DrawableHelper.drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
+
+        List<OrderedText> list = getHoveredButtonTooltip(mouseX, mouseY);
+        this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
+    }
+
+    private List<OrderedText> getHoveredButtonTooltip(int mouseX, int mouseY) {
+        Optional<ClickableWidget> optional = entrypointList.getHoveredButton(mouseX, mouseY);
+        return optional.isPresent() && optional.get() instanceof OrderableTooltip tooltip ? tooltip.getOrderedTooltip() : Collections.emptyList();
     }
 }

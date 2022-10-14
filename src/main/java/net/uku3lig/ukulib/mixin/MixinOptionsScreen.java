@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.api.UkulibAPI;
-import net.uku3lig.ukulib.config.screen.UkulibConfigScreen;
+import net.uku3lig.ukulib.config.impl.UkulibConfigScreen;
 import net.uku3lig.ukulib.utils.IconButton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
