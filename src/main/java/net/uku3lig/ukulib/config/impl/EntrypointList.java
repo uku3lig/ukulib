@@ -3,7 +3,6 @@ package net.uku3lig.ukulib.config.impl;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
@@ -60,11 +59,6 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
-            return Collections.singletonList(button);
-        }
-
-        @Override
         public List<? extends Element> children() {
             return Collections.singletonList(button);
         }
@@ -84,13 +78,13 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
 
         public ModButton(EntrypointContainer<UkulibAPI> container, int width, Screen parent) {
             super(width / 2 - 100, 0, 200, 20, Text.of(container.getProvider().getMetadata().getName()),
-                    b -> client.setScreen(container.getEntrypoint().supplyConfigScreen().apply(parent)));
+                    b -> client.openScreen(container.getEntrypoint().supplyConfigScreen().apply(parent)));
             this.tooltip = container.getProvider().getMetadata().getDescription();
         }
 
         @Override
-        public List<OrderedText> getOrderedTooltip() {
-            return client.textRenderer.wrapLines(Text.of(tooltip), 200);
+        public Optional<List<OrderedText>> getOrderedTooltip() {
+            return Optional.ofNullable(client.textRenderer.wrapLines(Text.of(tooltip), 200));
         }
     }
 }

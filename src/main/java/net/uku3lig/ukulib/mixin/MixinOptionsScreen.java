@@ -29,7 +29,7 @@ public class MixinOptionsScreen extends Screen {
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
 
-        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 120 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new UkulibConfigScreen(this))));
+        this.addButton(new IconButton(this.width / 2 + 158, this.height / 6 + 120 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().openScreen(new UkulibConfigScreen(this))));
     }
 
     /**
