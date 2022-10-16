@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.utils;
 
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
@@ -31,11 +31,11 @@ public class IconButton extends TexturedButtonWidget {
     public void renderButton(int mouseX, int mouseY, float delta) {
         // i love stealing minecraft's code
         MinecraftClient.getInstance().getTextureManager().bindTexture(WIDGETS_LOCATION);
-        RenderSystem.color4f(1.0F, 1.0F, 1.0F, this.alpha);
+        GlStateManager.color4f(1.0F, 1.0F, 1.0F, this.alpha);
         int i = this.getYImage(this.isHovered());
-        RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.enableDepthTest();
+        GlStateManager.enableBlend();
+        GlStateManager.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.enableDepthTest();
         blit(this.x, this.y, 0, 46 + i * 20, this.width / 2, this.height);
         blit(this.x + this.width / 2, this.y, 200 - this.width / 2, 46 + i * 20, this.width / 2, this.height);
 
