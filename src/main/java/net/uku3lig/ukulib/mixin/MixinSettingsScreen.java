@@ -3,7 +3,7 @@ package net.uku3lig.ukulib.mixin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.OptionsScreen;
+import net.minecraft.client.gui.screen.SettingsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.api.UkulibAPI;
@@ -15,10 +15,10 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 /**
- * Mixin for {@link OptionsScreen}.
+ * Mixin for {@link SettingsScreen}.
  */
-@Mixin(OptionsScreen.class)
-public class MixinOptionsScreen extends Screen {
+@Mixin(SettingsScreen.class)
+public class MixinSettingsScreen extends Screen {
     private static final Identifier ICON = new Identifier("ukulib", "uku.png");
 
     /**
@@ -35,7 +35,7 @@ public class MixinOptionsScreen extends Screen {
     /**
      * @param title the title of the screen
      */
-    protected MixinOptionsScreen(Text title) {
+    protected MixinSettingsScreen(Text title) {
         super(title);
     }
 }
