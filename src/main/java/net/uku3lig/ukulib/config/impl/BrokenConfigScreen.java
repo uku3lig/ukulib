@@ -4,13 +4,13 @@ import com.google.gson.Gson;
 import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
+import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import org.apache.commons.io.IOUtils;
@@ -83,7 +83,7 @@ public class BrokenConfigScreen extends Screen {
             } else {
                 log.info("Uploaded logs to {}", result.getUrl());
 
-                MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                MinecraftClient.getInstance().setScreen(new ConfirmChatLinkScreen(confirmed -> {
                     if (confirmed) Util.getOperatingSystem().open(result.getUrl());
                     this.close();
                 }, result.getUrl(), true));
