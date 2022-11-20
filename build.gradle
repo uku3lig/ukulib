@@ -1,7 +1,7 @@
 plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.3'
-    id "io.freefair.lombok" version "6.5.0.3"
+    id 'io.github.juuxel.loom-quiltflower' version '1.7.4'
+    id "io.freefair.lombok" version "6.6-rc1"
 
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
