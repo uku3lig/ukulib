@@ -62,6 +62,10 @@ public class ConfigManager<T extends IConfig<T>> {
         serializer.serialize(config);
     }
 
+    /**
+     * Replaces the current config with a new one.
+     * @param newConfig The new config
+     */
     public void replaceConfig(T newConfig) {
         config = newConfig;
         serializer.serialize(newConfig);

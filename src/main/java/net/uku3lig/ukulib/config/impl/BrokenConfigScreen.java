@@ -26,6 +26,9 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.nio.charset.StandardCharsets;
 
+/**
+ * Simple screen shown when a config screen is broken.
+ */
 @Slf4j
 public class BrokenConfigScreen extends Screen {
     private static final HttpClient httpClient = HttpClient.newHttpClient();
@@ -33,6 +36,10 @@ public class BrokenConfigScreen extends Screen {
 
     private final Screen parent;
 
+    /**
+     * Creates the screen.
+     * @param parent The parent screen
+     */
     public BrokenConfigScreen(Screen parent) {
         super(Text.of("Broken config screen"));
         this.parent = parent;
