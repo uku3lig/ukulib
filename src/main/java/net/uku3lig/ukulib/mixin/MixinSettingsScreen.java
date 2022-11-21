@@ -33,6 +33,7 @@ public class MixinSettingsScreen extends Screen {
     }
 
     /**
+     * constructor :D
      * @param title the title of the screen
      */
     protected MixinSettingsScreen(Text title) {
