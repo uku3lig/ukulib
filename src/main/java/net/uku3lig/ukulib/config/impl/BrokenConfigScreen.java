@@ -8,13 +8,13 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
+import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 
@@ -49,7 +49,7 @@ public class BrokenConfigScreen extends Screen {
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         MinecraftClient.getInstance().setScreen(parent);
     }
 
@@ -76,9 +76,9 @@ public class BrokenConfigScreen extends Screen {
             } else {
                 log.info("Uploaded logs to {}", response.url);
 
-                MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                MinecraftClient.getInstance().setScreen(new ConfirmChatLinkScreen(confirmed -> {
                     if (confirmed) Util.getOperatingSystem().open(response.url);
-                    this.close();
+                    this.onClose();
                 }, response.url, true));
             }
         } catch (Exception e) {
