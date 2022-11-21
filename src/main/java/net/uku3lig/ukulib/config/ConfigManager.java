@@ -20,7 +20,7 @@ public class ConfigManager<T extends IConfig<T>> {
      * @return The config
      */
     @Getter
-    private final T config;
+    private T config;
 
     /**
      * Creates a manager.
@@ -60,5 +60,14 @@ public class ConfigManager<T extends IConfig<T>> {
      */
     public void saveConfig() {
         serializer.serialize(config);
+    }
+
+    /**
+     * Replaces the current config with a new one.
+     * @param newConfig The new config
+     */
+    public void replaceConfig(T newConfig) {
+        config = newConfig;
+        serializer.serialize(newConfig);
     }
 }
