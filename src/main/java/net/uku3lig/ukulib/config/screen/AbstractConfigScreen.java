@@ -14,6 +14,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.IConfig;
+import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 
 import java.util.List;
 
@@ -58,7 +59,20 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     protected void init() {
         super.init();
         buttonList = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-        buttonList.addAll(getOptions(manager.getConfig()));
+
+        try {
+            buttonList.addAll(getOptions(manager.getConfig()));
+        } catch (Exception e) {
+            log.error("Error while getting options, replacing config with the default one", e);
+            manager.replaceConfig(manager.getConfig().defaultConfig());
+            try {
+                buttonList.addAll(getOptions(manager.getConfig()));
+            } catch (Exception e2) {
+                log.error("Error while getting options with the default config, this is a bug", e2);
+                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
+            }
+        }
+
         this.addSelectableChild(buttonList);
         drawFooterButtons();
     }
