@@ -69,7 +69,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
                 buttonList.addAll(getOptions(manager.getConfig()));
             } catch (Exception e2) {
                 log.error("Error while getting options with the default config, this is a bug", e2);
-                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
+                MinecraftClient.getInstance().openScreen(new BrokenConfigScreen(parent));
             }
         }
 
