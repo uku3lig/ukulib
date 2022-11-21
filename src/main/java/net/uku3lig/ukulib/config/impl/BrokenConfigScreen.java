@@ -8,15 +8,13 @@ import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.Version;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
-import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import net.minecraft.util.Util;
 
 import java.io.File;
@@ -35,7 +33,7 @@ public class BrokenConfigScreen extends Screen {
      * @param parent The parent screen
      */
     public BrokenConfigScreen(Screen parent) {
-        super(Text.of("Broken config screen"));
+        super(new LiteralText("Broken config screen"));
         this.parent = parent;
     }
 
@@ -56,14 +54,14 @@ public class BrokenConfigScreen extends Screen {
 
     @SuppressWarnings("ConstantConditions")
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        DrawableHelper.drawCenteredText(matrices, textRenderer, "There was an issue with this config screen.", width / 2, 100, 0xFFFFFF);
-        DrawableHelper.drawCenteredText(matrices, textRenderer, "Please report this issue to the mod author.", width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFF);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground();
+        drawCenteredString(font, "There was an issue with this config screen.", width / 2, 100, 0xFFFFFF);
+        drawCenteredString(font, "Please report this issue to the mod author.", width / 2, 100 + font.fontHeight + 4, 0xFFFFFF);
 
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, Text.of("Upload logs to mclo.gs"), button -> uploadLogs()));
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.openScreen(this.parent)));
-        super.render(matrices, mouseX, mouseY, delta);
+        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, "Upload logs to mclo.gs", button -> uploadLogs()));
+        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"), button -> this.minecraft.openScreen(this.parent)));
+        super.render(mouseX, mouseY, delta);
     }
 
     private void uploadLogs() {
@@ -85,7 +83,7 @@ public class BrokenConfigScreen extends Screen {
         } catch (Exception e) {
             log.error("Error while uploading logs to mclo.gs: {}", e.getMessage());
             ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
-            SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Error while uploading logs"), Text.of(e.getMessage()));
+            SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, new LiteralText("Error while uploading logs"), new LiteralText(e.getMessage()));
         }
     }
 }
