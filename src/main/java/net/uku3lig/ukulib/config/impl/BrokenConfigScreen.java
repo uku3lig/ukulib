@@ -1,8 +1,12 @@
 package net.uku3lig.ukulib.config.impl;
 
-import com.google.gson.Gson;
-import lombok.Data;
+import gs.mclo.java.APIResponse;
+import gs.mclo.java.MclogsAPI;
 import lombok.extern.slf4j.Slf4j;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.Version;
+import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,27 +17,16 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
-import org.apache.commons.io.IOUtils;
 
-import java.io.BufferedInputStream;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.InputStream;
-import java.net.URL;
-import java.net.URLEncoder;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
-import java.net.http.HttpResponse;
-import java.nio.charset.StandardCharsets;
+import java.io.IOException;
+import java.nio.file.Path;
 
 /**
  * Simple screen shown when a config screen is broken.
  */
 @Slf4j
 public class BrokenConfigScreen extends Screen {
-    private static final HttpClient httpClient = HttpClient.newHttpClient();
-    private static final String MCLOGS_URL = "https://api.mclo.gs/1/log";
-
     private final Screen parent;
 
     /**
@@ -43,6 +36,16 @@ public class BrokenConfigScreen extends Screen {
     public BrokenConfigScreen(Screen parent) {
         super(Text.of("Broken config screen"));
         this.parent = parent;
+    }
+
+    static {
+        MclogsAPI.mcversion = MinecraftClient.getInstance().getGameVersion();
+        MclogsAPI.userAgent = "ukulib";
+        MclogsAPI.version = FabricLoader.getInstance().getModContainer("ukulib")
+                .map(ModContainer::getMetadata)
+                .map(ModMetadata::getVersion)
+                .map(Version::getFriendlyString)
+                .orElse("unknown");
     }
 
     @Override
@@ -63,42 +66,25 @@ public class BrokenConfigScreen extends Screen {
     }
 
     private void uploadLogs() {
-        File logFile = new File(MinecraftClient.getInstance().runDirectory, "logs/latest.log");
-        try (InputStream in = new BufferedInputStream(new FileInputStream(logFile))) {
-            String body = "content=" + URLEncoder.encode(IOUtils.toString(in, StandardCharsets.UTF_8), StandardCharsets.UTF_8);
+        Path logFile = new File(MinecraftClient.getInstance().runDirectory, "logs/latest.log").toPath();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(new URL(MCLOGS_URL).toURI())
-                    .header("Content-Type", "application/x-www-form-urlencoded")
-                    .POST(HttpRequest.BodyPublishers.ofString(body))
-                    .build();
+        try {
+            APIResponse response = MclogsAPI.share(logFile);
 
-            HttpResponse<String> response = httpClient.send(request, HttpResponse.BodyHandlers.ofString());
-            McLogsResult result = new Gson().fromJson(response.body(), McLogsResult.class);
-
-            if (response.statusCode() >= 400 || !result.isSuccess() || result.getUrl() == null) {
-                log.error("Error while uploading logs to mclo.gs: {}", result.getError());
-                ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
-                SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Error while uploading logs"), Text.of(result.getError()));
+            if (!response.success || response.url == null) {
+                throw new IOException(response.error);
             } else {
-                log.info("Uploaded logs to {}", result.getUrl());
+                log.info("Uploaded logs to {}", response.url);
 
                 MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
-                    if (confirmed) Util.getOperatingSystem().open(result.getUrl());
+                    if (confirmed) Util.getOperatingSystem().open(response.url);
                     this.close();
-                }, result.getUrl(), true));
+                }, response.url, true));
             }
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
         } catch (Exception e) {
-            log.error("Error while uploading logs", e);
+            log.error("Error while uploading logs to mclo.gs: {}", e.getMessage());
+            ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
+            SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Error while uploading logs"), Text.of(e.getMessage()));
         }
-    }
-
-    @Data
-    private static class McLogsResult {
-        private boolean success;
-        private String error;
-        private String url;
     }
 }
