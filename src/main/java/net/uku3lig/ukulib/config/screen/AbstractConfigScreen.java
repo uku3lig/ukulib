@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.config.screen;
 
+import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
@@ -13,6 +14,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.IConfig;
+import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 
 import java.util.List;
 
@@ -22,6 +24,7 @@ import java.util.List;
  *
  * @param <T> The type of the config
  */
+@Log4j2
 public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
     /**
      * The config manager. Used to load and save the config.
@@ -56,7 +59,20 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     protected void init() {
         super.init();
         buttonList = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
-        buttonList.addAll(getOptions(manager.getConfig()));
+
+        try {
+            buttonList.addAll(getOptions(manager.getConfig()));
+        } catch (Exception e) {
+            log.error("Error while getting options, replacing config with the default one", e);
+            manager.replaceConfig(manager.getConfig().defaultConfig());
+            try {
+                buttonList.addAll(getOptions(manager.getConfig()));
+            } catch (Exception e2) {
+                log.error("Error while getting options with the default config, this is a bug", e2);
+                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
+            }
+        }
+
         this.children.add(buttonList);
         drawFooterButtons();
     }
