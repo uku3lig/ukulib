@@ -7,6 +7,33 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          java-version: 17
+          distribution: temurin
+      - name: Cache/Uncache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/loom-cache
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+      - name: Publish to the maven repo
+        run: ./gradlew publishAllPublicationsToUkuSnapshotsRepository
+        env:
+          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+
+  analyze:
+    runs-on: ubuntu-latest
     permissions:
       actions: read
       contents: read
@@ -19,22 +46,22 @@ jobs:
     
     steps:
       - name: Checkout sources
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
       - name: Set up JDK 17
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v3
         with:
           java-version: 17
+          distribution: temurin
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
           languages: ${{ matrix.language }}
       - name: Grant execute permission for gradlew
         run: chmod +x gradlew
-      - name: Publish to the maven repo
-        run: ./gradlew publishAllPublicationsToUkuSnapshotsRepository
-        env:
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+      - name: Build
+        run: ./gradlew build
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
+      
