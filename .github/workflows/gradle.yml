@@ -38,12 +38,12 @@ jobs:
       actions: read
       contents: read
       security-events: write
-    
+
     strategy:
       fail-fast: false
       matrix:
         language: [ 'java' ]
-    
+
     steps:
       - name: Checkout sources
         uses: actions/checkout@v3
@@ -64,4 +64,3 @@ jobs:
         uses: github/codeql-action/analyze@v2
         with:
           category: "/language:${{matrix.language}}"
-      
