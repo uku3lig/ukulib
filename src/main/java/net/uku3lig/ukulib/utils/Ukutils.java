@@ -29,6 +29,18 @@ public class Ukutils {
         return createButton(key, Text.of(String.valueOf(value)), callback);
     }
 
+    /**
+     * Creates a {@link SimpleOption} which acts as a simple button.
+     *
+     * @param key The translation key of the button text
+     * @param text The text to be displayed after the colon
+     * @param callback The action to be performed when the button is clicked
+     * @return The generated option
+     */
+    public static SimpleOption<Boolean> createButton(String key, Text text, Consumer<Screen> callback) {
+        return new SimpleOption<>(key, SimpleOption.emptyTooltip(), (optionText, value) -> text,
+                SimpleOption.BOOLEAN, true, v -> callback.accept(MinecraftClient.getInstance().currentScreen));
+    }
 
     /**
      * Creates a {@link SimpleOption} which acts as a simple button.
@@ -42,19 +54,6 @@ public class Ukutils {
      */
     public static SimpleOption<Boolean> createOpenButton(String key, Object value, UnaryOperator<Screen> callback) {
         return createOpenButton(key, Text.of(String.valueOf(value)), callback);
-    }
-
-    /**
-     * Creates a {@link SimpleOption} which acts as a simple button.
-     *
-     * @param key The translation key of the button text
-     * @param text The text to be displayed after the colon
-     * @param callback The action to be performed when the button is clicked
-     * @return The generated option
-     */
-    public static SimpleOption<Boolean> createButton(String key, Text text, Consumer<Screen> callback) {
-        return new SimpleOption<>(key, SimpleOption.emptyTooltip(), (optionText, value) -> text,
-                SimpleOption.BOOLEAN, true, v -> callback.accept(MinecraftClient.getInstance().currentScreen));
     }
 
     /**
