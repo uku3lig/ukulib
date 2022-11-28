@@ -5,11 +5,10 @@ import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.util.List;
 
@@ -28,7 +27,6 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
     }
 
     @Override
-    @SuppressWarnings("ConstantConditions")
     protected void init() {
         super.init();
 
@@ -37,9 +35,7 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
         entrypointList.addAll(containers, this);
         this.addSelectableChild(entrypointList);
 
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent))
-                .dimensions(this.width / 2 - 100, this.height - 27, 200, 20)
-                .build());
+        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
     }
 
     @Override

@@ -2,7 +2,9 @@ package net.uku3lig.ukulib.utils;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.SimpleOption;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -69,4 +71,10 @@ public class Ukutils {
     }
 
     private Ukutils() {}
+
+    public static ButtonWidget doneButton(int width, int height, Screen parent) {
+        return ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
+                .dimensions(width / 2 - 100, height - 27, 200, 20)
+                .build();
+    }
 }

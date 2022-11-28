@@ -5,14 +5,13 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 /**
  * A screen used to edit a config.
@@ -76,11 +75,8 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     /**
      * Draws the buttons in the footer.
      */
-    @SuppressWarnings("ConstantConditions")
     protected void drawFooterButtons() {
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> this.client.setScreen(this.parent))
-                .dimensions(this.width / 2 - 100, this.height - 27, 200, 20)
-                .build());
+        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
     }
 
     @Override
