@@ -71,6 +71,13 @@ public class Ukutils {
 
     private Ukutils() {}
 
+    /**
+     * Creates a done button.
+     * @param width The width of the screen
+     * @param height The height of the screen
+     * @param parent The parent screen
+     * @return The generated button
+     */
     public static ButtonWidget doneButton(int width, int height, Screen parent) {
         return ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
                 .dimensions(width / 2 - 100, height - 27, 200, 20)
