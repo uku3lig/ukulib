@@ -1,0 +1,21 @@
+name: build (jdk 17)
+
+on:
+  - push
+  - pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container: eclipse-temurin:17
+    steps:
+      - name: Checkout sources
+        uses: actions/checkout@v3
+      - name: Build
+        run: ./gradlew build --stacktrace --warning-mode fail
+      - name: Upload build artifacts
+        continue-on-error: true
+        uses: actions/upload-artifact@v3
+        with:
+          name: Artifacts
+          path: build/libs/

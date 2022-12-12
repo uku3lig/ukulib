@@ -17,6 +17,7 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,7 +54,6 @@ public class BrokenConfigScreen extends Screen {
         MinecraftClient.getInstance().setScreen(parent);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
@@ -61,7 +61,7 @@ public class BrokenConfigScreen extends Screen {
         drawCenteredTextWithShadow(matrices, textRenderer, Text.of("Please report this issue to the mod author.").asOrderedText(), width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFF);
 
         this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, Text.of("Upload logs to mclo.gs"), button -> uploadLogs()));
-        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, ScreenTexts.DONE, button -> this.client.setScreen(this.parent)));
+        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
         super.render(matrices, mouseX, mouseY, delta);
     }
 
