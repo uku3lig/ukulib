@@ -1,14 +1,27 @@
 plugins {
     id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.7.4'
-    id "io.freefair.lombok" version "6.6-rc1"
+    id 'io.github.juuxel.loom-quiltflower' version '1.8.0'
+    id "io.freefair.lombok" version "6.6"
 
     id 'maven-publish'
     id "com.modrinth.minotaur" version "2.+"
 }
 
-version = "${project.mod_version}+${project.minecraft_version}${getMetadata()}"
+def ENV = System.getenv()
+def build_number = ENV.BUILD_NUMBER ?: "unknown"
+
+version = "${project.mod_version}+${project.minecraft_version}" + (ENV.PUBLISH_RELEASE ? "" : "-build.${build_number}")
 group = project.maven_group
+
+if (ENV.PUBLISH_RELEASE) {
+    publish.finalizedBy "modrinth"
+}
+
+tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
+
+loom {
+    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
+}
 
 repositories {
     maven {
@@ -44,7 +57,7 @@ tasks.withType(JavaCompile).configureEach {
     // If Javadoc is generated, this must be specified in that task too.
     it.options.encoding = "UTF-8"
     if (targetJavaVersion >= 10 || JavaVersion.current().isJava10Compatible()) {
-        it.options.release = targetJavaVersion
+        it.options.release.set(targetJavaVersion)
     }
 }
 
@@ -63,10 +76,6 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-}
-
-if (System.getenv("PUBLISH_RELEASE") != null) {
-    publish.finalizedBy "modrinth"
 }
 
 // configure the maven publication
@@ -104,17 +113,7 @@ modrinth {
     versionType = "release"
     uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
     gameVersions = [project.minecraft_version] // Must be an array, even with only one version
-}
-
-static def getMetadata() {
-    if (System.getenv("PUBLISH_RELEASE") != null) return ""
-
-    def build_id = System.getenv("GITHUB_RUN_NUMBER")
-
-    // CI builds only
-    if (build_id != null) {
-        return "-build.${build_id}"
-    }
-    // No tracking information could be found about the build
-    return "-unknown"
+    loaders = ["fabric", "quilt"]
+    changelog = "See https://github.com/uku3lig/ukulib/releases/tag/${project.version}"
+    syncBodyFrom = rootProject.file("README.md").text
 }

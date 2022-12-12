@@ -39,7 +39,15 @@ public enum Position {
     MIDDLE(4, "ukulib.position.middle"),
     ;
 
+    /**
+     * The id of the position.
+     * @return The id
+     */
     private final int id;
+    /**
+     * The translation key of the position.
+     * @return The translation key
+     */
     private final String translationKey;
 
     Position(int id, String translationKey) {
