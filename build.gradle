@@ -14,7 +14,7 @@ version = "${project.mod_version}+${project.minecraft_version}" + (ENV.PUBLISH_R
 group = project.maven_group
 
 loom {
-    accessWidenerPath = file("src/main/resources/ukulib.accesswidener") as RegularFile
+    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
 }
 
 repositories {
