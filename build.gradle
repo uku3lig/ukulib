@@ -13,6 +13,12 @@ def build_number = ENV.BUILD_NUMBER ?: "unknown"
 version = "${project.mod_version}+${project.minecraft_version}" + (ENV.PUBLISH_RELEASE ? "" : "-build.${build_number}")
 group = project.maven_group
 
+if (ENV.PUBLISH_RELEASE) {
+    publish.finalizedBy "modrinth"
+}
+
+tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
+
 loom {
     accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
 }
@@ -70,10 +76,6 @@ jar {
     from("LICENSE") {
         rename { "${it}_${project.archivesBaseName}" }
     }
-}
-
-if (System.getenv("PUBLISH_RELEASE") != null) {
-    publish.finalizedBy "modrinth"
 }
 
 // configure the maven publication
