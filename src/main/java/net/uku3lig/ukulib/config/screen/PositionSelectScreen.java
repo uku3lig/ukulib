@@ -47,12 +47,12 @@ public abstract class PositionSelectScreen extends Screen {
     @Override
     protected void init() {
         int textWidth = textRenderer.getWidth(ScreenTexts.DONE);
-        this.addDrawableChild(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> onClose()));
+        this.addButton(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> onClose()));
     }
 
     @Override
     public void onClose() {
-        MinecraftClient.getInstance().setScreen(parent);
+        MinecraftClient.getInstance().openScreen(parent);
     }
 
     @Override

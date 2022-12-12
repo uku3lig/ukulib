@@ -19,10 +19,6 @@ if (ENV.PUBLISH_RELEASE) {
 
 tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
 
-loom {
-    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
-}
-
 repositories {
     maven {
         url "https://maven.uku3lig.net/releases"

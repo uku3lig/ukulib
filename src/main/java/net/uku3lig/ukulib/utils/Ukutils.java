@@ -21,17 +21,11 @@ import java.util.function.UnaryOperator;
 @SuppressWarnings("unused")
 public class Ukutils {
     /**
-     * Placeholder for button text.
-     */
-    public static final Text BUTTON_PLACEHOLDER = Text.of("ukulib:placeholder_owo");
-
-
-    /**
      * Creates a {@link Option} which acts as a simple button.
      * Equivalent to {@link Ukutils#createButton(String, Text, Consumer) createButton(key, Text.of(String.valueOf(value)), callback)}.
      *
-     * @param key The translation key of the button text
-     * @param value The value to be displayed after the colon
+     * @param key      The translation key of the button text
+     * @param value    The value to be displayed after the colon
      * @param callback The action to be performed when the button is clicked
      * @return The generated option
      * @see Ukutils#createButton(String, Text, Consumer)
@@ -42,34 +36,37 @@ public class Ukutils {
 
     /**
      * Creates a {@link Option} which acts as a simple button.
-     * @param key The translation key of the button text
+     *
+     * @param key      The translation key of the button text
      * @param callback The action to be performed when the button is clicked
      * @return The generated option
      * @see Ukutils#createButton(String, Text, Consumer)
      */
     public static Option createButton(String key, Consumer<Screen> callback) {
-        return createButton(key, BUTTON_PLACEHOLDER, callback);
+        return createButton(key, null, callback);
     }
 
     /**
      * Creates a {@link Option} which acts as a simple button.
      *
-     * @param key The translation key of the button text
-     * @param text The text to be displayed after the colon
+     * @param key      The translation key of the button text
+     * @param text     The text to be displayed after the colon
      * @param callback The action to be performed when the button is clicked
      * @return The generated option
      */
     public static Option createButton(String key, Text text, Consumer<Screen> callback) {
-        return new CyclingOption(key, (opt, amount) -> callback.accept(MinecraftClient.getInstance().currentScreen),
-                (opt, option) -> getGenericLabel(key, text));
+        return new CyclingOption(key, (opt, amount) -> callback.accept(MinecraftClient.getInstance().currentScreen), (opt, option) -> {
+            if (text != null) return getGenericLabel(key, text);
+            else return new TranslatableText(key);
+        });
     }
 
     /**
      * Creates an {@link Option} which acts as a simple button that opens a screen when clicked.
      * Equivalent to {@link Ukutils#createOpenButton(String, Text, UnaryOperator) createOpenButton(key, Text.of(String.valueOf(value)), callback)}.
      *
-     * @param key The translation key of the button text
-     * @param value The value to be displayed after the colon
+     * @param key      The translation key of the button text
+     * @param value    The value to be displayed after the colon
      * @param callback The getter for the screen to be opened when the button is clicked
      * @return The generated option
      * @see Ukutils#createOpenButton(String, Text, UnaryOperator)
@@ -80,20 +77,21 @@ public class Ukutils {
 
     /**
      * Creates a {@link Option} which acts as a simple that opens a screen when clicked.
-     * @param key The translation key of the button text
+     *
+     * @param key      The translation key of the button text
      * @param callback The getter for the screen to be opened when the button is clicked
      * @return The generated option
      * @see Ukutils#createOpenButton(String, Text, UnaryOperator)
      */
     public static Option createOpenButton(String key, UnaryOperator<Screen> callback) {
-        return createOpenButton(key, BUTTON_PLACEHOLDER, callback);
+        return createOpenButton(key, null, callback);
     }
 
     /**
      * Creates a {@link Option} which acts as a simple button that opens a screen when clicked.
      *
-     * @param key The translation key of the button text
-     * @param text The text to be displayed after the colon
+     * @param key      The translation key of the button text
+     * @param text     The text to be displayed after the colon
      * @param callback The getter for the screen to be opened when the button is clicked
      * @return The generated option
      */
@@ -107,25 +105,27 @@ public class Ukutils {
 
     /**
      * Creates a done button.
-     * @param width The width of the screen
+     *
+     * @param width  The width of the screen
      * @param height The height of the screen
      * @param parent The parent screen
      * @return The generated button
      */
     public static ButtonWidget doneButton(int width, int height, Screen parent) {
         return new ButtonWidget(width / 2 - 100, height - 27, 200, 20, ScreenTexts.DONE,
-                button -> MinecraftClient.getInstance().setScreen(parent));
+                button -> MinecraftClient.getInstance().openScreen(parent));
     }
 
     /**
      * Makes text coordinates based on the position of an icon.
-     * @param text The text to be drawn
-     * @param screenWidth The width of the screen
+     *
+     * @param text         The text to be drawn
+     * @param screenWidth  The width of the screen
      * @param textRenderer The text renderer
-     * @param x The x coordinate of the icon
-     * @param y The y coordinate of the icon
-     * @param width The width of the icon
-     * @param height The height of the icon
+     * @param x            The x coordinate of the icon
+     * @param y            The y coordinate of the icon
+     * @param width        The width of the icon
+     * @param height       The height of the icon
      * @return The tuple of coordinates
      */
     public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
@@ -145,11 +145,12 @@ public class Ukutils {
 
     /**
      * Makes text coordinates based on the position of a standard 16x16 icon.
-     * @param text The text to be drawn
-     * @param screenWidth The width of the screen
+     *
+     * @param text         The text to be drawn
+     * @param screenWidth  The width of the screen
      * @param textRenderer The text renderer
-     * @param x The x coordinate of the icon
-     * @param y The y coordinate of the icon
+     * @param x            The x coordinate of the icon
+     * @param y            The y coordinate of the icon
      * @return The tuple of coordinates
      * @see Ukutils#getTextCoords(Text, int, TextRenderer, int, int, int, int)
      */
@@ -159,6 +160,7 @@ public class Ukutils {
 
     /**
      * Simple 2-tuple.
+     *
      * @param <T1> The type of the first element
      * @param <T2> The type of the second element
      */
@@ -169,5 +171,6 @@ public class Ukutils {
         private T2 t2;
     }
 
-    private Ukutils() {}
+    private Ukutils() {
+    }
 }
