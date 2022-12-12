@@ -1,5 +1,7 @@
 package net.uku3lig.ukulib.utils;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -152,12 +154,14 @@ public class Ukutils {
 
     /**
      * Simple 2-tuple.
-     * @param t1 The first element
-     * @param t2 The second element
      * @param <T1> The type of the first element
      * @param <T2> The type of the second element
      */
-    public record Tuple2<T1, T2>(T1 t1, T2 t2) {
+    @Getter
+    @AllArgsConstructor
+    public static class Tuple2<T1, T2> {
+        private T1 t1;
+        private T2 t2;
     }
 
     private Ukutils() {}

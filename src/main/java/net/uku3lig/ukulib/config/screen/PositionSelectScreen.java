@@ -47,11 +47,11 @@ public abstract class PositionSelectScreen extends Screen {
     @Override
     protected void init() {
         int textWidth = textRenderer.getWidth(ScreenTexts.DONE);
-        this.addDrawableChild(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> close()));
+        this.addDrawableChild(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> onClose()));
     }
 
     @Override
-    public void close() {
+    public void onClose() {
         MinecraftClient.getInstance().setScreen(parent);
     }
 
@@ -77,13 +77,20 @@ public abstract class PositionSelectScreen extends Screen {
             int amount = modifiers == GLFW.GLFW_MOD_SHIFT ? 10 : 1;
 
             switch (keyCode) {
-                case GLFW.GLFW_KEY_RIGHT -> x += amount;
-                case GLFW.GLFW_KEY_LEFT -> x -= amount;
-                case GLFW.GLFW_KEY_DOWN -> y += amount;
-                case GLFW.GLFW_KEY_UP -> y -= amount;
-                default -> {
+                case GLFW.GLFW_KEY_RIGHT:
+                    x += amount;
+                    break;
+                case GLFW.GLFW_KEY_LEFT:
+                    x -= amount;
+                    break;
+                case GLFW.GLFW_KEY_DOWN:
+                    y += amount;
+                    break;
+                case GLFW.GLFW_KEY_UP:
+                    y -= amount;
+                    break;
+                default:
                     return false;
-                }
             }
         }
 
