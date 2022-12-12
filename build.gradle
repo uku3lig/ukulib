@@ -13,6 +13,10 @@ def build_number = ENV.BUILD_NUMBER ?: "unknown"
 version = "${project.mod_version}+${project.minecraft_version}" + (ENV.PUBLISH_RELEASE ? "" : "-build.${build_number}")
 group = project.maven_group
 
+loom {
+    accessWidenerPath = file("src/main/resources/ukulib.accesswidener") as RegularFile
+}
+
 repositories {
     maven {
         url "https://maven.uku3lig.net/releases"

@@ -16,6 +16,12 @@ import java.util.function.UnaryOperator;
 @SuppressWarnings("unused")
 public class Ukutils {
     /**
+     * Placeholder for button text.
+     */
+    public static final Text BUTTON_PLACEHOLDER = Text.of("ukulib:placeholder_owo");
+
+
+    /**
      * Creates a {@link SimpleOption} which acts as a simple button.
      * Equivalent to {@link Ukutils#createButton(String, Text, Consumer) createButton(key, Text.of(String.valueOf(value)), callback)}.
      *
@@ -27,6 +33,17 @@ public class Ukutils {
      */
     public static SimpleOption<Boolean> createButton(String key, Object value, Consumer<Screen> callback) {
         return createButton(key, Text.of(String.valueOf(value)), callback);
+    }
+
+    /**
+     * Creates a {@link SimpleOption} which acts as a simple button.
+     * @param key The translation key of the button text
+     * @param callback The action to be performed when the button is clicked
+     * @return The generated option
+     * @see Ukutils#createButton(String, Text, Consumer)
+     */
+    public static SimpleOption<Boolean> createButton(String key, Consumer<Screen> callback) {
+        return createButton(key, BUTTON_PLACEHOLDER, callback);
     }
 
     /**
@@ -57,6 +74,17 @@ public class Ukutils {
     }
 
     /**
+     * Creates a {@link SimpleOption} which acts as a simple that opens a screen when clicked.
+     * @param key The translation key of the button text
+     * @param callback The getter for the screen to be opened when the button is clicked
+     * @return The generated option
+     * @see Ukutils#createOpenButton(String, Text, UnaryOperator)
+     */
+    public static SimpleOption<Boolean> createOpenButton(String key, UnaryOperator<Screen> callback) {
+        return createOpenButton(key, BUTTON_PLACEHOLDER, callback);
+    }
+
+    /**
      * Creates a {@link SimpleOption} which acts as a simple button that opens a screen when clicked.
      *
      * @param key The translation key of the button text
@@ -68,8 +96,6 @@ public class Ukutils {
         return new SimpleOption<>(key, SimpleOption.emptyTooltip(), (optionText, value) -> text,
                 SimpleOption.BOOLEAN, true, v -> MinecraftClient.getInstance().setScreen(callback.apply(MinecraftClient.getInstance().currentScreen)));
     }
-
-    private Ukutils() {}
 
     /**
      * Creates a done button.
@@ -83,4 +109,6 @@ public class Ukutils {
                 .dimensions(width / 2 - 100, height - 27, 200, 20)
                 .build();
     }
+
+    private Ukutils() {}
 }
