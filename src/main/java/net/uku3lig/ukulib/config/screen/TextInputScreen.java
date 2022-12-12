@@ -8,6 +8,7 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.util.Optional;
 import java.util.function.Consumer;
@@ -15,6 +16,7 @@ import java.util.function.Consumer;
 /**
  * A screen used to input a value.
  * Instances of this class should NOT be reused.
+ *
  * @param <T> The type of the value.
  */
 public abstract class TextInputScreen<T> extends Screen {
@@ -29,12 +31,12 @@ public abstract class TextInputScreen<T> extends Screen {
     /**
      * Creates an input screen.
      *
-     * @param parent The parent screen
-     * @param title The title of the screen
-     * @param label The label to be shown above the text input field
+     * @param parent   The parent screen
+     * @param title    The title of the screen
+     * @param label    The label to be shown above the text input field
      * @param callback The action to be performed when the value is changed
-     * @param last The last known value
-     * @param manager The config manager, used to save the config
+     * @param last     The last known value
+     * @param manager  The config manager, used to save the config
      */
     protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
         super(title);
@@ -47,7 +49,7 @@ public abstract class TextInputScreen<T> extends Screen {
 
     @Override
     protected void init() {
-        final ButtonWidget doneButton = new ButtonWidget(this.width / 2 - 100, this.height / 4 + 96 + 12, 200, 20, ScreenTexts.DONE, button -> this.onClose());
+        final ButtonWidget doneButton = Ukutils.doneButton(this.width, this.height, this.parent);
         textField = new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label);
         textField.setText(String.valueOf(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
@@ -59,6 +61,7 @@ public abstract class TextInputScreen<T> extends Screen {
 
     /**
      * Converts the contents of the text field to the type needed.
+     *
      * @param value the value of the text field, given by the user
      * @return an empty optional is the value is incorrect, else the converted value
      */
