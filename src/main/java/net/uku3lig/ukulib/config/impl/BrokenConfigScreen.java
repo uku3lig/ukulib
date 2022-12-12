@@ -59,8 +59,7 @@ public class BrokenConfigScreen extends Screen {
         drawCenteredTextWithShadow(matrices, textRenderer, Text.of("There was an issue with this config screen.").asOrderedText(), width / 2, 100, 0xFFFFFF);
         drawCenteredTextWithShadow(matrices, textRenderer, Text.of("Please report this issue to the mod author.").asOrderedText(), width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFF);
 
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Upload logs to mclo.gs"), button -> uploadLogs())
-                .dimensions(this.width / 2 - 100, this.height - 51, 200, 20).build());
+        this.addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, Text.of("Upload logs to mclo.gs"), button -> uploadLogs()));
         this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
         super.render(matrices, mouseX, mouseY, delta);
     }

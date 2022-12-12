@@ -2,16 +2,20 @@ package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
+
+import java.util.List;
 
 /**
  * A screen used to edit a config.
@@ -81,7 +85,12 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        render(matrices, buttonList, mouseX, mouseY, delta);
+        this.renderBackground(matrices);
+        this.buttonList.render(matrices, mouseX, mouseY, delta);
+        DrawableHelper.drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        super.render(matrices, mouseX, mouseY, delta);
+        List<OrderedText> list = GameOptionsScreen.getHoveredButtonTooltip(this.buttonList, mouseX, mouseY);
+        this.renderOrderedTooltip(matrices, list, mouseX, mouseY);
     }
 
     @Override

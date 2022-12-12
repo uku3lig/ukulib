@@ -47,9 +47,7 @@ public abstract class PositionSelectScreen extends Screen {
     @Override
     protected void init() {
         int textWidth = textRenderer.getWidth(ScreenTexts.DONE);
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, b -> close())
-                .dimensions(this.width - 20 - textWidth, 10, 10 + textWidth, 20)
-                .build());
+        this.addDrawableChild(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> close()));
     }
 
     @Override

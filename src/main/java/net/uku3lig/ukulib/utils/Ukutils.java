@@ -106,9 +106,8 @@ public class Ukutils {
      * @return The generated button
      */
     public static ButtonWidget doneButton(int width, int height, Screen parent) {
-        return ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
-                .dimensions(width / 2 - 100, height - 27, 200, 20)
-                .build();
+        return new ButtonWidget(width / 2 - 100, height - 27, 200, 20, ScreenTexts.DONE,
+                button -> MinecraftClient.getInstance().setScreen(parent));
     }
 
     /**
