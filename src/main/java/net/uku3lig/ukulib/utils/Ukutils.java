@@ -43,14 +43,14 @@ public class Ukutils {
     }
 
     /**
-     * Creates a {@link SimpleOption} which acts as a simple button.
+     * Creates a {@link SimpleOption} which acts as a simple button that opens a screen when clicked.
      * Equivalent to {@link Ukutils#createOpenButton(String, Text, UnaryOperator) createOpenButton(key, Text.of(String.valueOf(value)), callback)}.
      *
      * @param key The translation key of the button text
      * @param value The value to be displayed after the colon
      * @param callback The getter for the screen to be opened when the button is clicked
      * @return The generated option
-     * @see Ukutils#createButton(String, Text, Consumer)
+     * @see Ukutils#createOpenButton(String, Text, UnaryOperator)
      */
     public static SimpleOption<Boolean> createOpenButton(String key, Object value, UnaryOperator<Screen> callback) {
         return createOpenButton(key, Text.of(String.valueOf(value)), callback);
