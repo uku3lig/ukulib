@@ -4,13 +4,12 @@ import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonListWidget;
-import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.Option;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 /**
  * A screen used to edit a config.
@@ -77,10 +76,8 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends Screen 
     /**
      * Draws the buttons in the footer.
      */
-    @SuppressWarnings("ConstantConditions")
     protected void drawFooterButtons() {
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"),
-                button -> this.minecraft.openScreen(this.parent)));
+        this.addButton(Ukutils.doneButton(this.width, this.height, this.parent));
     }
 
     @Override
