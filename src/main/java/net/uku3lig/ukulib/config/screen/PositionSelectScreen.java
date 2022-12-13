@@ -4,7 +4,6 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.resource.language.I18n;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.LiteralText;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.lwjgl.glfw.GLFW;
@@ -100,17 +99,17 @@ public abstract class PositionSelectScreen extends Screen {
     /**
      * Draws the screen and all the components in it.
      * Called in {@link PositionSelectScreen#render(int, int, float)}.
-     * @param matrices The matrix stack
      * @param mouseX The x position of the mouse
      * @param mouseY The y position of the mouse
      * @param delta The delta time
      */
-    public abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    public abstract void draw(int mouseX, int mouseY, float delta);
 
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         this.renderBackground();
         this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
+        draw(mouseX, mouseY, delta);
         super.render(mouseX, mouseY, delta);
     }
 }
