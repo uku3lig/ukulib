@@ -1,6 +1,9 @@
 name: codeql analysis
 
-on: push
+on:
+  push:
+    tags-ignore:
+      - '**'
 
 jobs:
   analyze:
