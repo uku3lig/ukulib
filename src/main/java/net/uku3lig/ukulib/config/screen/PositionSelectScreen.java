@@ -2,10 +2,10 @@ package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.util.math.MatrixStack;
-import net.minecraft.text.Text;
+import net.minecraft.text.LiteralText;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.lwjgl.glfw.GLFW;
 
@@ -36,7 +36,7 @@ public abstract class PositionSelectScreen extends Screen {
      * @param callback The action to be performed when the position is changed
      */
     protected PositionSelectScreen(Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
-        super(Text.of("Position Select"));
+        super(new LiteralText("Position Select"));
         this.parent = parent;
         this.x = x;
         this.y = y;
@@ -46,8 +46,8 @@ public abstract class PositionSelectScreen extends Screen {
 
     @Override
     protected void init() {
-        int textWidth = textRenderer.getWidth(ScreenTexts.DONE);
-        this.addButton(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> onClose()));
+        int textWidth = font.getStringWidth(I18n.translate("gui.done"));
+        this.addButton(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, I18n.translate("gui.done"), b -> onClose()));
     }
 
     @Override
@@ -99,7 +99,7 @@ public abstract class PositionSelectScreen extends Screen {
 
     /**
      * Draws the screen and all the components in it.
-     * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
+     * Called in {@link PositionSelectScreen#render(int, int, float)}.
      * @param matrices The matrix stack
      * @param mouseX The x position of the mouse
      * @param mouseY The y position of the mouse
@@ -108,10 +108,9 @@ public abstract class PositionSelectScreen extends Screen {
     public abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        draw(matrices, mouseX, mouseY, delta);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(int mouseX, int mouseY, float delta) {
+        this.renderBackground();
+        this.drawCenteredString(this.font, this.title.asFormattedString(), this.width / 2, 20, 0xFFFFFF);
+        super.render(mouseX, mouseY, delta);
     }
 }

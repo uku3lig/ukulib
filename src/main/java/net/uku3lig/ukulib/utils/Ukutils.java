@@ -5,8 +5,10 @@ import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.options.CyclingOption;
 import net.minecraft.client.options.Option;
+import net.minecraft.client.resource.language.I18n;
 import net.minecraft.text.LiteralText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
@@ -111,7 +113,7 @@ public class Ukutils {
      * @return The generated button
      */
     public static ButtonWidget doneButton(int width, int height, Screen parent) {
-        return new ButtonWidget(width / 2 - 100, height - 27, 200, 20, ScreenTexts.DONE,
+        return new ButtonWidget(width / 2 - 100, height - 27, 200, 20, I18n.translate("gui.done"),
                 button -> MinecraftClient.getInstance().openScreen(parent));
     }
 
@@ -127,16 +129,16 @@ public class Ukutils {
      * @param height       The height of the icon
      * @return The tuple of coordinates
      */
-    public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
+    public static Tuple2<Integer, Integer> getTextCoords(String text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
         int rx = x - ((screenWidth + width) / 2);
-        int textX = x + (width / 2) - (textRenderer.getWidth(text) / 2); // center
+        int textX = x + (width / 2) - (textRenderer.getStringWidth(text) / 2); // center
         int textY = y + height + 2 - textRenderer.fontHeight; // center
 
         if (Math.abs(rx) >= 2) {
             textY = y + height - (textRenderer.fontHeight / 2); // left/right
 
             if (rx < 0) textX = x + width + 2; // left
-            else textX = x - 2 - textRenderer.getWidth(text); // right
+            else textX = x - 2 - textRenderer.getStringWidth(text); // right
         }
 
         return new Tuple2<>(textX, textY);
@@ -151,9 +153,9 @@ public class Ukutils {
      * @param x            The x coordinate of the icon
      * @param y            The y coordinate of the icon
      * @return The tuple of coordinates
-     * @see Ukutils#getTextCoords(Text, int, TextRenderer, int, int, int, int)
+     * @see Ukutils#getTextCoords(String, int, TextRenderer, int, int, int, int)
      */
-    public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y) {
+    public static Tuple2<Integer, Integer> getTextCoords(String text, int screenWidth, TextRenderer textRenderer, int x, int y) {
         return getTextCoords(text, screenWidth, textRenderer, x, y, 16, 16);
     }
 
