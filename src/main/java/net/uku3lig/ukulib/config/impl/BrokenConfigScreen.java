@@ -11,11 +11,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.ConfirmChatLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.resource.language.I18n;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
-import net.minecraft.text.LiteralText;
 import net.minecraft.util.Util;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.File;
 import java.io.IOException;
@@ -52,7 +51,6 @@ public class BrokenConfigScreen extends Screen {
         MinecraftClient.getInstance().openScreen(parent);
     }
 
-    @SuppressWarnings("ConstantConditions")
     @Override
     public void render(int mouseX, int mouseY, float delta) {
         this.renderBackground();
@@ -60,7 +58,7 @@ public class BrokenConfigScreen extends Screen {
         drawCenteredString(font, "Please report this issue to the mod author.", width / 2, 100 + font.fontHeight + 4, 0xFFFFFF);
 
         this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, "Upload logs to mclo.gs", button -> uploadLogs()));
-        this.addButton(new ButtonWidget(this.width / 2 - 100, this.height - 27, 200, 20, I18n.translate("gui.done"), button -> this.minecraft.openScreen(this.parent)));
+        this.addButton(Ukutils.doneButton(this.width, this.height, this.parent));
         super.render(mouseX, mouseY, delta);
     }
 
