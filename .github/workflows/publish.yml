@@ -1,7 +1,9 @@
 name: publish
 
 on:
-  - push
+  push:
+    tags-ignore:
+      - '**'
 
 jobs:
   publish:
