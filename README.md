@@ -39,7 +39,7 @@ dependencies {
 <details>
     <summary><b>Development versions</b></summary>
 
-<a href="https://github.com/uku3lig/ukulib/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/workflow/status/uku3lig/ukulib/gradle%20ci"></a>
+<a href="https://github.com/uku3lig/ukulib/actions"><img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/uku3lig/ukulib/build.yml?branch=1.19.3"></a>
 <a href="https://maven.uku3lig.net/#/snapshots/net/uku3lig/ukulib"><img alt="Maven metadata URL" src="https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.uku3lig.net%2Fsnapshots%2Fnet%2Fuku3lig%2Fukulib%2Fmaven-metadata.xml"></a>
     
 Development version numbers end with `-build.<build number>`, e.g. `0.2.2+1.19.2-build.65`. <br>
