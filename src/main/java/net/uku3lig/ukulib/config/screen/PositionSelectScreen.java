@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.utils.Ukutils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.BiConsumer;
@@ -66,8 +67,8 @@ public abstract class PositionSelectScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!super.mouseClicked(mouseX, mouseY, button)) {
-            this.x = (int) mouseX;
-            this.y = (int) mouseY;
+            this.x = (int) Ukutils.bound(mouseX, 0, this.width);
+            this.y = (int) Ukutils.bound(mouseY, 0, this.height);
         }
 
         return true;
@@ -87,6 +88,10 @@ public abstract class PositionSelectScreen extends Screen {
                     return false;
                 }
             }
+
+            // make sure they are within bounds
+            this.x = Ukutils.bound(x, 0, this.width);
+            this.y = Ukutils.bound(y, 0, this.height);
         }
 
         return true;
