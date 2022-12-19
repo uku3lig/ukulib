@@ -7,6 +7,7 @@ import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.utils.Ukutils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.BiConsumer;
@@ -28,11 +29,13 @@ public abstract class PositionSelectScreen extends Screen {
     private final BiConsumer<Integer, Integer> callback;
 
     /**
-     * Creates a position select screen.
-     * @param parent The parent screen
-     * @param x The initial x position
-     * @param y The initial y position
-     * @param manager The config manager, used to save the config
+     * Creates a position select screen. If any of <code>x</code> or <code>y</code> is passed as <code>-1</code>,
+     * the screen will use the default values.
+     *
+     * @param parent   The parent screen
+     * @param x        The initial x position
+     * @param y        The initial y position
+     * @param manager  The config manager, used to save the config
      * @param callback The action to be performed when the position is changed
      */
     protected PositionSelectScreen(Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
@@ -46,8 +49,11 @@ public abstract class PositionSelectScreen extends Screen {
 
     @Override
     protected void init() {
-        int textWidth = textRenderer.getWidth(ScreenTexts.DONE);
-        this.addDrawableChild(new ButtonWidget(this.width - 20 - textWidth, 10, 10 + textWidth, 20, ScreenTexts.DONE, b -> close()));
+        this.addDrawableChild(new ButtonWidget(this.width - 40, 10, 30, 20, ScreenTexts.DONE, b -> close()));
+        this.addDrawableChild(new ButtonWidget(this.width - 40, 35, 30, 20, Text.of("Default"), b -> {
+            this.x = -1;
+            this.y = -1;
+        }));
     }
 
     @Override
@@ -64,8 +70,8 @@ public abstract class PositionSelectScreen extends Screen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!super.mouseClicked(mouseX, mouseY, button)) {
-            this.x = (int) mouseX;
-            this.y = (int) mouseY;
+            this.x = (int) Ukutils.bound(mouseX, 0, this.width);
+            this.y = (int) Ukutils.bound(mouseY, 0, this.height);
         }
 
         return true;
@@ -85,6 +91,10 @@ public abstract class PositionSelectScreen extends Screen {
                     return false;
                 }
             }
+
+            // make sure they are within bounds
+            this.x = Ukutils.bound(x, 0, this.width);
+            this.y = Ukutils.bound(y, 0, this.height);
         }
 
         return true;
@@ -93,18 +103,55 @@ public abstract class PositionSelectScreen extends Screen {
     /**
      * Draws the screen and all the components in it.
      * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
+     *
      * @param matrices The matrix stack
-     * @param mouseX The x position of the mouse
-     * @param mouseY The y position of the mouse
-     * @param delta The delta time
+     * @param mouseX   The x position of the mouse
+     * @param mouseY   The y position of the mouse
+     * @param delta    The delta time
+     * @param x        The x position of the element
+     * @param y        The y position of the element
      */
-    public abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta, int x, int y);
+
+    /**
+     * <b>Deprecated, use {@link PositionSelectScreen#draw(MatrixStack, int, int, float, int, int)} instead.</b>
+     * <p>
+     * Draws the screen and all the components in it, in their default position.
+     * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
+     *
+     * @param matrices The matrix stack
+     * @param mouseX   The x position of the mouse
+     * @param mouseY   The y position of the mouse
+     * @param delta    The delta time
+     * @deprecated since 0.4.1, for removal in 0.5
+     */
+    @Deprecated(forRemoval = true)
+    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
+
+    /**
+     * Draws the screen and all the components in it, in their default position.
+     * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
+     *
+     * @param matrices The matrix stack
+     * @param mouseX   The x position of the mouse
+     * @param mouseY   The y position of the mouse
+     * @param delta    The delta time
+     */
+    protected abstract void drawDefault(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        if (x == -1 || y == -1) {
+            drawDefault(matrices, mouseX, mouseY, delta);
+        } else {
+            draw(matrices, mouseX, mouseY, delta, x, y);
+        }
+
+        // for removal
         draw(matrices, mouseX, mouseY, delta);
+
         super.render(matrices, mouseX, mouseY, delta);
     }
 }

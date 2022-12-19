@@ -151,6 +151,40 @@ public class Ukutils {
     }
 
     /**
+     * Returns the value, keeping it between two bounds.
+     * @param n The value
+     * @param min The bottom bound
+     * @param max The top bound
+     * @return The bounded value
+     */
+    public static double bound(double n, double min, double max) {
+        if (min > max) {
+            double tmp = max;
+            max = min;
+            min = tmp;
+        }
+
+        return Math.min(Math.max(n, min), max);
+    }
+
+    /**
+     * Returns the value, keeping it between two integer bounds.
+     * @param n The value
+     * @param min The bottom bound
+     * @param max The top bound
+     * @return The bounded value
+     */
+    public static int bound(int n, int min, int max) {
+        if (min > max) {
+            int tmp = max;
+            max = min;
+            min = tmp;
+        }
+
+        return Math.min(Math.max(n, min), max);
+    }
+
+    /**
      * Simple 2-tuple.
      * @param t1 The first element
      * @param t2 The second element

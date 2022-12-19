@@ -2,8 +2,10 @@ name: publish
 
 on:
   push:
+    branches:
+      - '*'
     tags-ignore:
-      - '**'
+      - '*'
 
 jobs:
   publish:
