@@ -2,6 +2,8 @@ name: codeql analysis
 
 on:
   push:
+    branches:
+      - '*'
     tags-ignore:
       - '*'
 
