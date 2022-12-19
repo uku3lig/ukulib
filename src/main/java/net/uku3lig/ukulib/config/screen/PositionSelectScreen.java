@@ -105,7 +105,7 @@ public abstract class PositionSelectScreen extends Screen {
      * @param mouseY The y position of the mouse
      * @param delta The delta time
      */
-    public abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
