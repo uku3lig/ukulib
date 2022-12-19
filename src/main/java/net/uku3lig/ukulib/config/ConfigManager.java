@@ -63,7 +63,7 @@ public class ConfigManager<T extends IConfig<T>> {
     }
 
     /**
-     * Replaces the current config with a new one.
+     * Replaces the current config with a new one, serializing it in the process.
      * @param newConfig The new config
      */
     public void replaceConfig(T newConfig) {
