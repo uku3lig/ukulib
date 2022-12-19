@@ -3,7 +3,7 @@ name: codeql analysis
 on:
   push:
     tags-ignore:
-      - '**'
+      - '*'
 
 jobs:
   analyze:
