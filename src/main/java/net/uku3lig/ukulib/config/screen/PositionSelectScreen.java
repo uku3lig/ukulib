@@ -17,14 +17,8 @@ import java.util.function.BiConsumer;
  */
 public abstract class PositionSelectScreen extends Screen {
     private final Screen parent;
-    /**
-     * The x position of the element.
-     */
-    protected int x;
-    /**
-     * The y position of the element.
-     */
-    protected int y;
+    private int x;
+    private int y;
     private final ConfigManager<?> manager;
     private final BiConsumer<Integer, Integer> callback;
 
@@ -114,21 +108,6 @@ public abstract class PositionSelectScreen extends Screen {
     protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta, int x, int y);
 
     /**
-     * <b>Deprecated, use {@link PositionSelectScreen#draw(MatrixStack, int, int, float, int, int)} instead.</b>
-     * <p>
-     * Draws the screen and all the components in it, in their default position.
-     * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
-     *
-     * @param matrices The matrix stack
-     * @param mouseX   The x position of the mouse
-     * @param mouseY   The y position of the mouse
-     * @param delta    The delta time
-     * @deprecated since 0.4.1, for removal in 0.5
-     */
-    @Deprecated(forRemoval = true)
-    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
-
-    /**
      * Draws the screen and all the components in it, in their default position.
      * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
      *
@@ -137,7 +116,9 @@ public abstract class PositionSelectScreen extends Screen {
      * @param mouseY   The y position of the mouse
      * @param delta    The delta time
      */
-    protected abstract void drawDefault(MatrixStack matrices, int mouseX, int mouseY, float delta);
+    protected void drawDefault(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+        draw(matrices, mouseX, mouseY, delta, 5, 5);
+    }
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
@@ -148,10 +129,6 @@ public abstract class PositionSelectScreen extends Screen {
         } else {
             draw(matrices, mouseX, mouseY, delta, x, y);
         }
-
-        // for removal
-        draw(matrices, mouseX, mouseY, delta);
-
         super.render(matrices, mouseX, mouseY, delta);
     }
 }
