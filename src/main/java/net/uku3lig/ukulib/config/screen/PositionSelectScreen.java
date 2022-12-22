@@ -17,7 +17,13 @@ import java.util.function.BiConsumer;
  */
 public abstract class PositionSelectScreen extends Screen {
     private final Screen parent;
+    /**
+     * The x position of the element
+     */
     protected int x;
+    /**
+     * The y position of the element
+     */
     protected int y;
     private final ConfigManager<?> manager;
     private final BiConsumer<Integer, Integer> callback;
