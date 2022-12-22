@@ -17,8 +17,8 @@ import java.util.function.BiConsumer;
  */
 public abstract class PositionSelectScreen extends Screen {
     private final Screen parent;
-    private int x;
-    private int y;
+    protected int x;
+    protected int y;
     private final ConfigManager<?> manager;
     private final BiConsumer<Integer, Integer> callback;
 
@@ -106,10 +106,8 @@ public abstract class PositionSelectScreen extends Screen {
      * @param mouseX   The x position of the mouse
      * @param mouseY   The y position of the mouse
      * @param delta    The delta time
-     * @param x        The x position of the element
-     * @param y        The y position of the element
      */
-    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta, int x, int y);
+    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta);
 
     /**
      * Draws the screen and all the components in it, in their default position.
@@ -121,7 +119,7 @@ public abstract class PositionSelectScreen extends Screen {
      * @param delta    The delta time
      */
     protected void drawDefault(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        draw(matrices, mouseX, mouseY, delta, 5, 5);
+        draw(matrices, mouseX, mouseY, delta);
     }
 
     @Override
@@ -131,7 +129,7 @@ public abstract class PositionSelectScreen extends Screen {
         if (x == -1 || y == -1) {
             drawDefault(matrices, mouseX, mouseY, delta);
         } else {
-            draw(matrices, mouseX, mouseY, delta, x, y);
+            draw(matrices, mouseX, mouseY, delta);
         }
         super.render(matrices, mouseX, mouseY, delta);
     }
