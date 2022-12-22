@@ -128,6 +128,9 @@ public abstract class PositionSelectScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawCenteredText(matrices, this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFF55);
+        drawCenteredText(matrices, this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFF);
+
         if (x == -1 || y == -1) {
             drawDefault(matrices, mouseX, mouseY, delta);
         } else {
