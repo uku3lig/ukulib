@@ -43,8 +43,8 @@ public abstract class PositionSelectScreen extends Screen {
 
     @Override
     protected void init() {
-        this.addDrawableChild(new ButtonWidget(this.width - 40, 10, 30, 20, ScreenTexts.DONE, b -> close()));
-        this.addDrawableChild(new ButtonWidget(this.width - 40, 35, 30, 20, Text.of("Default"), b -> {
+        this.addDrawableChild(new ButtonWidget(this.width - 60, 10, 50, 20, ScreenTexts.DONE, b -> close()));
+        this.addDrawableChild(new ButtonWidget(this.width - 60, 35, 50, 20, Text.of("Default"), b -> {
             this.x = -1;
             this.y = -1;
         }));
@@ -124,6 +124,9 @@ public abstract class PositionSelectScreen extends Screen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         drawCenteredText(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawCenteredText(matrices, this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFF55);
+        drawCenteredText(matrices, this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFF);
+
         if (x == -1 || y == -1) {
             drawDefault(matrices, mouseX, mouseY, delta);
         } else {
