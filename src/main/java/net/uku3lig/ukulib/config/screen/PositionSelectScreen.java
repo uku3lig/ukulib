@@ -44,13 +44,13 @@ public abstract class PositionSelectScreen extends Screen {
     @Override
     protected void init() {
         this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, b -> close())
-                .dimensions(this.width - 40, 10, 30, 20)
+                .dimensions(this.width - 60, 10, 50, 20)
                 .build());
         this.addDrawableChild(ButtonWidget.builder(Text.of("Default"), b -> {
                     this.x = -1;
                     this.y = -1;
                 })
-                .dimensions(this.width - 40, 35, 30, 20)
+                .dimensions(this.width - 60, 35, 50, 20)
                 .build());
     }
 
