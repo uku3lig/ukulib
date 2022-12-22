@@ -123,12 +123,12 @@ public class Ukutils {
      * @return The tuple of coordinates
      */
     public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
-        int rx = x - ((screenWidth + width) / 2);
+        int rx = x - ((screenWidth - width) / 2);
         int textX = x + (width / 2) - (textRenderer.getWidth(text) / 2); // center
         int textY = y + height + 2 - textRenderer.fontHeight; // center
 
         if (Math.abs(rx) >= 2) {
-            textY = y + height - (textRenderer.fontHeight / 2); // left/right
+            textY = y + (height / 2) - (textRenderer.fontHeight / 2); // left/right
 
             if (rx < 0) textX = x + width + 2; // left
             else textX = x - 2 - textRenderer.getWidth(text); // right
