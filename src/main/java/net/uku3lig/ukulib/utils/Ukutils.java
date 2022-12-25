@@ -6,6 +6,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 
 import java.util.function.Consumer;
@@ -183,6 +184,16 @@ public class Ukutils {
         }
 
         return Math.min(Math.max(n, min), max);
+    }
+
+    public static String getText(OrderedText text) {
+        StringBuilder builder = new StringBuilder();
+        text.accept((index, style, codePoint) -> {
+            builder.append(Character.toChars(codePoint));
+            return true;
+        });
+
+        return builder.toString();
     }
 
     /**
