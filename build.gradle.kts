@@ -1,3 +1,5 @@
+import org.ajoberstar.grgit.Grgit
+
 plugins {
     id("fabric-loom") version "1.0-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
@@ -135,7 +137,8 @@ fun getVersionMetadata(): String {
         return "-build.${buildId}"
     }
 
-    if (grgit.head() != null) {
+    val grgit = Grgit.open(mapOf("currentDir" to project.rootDir))
+    if (grgit != null) {
         val head = grgit.head()
         var id: String = head.abbreviatedId
 
