@@ -20,8 +20,7 @@ import java.util.function.Consumer;
  * @param <T> The type of the value.
  */
 @Slf4j
-public abstract class TextInputScreen<T> extends Screen {
-    private final Screen parent;
+public abstract class TextInputScreen<T> extends CloseableScreen {
     private final Text label;
     private final Consumer<T> callback;
     private final T last;
@@ -40,8 +39,7 @@ public abstract class TextInputScreen<T> extends Screen {
      * @param manager  The config manager, used to save the config
      */
     protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
-        super(title);
-        this.parent = parent;
+        super(title, parent);
         this.label = label;
         this.callback = callback;
         this.last = last;
