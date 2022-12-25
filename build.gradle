@@ -1,23 +1,19 @@
 plugins {
-    id 'fabric-loom' version '1.0-SNAPSHOT'
-    id 'io.github.juuxel.loom-quiltflower' version '1.8.0'
-    id "io.freefair.lombok" version "6.6"
+    id "fabric-loom" version "1.0-SNAPSHOT"
+    id "io.github.juuxel.loom-quiltflower" version "1.8.0"
+    id "io.freefair.lombok" version "6.6.1"
+    id "org.ajoberstar.grgit" version "5.0.0-rc.3"
 
-    id 'maven-publish'
+    id "maven-publish"
     id "com.modrinth.minotaur" version "2.+"
 }
 
-def ENV = System.getenv()
-def build_number = ENV.BUILD_NUMBER ?: "unknown"
-
-version = "${project.mod_version}+${project.minecraft_version}" + (ENV.PUBLISH_RELEASE ? "" : "-build.${build_number}")
+version = "${project.mod_version}+${project.minecraft_version}${getVersionMetadata()}"
 group = project.maven_group
 
-if (ENV.PUBLISH_RELEASE) {
+if (System.getenv().PUBLISH_RELEASE) {
     publish.finalizedBy "modrinth"
 }
-
-tasks.modrinth.dependsOn(tasks.modrinthSyncBody)
 
 loom {
     accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
@@ -116,4 +112,32 @@ modrinth {
     loaders = ["fabric", "quilt"]
     changelog = "See https://github.com/uku3lig/ukulib/releases/tag/${project.version}"
     syncBodyFrom = rootProject.file("README.md").text
+}
+
+def getVersionMetadata() {
+    def ENV = System.getenv()
+
+    if (ENV.PUBLISH_RELEASE) return ""
+
+    def build_id = ENV.BUILD_NUMBER
+
+    // CI builds only
+    if (build_id != null) {
+        return "-build.${build_id}"
+    }
+
+    if (grgit != null) {
+        def head = grgit.head()
+        def id = head.abbreviatedId
+
+        // Flag the build if the build tree is not clean
+        if (!grgit.status().clean) {
+            id += "-dirty"
+        }
+
+        return "-rev.${id}"
+    }
+
+    // No tracking information could be found about the build
+    return "-unknown"
 }
