@@ -60,7 +60,7 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
      * @param value The value of the text field, given by the user
      * @return An empty optional is the value is incorrect, else the converted value
      */
-    public abstract Optional<T> convert(String value);
+    protected abstract Optional<T> convert(String value);
 
     /**
      * Formats the raw value to a String. Useful when String#valueOf doesn't yield the correct result.
@@ -68,7 +68,7 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
      * @param value The value to format
      * @return A string representation of the value
      */
-    public String format(T value) {
+    protected String format(T value) {
         return String.valueOf(value);
     }
 
