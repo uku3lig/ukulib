@@ -22,13 +22,11 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     @Override
     protected void init() {
         super.init();
-        addDrawableChild(ButtonWidget.builder(Text.of("Open Web Color Picker"), button ->
-                        MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
-                            if (confirmed) Util.getOperatingSystem().open("https://colors-picker.com/hex-color-picker/");
-                            MinecraftClient.getInstance().setScreen(this);
-                        }, "https://colors-picker.com/hex-color-picker/", true)))
-                .dimensions(this.width / 2 - 100, this.height - 51, 200, 20)
-                .build());
+        addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, Text.of("Open Web Color Picker"), button ->
+                MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                    if (confirmed) Util.getOperatingSystem().open("https://colors-picker.com/hex-color-picker/");
+                    MinecraftClient.getInstance().setScreen(this);
+                }, "https://colors-picker.com/hex-color-picker/", true))));
     }
 
     @Override
