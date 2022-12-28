@@ -40,7 +40,15 @@ public class DefaultConfigSerializer<T extends IConfig<T>> implements ConfigSeri
      * @return The deserialized config
      */
     public T deserialize() {
-        if (!Files.exists(file.toPath())) {
+        if (!Files.isRegularFile(file.toPath())) {
+            File parent = file.getParentFile();
+
+            if (!parent.mkdirs() && !Files.isDirectory(parent.toPath())) {
+                log.warn("Could not create directory {}", parent.getAbsolutePath());
+            } else {
+                serialize(defaultConfig.get());
+            }
+
             return defaultConfig.get();
         }
 

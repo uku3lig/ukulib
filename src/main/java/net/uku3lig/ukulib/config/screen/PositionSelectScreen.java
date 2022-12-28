@@ -16,8 +16,7 @@ import java.util.function.BiConsumer;
 /**
  * Simple screen used to select a custom position on the screen for an element.
  */
-public abstract class PositionSelectScreen extends Screen {
-    private final Screen parent;
+public abstract class PositionSelectScreen extends CloseableScreen {
     private int x;
     private int y;
     private final ConfigManager<?> manager;
@@ -32,10 +31,26 @@ public abstract class PositionSelectScreen extends Screen {
      * @param y        The initial y position
      * @param manager  The config manager, used to save the config
      * @param callback The action to be performed when the position is changed
+     * @deprecated use the other constructor
      */
+    @Deprecated(since = "0.5")
     protected PositionSelectScreen(Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
-        super(Text.of("Position Select"));
-        this.parent = parent;
+        this(Text.of("Position Select"), parent, x, y, manager, callback);
+    }
+
+    /**
+     * Creates a position select screen. If any of <code>x</code> or <code>y</code> is passed as <code>-1</code>,
+     * the screen will use the default values.
+     *
+     * @param title    The screen's title
+     * @param parent   The parent screen
+     * @param x        The initial x position
+     * @param y        The initial y position
+     * @param manager  The config manager, used to save the config
+     * @param callback The action to be performed when the position is changed
+     */
+    protected PositionSelectScreen(Text title, Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
+        super(title, parent);
         this.x = x;
         this.y = y;
         this.manager = manager;

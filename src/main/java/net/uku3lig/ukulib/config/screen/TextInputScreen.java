@@ -21,14 +21,13 @@ import java.util.function.Consumer;
  * @param <T> The type of the value.
  */
 @Slf4j
-public abstract class TextInputScreen<T> extends Screen {
-    private final Screen parent;
+public abstract class TextInputScreen<T> extends CloseableScreen {
     private final Text label;
     private final Consumer<T> callback;
     private final T last;
     private final ConfigManager<?> manager;
 
-    private TextFieldWidget textField;
+    TextFieldWidget textField;
 
     /**
      * Creates an input screen.
@@ -41,8 +40,7 @@ public abstract class TextInputScreen<T> extends Screen {
      * @param manager  The config manager, used to save the config
      */
     protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
-        super(title);
-        this.parent = parent;
+        super(title, parent);
         this.label = label;
         this.callback = callback;
         this.last = last;
@@ -53,17 +51,27 @@ public abstract class TextInputScreen<T> extends Screen {
     protected void init() {
         final ButtonWidget doneButton = this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
         textField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label));
-        textField.setText(String.valueOf(last));
+        textField.setText(format(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
     }
 
     /**
      * Converts the contents of the text field to the type needed.
      *
-     * @param value the value of the text field, given by the user
-     * @return an empty optional is the value is incorrect, else the converted value
+     * @param value The value of the text field, given by the user
+     * @return An empty optional is the value is incorrect, else the converted value
      */
-    public abstract Optional<T> convert(String value);
+    protected abstract Optional<T> convert(String value);
+
+    /**
+     * Formats the raw value to a String. Useful when String#valueOf doesn't yield the correct result.
+     *
+     * @param value The value to format
+     * @return A string representation of the value
+     */
+    protected String format(T value) {
+        return String.valueOf(value);
+    }
 
     @Override
     public final void removed() {
