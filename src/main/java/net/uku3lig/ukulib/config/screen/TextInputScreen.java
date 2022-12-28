@@ -26,7 +26,7 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     private final T last;
     private final ConfigManager<?> manager;
 
-    private TextFieldWidget textField;
+    TextFieldWidget textField;
 
     /**
      * Creates an input screen.
@@ -50,7 +50,7 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     protected void init() {
         final ButtonWidget doneButton = this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
         textField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label));
-        textField.setText(String.valueOf(last));
+        textField.setText(format(last));
         textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
     }
 
