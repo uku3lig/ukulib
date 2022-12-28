@@ -186,6 +186,11 @@ public class Ukutils {
         return Math.min(Math.max(n, min), max);
     }
 
+    /**
+     * Retrieves the string text from an ordered text.
+     * @param text The ordered text
+     * @return The value of the text
+     */
     public static String getText(OrderedText text) {
         StringBuilder builder = new StringBuilder();
         text.accept((index, style, codePoint) -> {
