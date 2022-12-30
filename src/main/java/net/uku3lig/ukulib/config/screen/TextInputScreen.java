@@ -54,7 +54,10 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
         final ButtonWidget doneButton = this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
         textField = this.addDrawableChild(new TextFieldWidget(this.textRenderer, this.width / 2 - 100, 116, 200, 20, label));
         textField.setText(format(last));
-        textField.setChangedListener(s -> doneButton.active = convert(s).isPresent());
+        textField.setChangedListener(s -> {
+            doneButton.active = convert(s).isPresent();
+            onTextChange(s);
+        });
     }
 
     /**
@@ -73,6 +76,15 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
      */
     protected String format(T value) {
         return String.valueOf(value);
+    }
+
+    /**
+     * Called when the text field value is changed
+     * @param value The new value
+     */
+    @SuppressWarnings("unused")
+    protected void onTextChange(String value) {
+        // empty
     }
 
     @Override
