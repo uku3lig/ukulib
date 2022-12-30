@@ -34,7 +34,7 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         super.render(matrices, mouseX, mouseY, delta);
-        convert(textField.getText()).ifPresent(color -> renderColor(matrices, mouseX, mouseY, delta, color));
+        convert(getTextField().getText()).ifPresent(color -> renderColor(matrices, mouseX, mouseY, delta, color));
     }
 
     @SuppressWarnings("unused")

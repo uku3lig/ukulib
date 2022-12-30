@@ -1,5 +1,7 @@
 package net.uku3lig.ukulib.config.screen;
 
+import lombok.AccessLevel;
+import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
@@ -26,7 +28,8 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     private final T last;
     private final ConfigManager<?> manager;
 
-    TextFieldWidget textField;
+    @Getter(AccessLevel.PROTECTED)
+    private TextFieldWidget textField;
 
     /**
      * Creates an input screen.
