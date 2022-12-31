@@ -43,7 +43,9 @@ dependencies {
 
     include(implementation("com.moandjiezana.toml:toml4j:$toml4jVersion")!!)
     include(implementation("gs.mclo.java:mclogs-java:2.1.1")!!)
+
     include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabricVersion))!!)
+    include(modImplementation(fabricApi.module("fabric-command-api-v2", fabricVersion))!!)
 }
 
 tasks.processResources {
