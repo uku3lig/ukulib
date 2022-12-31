@@ -12,9 +12,24 @@ import net.uku3lig.ukulib.config.ConfigManager;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * A color selection screen.
+ */
 public class ColorSelectScreen extends TextInputScreen<Integer> {
+    /**
+     * Constant for full alpha (255) with no color. <br>
+     * Can be used like this: <code>color |= FULL_ALPHA</code>.
+     */
     public static final int FULL_ALPHA = 0xFF000000;
 
+    /**
+     * Creates a color selection screen.
+     * @param title The title of the screen
+     * @param parent The parent screen
+     * @param callback The action to be done after the screen is closed
+     * @param last The last known color
+     * @param manager The config manager
+     */
     public ColorSelectScreen(Text title, Screen parent, Consumer<Integer> callback, int last, ConfigManager<?> manager) {
         super(parent, title, Text.of("Color"), callback, last, manager);
     }
@@ -37,6 +52,14 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
         convert(getTextField().getText()).ifPresent(color -> renderColor(matrices, mouseX, mouseY, delta, color));
     }
 
+    /**
+     * Renders the selected color on the screen
+     * @param matrices The matrix stack
+     * @param mouseX The x position of the mouse
+     * @param mouseY The y position of the mouse
+     * @param delta The time delta
+     * @param color The chosen color
+     */
     @SuppressWarnings("unused")
     protected void renderColor(MatrixStack matrices, int mouseX, int mouseY, float delta, int color) {
         int x = this.width / 2 + 105;

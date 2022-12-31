@@ -8,6 +8,9 @@ import net.uku3lig.ukulib.config.screen.TextInputScreen;
 import java.util.Optional;
 import java.util.function.Consumer;
 
+/**
+ * Basic implementation of {@link TextInputScreen} used to input a {@link String} of any type.
+ */
 public class StringInputScreen extends TextInputScreen<String> {
     /**
      * Creates an input screen.

@@ -16,13 +16,30 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 
+/**
+ * An argument type which represents players. Can only be used in client commands.
+ */
 public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.PlayerSelector> {
+    /**
+     * The exception thrown when the selected player is not found.
+     */
     public static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("name.entity.notfound.player"));
 
+    /**
+     * Returns a new instance.
+     * @return The instance
+     */
     public static PlayerArgumentType player() {
         return new PlayerArgumentType();
     }
 
+    /**
+     * Gets the player passed to the command.
+     * @param name The name of the argument
+     * @param context The command context
+     * @return The player entity
+     * @throws CommandSyntaxException if the player is not found
+     */
     public static PlayerEntity getPlayer(String name, CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         PlayerSelector selector = context.getArgument(name, PlayerSelector.class);
 
@@ -51,6 +68,10 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
         return Collections.singleton("uku3lig");
     }
 
+    /**
+     * Simple record used to store the player name for later use
+     * @param name The player's name or {@link java.util.UUID}
+     */
     public record PlayerSelector(String name) {
     }
 }

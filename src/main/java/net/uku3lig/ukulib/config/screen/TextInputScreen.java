@@ -28,6 +28,10 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     private final T last;
     private final ConfigManager<?> manager;
 
+    /**
+     * The text field widget.
+     * @return The widget instance
+     */
     @Getter(AccessLevel.PROTECTED)
     private TextFieldWidget textField;
 
