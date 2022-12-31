@@ -75,6 +75,10 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
         return true;
     }
 
+    /**
+     * The default alpha value for the color. Default disables alpha.
+     * @return The default alpha value
+     */
     protected byte defaultAlpha() {
         return (byte) 0xFF;
     }
