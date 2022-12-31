@@ -67,16 +67,30 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
         fill(matrices, x, y, x + 20, y + 20, color);
     }
 
+    /**
+     * Sets if alpha is allowed along with the RGB color.
+     * @return <code>true</code> if allowed, <code>false</code> otherwise
+     */
+    protected boolean allowAlpha() {
+        return true;
+    }
+
+    protected byte defaultAlpha() {
+        return (byte) 0xFF;
+    }
+
     @Override
     public Optional<Integer> convert(String value) {
         try {
             value = value.replace("#", "");
-            if (value.length() != 8 && value.length() != 6) return Optional.empty();
+            if (value.length() == 6 || (value.length() == 8 && allowAlpha())) {
+                int color = Integer.parseUnsignedInt(value, 16);
+                if (color <= 0xFFFFFF) color |= (defaultAlpha() << 24);
 
-            int color = Integer.parseUnsignedInt(value, 16);
-            if (color <= 0xFFFFFF) color |= FULL_ALPHA;
-
-            return Optional.of(color);
+                return Optional.of(color);
+            } else {
+                return Optional.empty();
+            }
         } catch (Exception e) {
             return Optional.empty();
         }
@@ -84,6 +98,7 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
 
     @Override
     public String format(Integer value) {
+        if (!allowAlpha()) value &= 0x00FFFFFF;
         return "#" + Integer.toHexString(value);
     }
 }
