@@ -1,7 +1,5 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.util.math.MatrixStack;
@@ -37,11 +35,7 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     @Override
     protected void init() {
         super.init();
-        addDrawableChild(ButtonWidget.builder(Text.of("Open Web Color Picker"), button ->
-                        MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
-                            if (confirmed) Util.getOperatingSystem().open("https://colors-picker.com/hex-color-picker/");
-                            MinecraftClient.getInstance().setScreen(this);
-                        }, "https://colors-picker.com/hex-color-picker/", true)))
+        addDrawableChild(ButtonWidget.builder(Text.of("Open Web Color Picker"), button -> Util.getOperatingSystem().open("https://colors-picker.com/hex-color-picker/"))
                 .dimensions(this.width / 2 - 100, this.height - 51, 200, 20)
                 .build());
     }
