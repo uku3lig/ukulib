@@ -1,0 +1,10 @@
+{
+  "ukulib.position": "位置",
+  "ukulib.position.topLeft": "左上角",
+  "ukulib.position.topRight": "右上角",
+  "ukulib.position.bottomLeft": "左下角",
+  "ukulib.position.bottomRight": "右下角",
+  "ukulib.position.middle": "在经验栏上方",
+  "ukulib.position.desc": "点击屏幕上的某个地方来改变元素的位置。",
+  "ukulib.position.desc.move": "按§e方向键§r来精确调整元素的位置。"
+}

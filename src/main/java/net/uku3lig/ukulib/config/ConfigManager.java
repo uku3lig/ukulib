@@ -1,11 +1,12 @@
 package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
+import net.fabricmc.loader.api.FabricLoader;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.config.serialization.DefaultConfigSerializer;
 import net.uku3lig.ukulib.utils.ReflectionUtils;
 
-import java.io.File;
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 /**
@@ -50,9 +51,9 @@ public class ConfigManager<T extends IConfig<T>> {
      * @param <T> The type of the config
      */
     public static <T extends IConfig<T>> ConfigManager<T> create(Class<T> configClass, String name) {
-        String filename = "./config/" + name + ".toml";
+        Path path = FabricLoader.getInstance().getConfigDir().resolve(name + ".toml");
         Supplier<T> defaultConfig = () -> ReflectionUtils.newInstance(configClass).defaultConfig();
-        return new ConfigManager<>(new DefaultConfigSerializer<>(configClass, new File(filename), defaultConfig));
+        return new ConfigManager<>(new DefaultConfigSerializer<>(configClass, path.toFile(), defaultConfig));
     }
 
     /**
@@ -63,7 +64,7 @@ public class ConfigManager<T extends IConfig<T>> {
     }
 
     /**
-     * Replaces the current config with a new one.
+     * Replaces the current config with a new one, serializing it in the process.
      * @param newConfig The new config
      */
     public void replaceConfig(T newConfig) {

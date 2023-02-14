@@ -9,6 +9,7 @@ import net.minecraft.client.gui.screen.ScreenTexts;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.CyclingOption;
 import net.minecraft.client.option.Option;
+import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.text.TranslatableText;
 
@@ -129,12 +130,12 @@ public class Ukutils {
      * @return The tuple of coordinates
      */
     public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
-        int rx = x - ((screenWidth + width) / 2);
+        int rx = x - ((screenWidth - width) / 2);
         int textX = x + (width / 2) - (textRenderer.getWidth(text) / 2); // center
         int textY = y + height + 2 - textRenderer.fontHeight; // center
 
         if (Math.abs(rx) >= 2) {
-            textY = y + height - (textRenderer.fontHeight / 2); // left/right
+            textY = y + (height / 2) - (textRenderer.fontHeight / 2); // left/right
 
             if (rx < 0) textX = x + width + 2; // left
             else textX = x - 2 - textRenderer.getWidth(text); // right
@@ -156,6 +157,55 @@ public class Ukutils {
      */
     public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y) {
         return getTextCoords(text, screenWidth, textRenderer, x, y, 16, 16);
+    }
+
+    /**
+     * Returns the value, keeping it between two bounds.
+     * @param n The value
+     * @param min The bottom bound
+     * @param max The top bound
+     * @return The bounded value
+     */
+    public static double bound(double n, double min, double max) {
+        if (min > max) {
+            double tmp = max;
+            max = min;
+            min = tmp;
+        }
+
+        return Math.min(Math.max(n, min), max);
+    }
+
+    /**
+     * Returns the value, keeping it between two integer bounds.
+     * @param n The value
+     * @param min The bottom bound
+     * @param max The top bound
+     * @return The bounded value
+     */
+    public static int bound(int n, int min, int max) {
+        if (min > max) {
+            int tmp = max;
+            max = min;
+            min = tmp;
+        }
+
+        return Math.min(Math.max(n, min), max);
+    }
+
+    /**
+     * Retrieves the string text from an ordered text.
+     * @param text The ordered text
+     * @return The value of the text
+     */
+    public static String getText(OrderedText text) {
+        StringBuilder builder = new StringBuilder();
+        text.accept((index, style, codePoint) -> {
+            builder.append(Character.toChars(codePoint));
+            return true;
+        });
+
+        return builder.toString();
     }
 
     /**
