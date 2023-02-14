@@ -35,7 +35,7 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     @Override
     protected void init() {
         super.init();
-        addDrawableChild(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, Text.of("Open Web Color Picker"),
+        addButton(new ButtonWidget(this.width / 2 - 100, this.height - 51, 200, 20, Text.of("Open Web Color Picker"),
                 button -> Util.getOperatingSystem().open("https://colors-picker.com/hex-color-picker/")));
     }
 

@@ -23,7 +23,7 @@ public abstract class CloseableScreen extends Screen {
     }
 
     @Override
-    public void close() {
-        if (this.client != null) this.client.setScreen(parent);
+    public void onClose() {
+        if (this.client != null) this.client.openScreen(parent);
     }
 }

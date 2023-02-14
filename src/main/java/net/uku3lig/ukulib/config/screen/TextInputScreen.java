@@ -2,7 +2,7 @@ package net.uku3lig.ukulib.config.screen;
 
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.extern.slf4j.Slf4j;
+import lombok.extern.log4j.Log4j2;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -21,7 +21,7 @@ import java.util.function.Consumer;
  *
  * @param <T> The type of the value.
  */
-@Slf4j
+@Log4j2
 public abstract class TextInputScreen<T> extends CloseableScreen {
     private final Text label;
     private final Consumer<T> callback;
