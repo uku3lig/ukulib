@@ -42,7 +42,7 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         this.renderBackground(matrices);
         entrypointList.render(matrices, mouseX, mouseY, delta);
-        drawCenteredText(matrices, textRenderer, title, width / 2, 20, 0xFFFFFF);
+        drawCenteredTextWithShadow(matrices, textRenderer, title, width / 2, 20, 0xFFFFFF);
         super.render(matrices, mouseX, mouseY, delta);
     }
 }
