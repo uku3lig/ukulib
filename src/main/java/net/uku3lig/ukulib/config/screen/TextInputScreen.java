@@ -3,7 +3,6 @@ package net.uku3lig.ukulib.config.screen;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -97,11 +96,6 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
             callback.accept(t);
             manager.saveConfig();
         });
-    }
-
-    @Override
-    public void close() {
-        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override
