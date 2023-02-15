@@ -1,8 +1,8 @@
 plugins {
-    id("fabric-loom") version "1.0-SNAPSHOT"
+    id("fabric-loom") version "1.1-SNAPSHOT"
     id("io.github.juuxel.loom-quiltflower") version "1.8.0"
-    id("io.freefair.lombok") version "6.6.1"
-    id("org.ajoberstar.grgit") version "5.0.0-rc.3"
+    id("io.freefair.lombok") version "6.6.2"
+    id("org.ajoberstar.grgit") version "5.0.0"
 
     `maven-publish`
     id("com.modrinth.minotaur") version "2.+"
