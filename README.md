@@ -1,4 +1,4 @@
-![banner](https://raw.githubusercontent.com/uku3lig/ukulib/1.19/banner.png)
+![banner](https://raw.githubusercontent.com/uku3lig/ukulib/1.19.4/banner.png)
 
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.uku3lig.net%2Freleases%2Fnet%2Fuku3lig%2Fukulib%2Fmaven-metadata.xml&color=brightgreen&style=for-the-badge)](https://maven.uku3lig.net/#/releases/net/uku3lig/ukulib)
 [![Javadoc badge](https://img.shields.io/badge/javadoc-latest-blue?style=for-the-badge)](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib/latest)
