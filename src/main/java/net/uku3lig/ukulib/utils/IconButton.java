@@ -1,9 +1,7 @@
 package net.uku3lig.ukulib.utils;
 
 import com.mojang.blaze3d.systems.RenderSystem;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
-import net.minecraft.client.render.GameRenderer;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.util.Identifier;
 
@@ -32,15 +30,26 @@ public class IconButton extends TexturedButtonWidget {
     @Override
     public void renderButton(MatrixStack matrices, int mouseX, int mouseY, float delta) {
         // i love stealing minecraft's code
-        RenderSystem.setShader(GameRenderer::getPositionTexProgram);
         RenderSystem.setShaderTexture(0, WIDGETS_TEXTURE);
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, this.alpha);
         RenderSystem.enableBlend();
-        RenderSystem.defaultBlendFunc();
         RenderSystem.enableDepthTest();
-        DrawableHelper.drawTexture(matrices, this.getX(), this.getY(), 0, 46, this.width / 2, this.height);
-        DrawableHelper.drawTexture(matrices, this.getX() + this.width / 2, this.getY(), 200 - this.width / 2, 46, this.width / 2, this.height);
+        method_49697(matrices, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
 
         super.renderButton(matrices, mouseX, mouseY, delta);
+    }
+
+    /**
+     * PressableWidget#getTextureY()
+     */
+    private int getTextureY() {
+        int i = 1;
+        if (!this.active) {
+            i = 0;
+        } else if (this.isSelected()) {
+            i = 2;
+        }
+
+        return 46 + i * 20;
     }
 }
