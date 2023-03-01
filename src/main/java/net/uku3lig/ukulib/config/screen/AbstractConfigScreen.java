@@ -4,7 +4,7 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.ButtonListWidget;
+import net.minecraft.client.gui.widget.OptionListWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
@@ -30,7 +30,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
      * The widget used to display the options.
      * @see AbstractConfigScreen#getOptions(IConfig)
      */
-    protected ButtonListWidget buttonList;
+    protected OptionListWidget optionList;
 
     /**
      * Creates a config screen.
@@ -53,22 +53,22 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     @Override
     protected void init() {
         super.init();
-        buttonList = new ButtonListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
+        optionList = new OptionListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
 
         try {
-            buttonList.addAll(getOptions(manager.getConfig()));
+            optionList.addAll(getOptions(manager.getConfig()));
         } catch (Exception e) {
             log.error("Error while getting options, replacing config with the default one", e);
             manager.replaceConfig(manager.getConfig().defaultConfig());
             try {
-                buttonList.addAll(getOptions(manager.getConfig()));
+                optionList.addAll(getOptions(manager.getConfig()));
             } catch (Exception e2) {
                 log.error("Error while getting options with the default config, this is a bug", e2);
                 MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
             }
         }
 
-        this.addSelectableChild(buttonList);
+        this.addSelectableChild(optionList);
         drawFooterButtons();
     }
 
@@ -81,7 +81,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
 
     @Override
     public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        render(matrices, buttonList, mouseX, mouseY, delta);
+        render(matrices, optionList, mouseX, mouseY, delta);
     }
 
     @Override
