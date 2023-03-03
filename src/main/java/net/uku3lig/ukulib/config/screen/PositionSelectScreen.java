@@ -33,7 +33,7 @@ public abstract class PositionSelectScreen extends CloseableScreen {
      * @param callback The action to be performed when the position is changed
      * @deprecated use the other constructor
      */
-    @Deprecated(since = "0.5")
+    @Deprecated
     protected PositionSelectScreen(Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
         this(Text.of("Position Select"), parent, x, y, manager, callback);
     }

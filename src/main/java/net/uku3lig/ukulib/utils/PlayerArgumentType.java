@@ -7,6 +7,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
+import lombok.Data;
 import net.fabricmc.fabric.api.client.command.v1.FabricClientCommandSource;
 import net.minecraft.command.CommandSource;
 import net.minecraft.entity.player.PlayerEntity;
@@ -56,7 +57,8 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        if (context.getSource() instanceof FabricClientCommandSource source) {
+        if (context.getSource() instanceof FabricClientCommandSource) {
+            FabricClientCommandSource source = (FabricClientCommandSource) context.getSource();
             return CommandSource.suggestMatching(source.getWorld().getPlayers().stream().map(PlayerEntity::getEntityName), builder);
         } else {
             return CommandSource.suggestMatching(Collections.emptyList(), builder);
@@ -69,9 +71,13 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     }
 
     /**
-     * Simple record used to store the player name for later use
-     * @param name The player's name or {@link java.util.UUID}
+     * Simple POJO used to store the player name for later use
      */
-    public record PlayerSelector(String name) {
+    @Data
+    public static class PlayerSelector {
+        /**
+         * The player's name or {@link java.util.UUID}
+         */
+        private final String name;
     }
 }
