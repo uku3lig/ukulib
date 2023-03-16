@@ -2,8 +2,8 @@
 
 [![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.uku3lig.net%2Freleases%2Fnet%2Fuku3lig%2Fukulib%2Fmaven-metadata.xml&color=brightgreen&style=for-the-badge)](https://maven.uku3lig.net/#/releases/net/uku3lig/ukulib)
 [![Javadoc badge](https://img.shields.io/badge/javadoc-latest-blue?style=for-the-badge)](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib/latest)
-![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/uku3lig/ukulib?style=for-the-badge)
-![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/uku3lig/ukulib?style=for-the-badge)
+[![Code Climate maintainability](https://img.shields.io/codeclimate/maintainability/uku3lig/ukulib?style=for-the-badge)](https://codeclimate.com/github/uku3lig/ukulib)
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/uku3lig/ukulib?style=for-the-badge)](https://www.codefactor.io/repository/github/uku3lig/ukulib)
 
 The coolest fabric library mod on the internet, which has 0 (zero) dependencies. <br>
 Javadoc can be found [here](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib/latest) for the latest version, or at `https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib/VERSION` for older versions.
