@@ -76,8 +76,10 @@ java {
         toolchain.languageVersion.set(JavaLanguageVersion.of(targetJavaVersion))
     }
 
-    withSourcesJar()
-    withJavadocJar()
+    if (grgit.head() != null && grgit.status().isClean) {
+        withSourcesJar()
+        withJavadocJar()
+    }
 }
 
 tasks.jar {
