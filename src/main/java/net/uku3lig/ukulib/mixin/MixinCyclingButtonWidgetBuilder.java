@@ -34,9 +34,14 @@ public class MixinCyclingButtonWidgetBuilder<T> {
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/widget/CyclingButtonWidget;<init>(IIIILnet/minecraft/text/Text;Lnet/minecraft/text/Text;ILjava/lang/Object;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$Values;Ljava/util/function/Function;Ljava/util/function/Function;Lnet/minecraft/client/gui/widget/CyclingButtonWidget$UpdateCallback;Lnet/minecraft/client/option/SimpleOption$TooltipFactory;Z)V"),
             cancellable = true, locals = LocalCapture.CAPTURE_FAILHARD)
     private void fixText(int x, int y, int width, int height, Text optionText, CyclingButtonWidget.UpdateCallback<T> callback, CallbackInfoReturnable<CyclingButtonWidget<T>> cir, List<T> list, T object, Text text, Text text2) {
-        if (text2.contains(Ukutils.BUTTON_PLACEHOLDER)) text2 = optionText;
+        Function<T, Text> textGetter = this.valueToText;
+        if (text2.contains(Ukutils.BUTTON_PLACEHOLDER)) {
+            this.optionTextOmitted = true;
+            text2 = optionText;
+            textGetter = obj -> optionText;
+        }
 
-        CyclingButtonWidget<T> w = new CyclingButtonWidget<>(x, y, width, height, text2, optionText, this.initialIndex, object, this.values, this.valueToText, this.narrationMessageFactory, callback, this.tooltipFactory, this.optionTextOmitted);
+        CyclingButtonWidget<T> w = new CyclingButtonWidget<>(x, y, width, height, text2, optionText, this.initialIndex, object, this.values, textGetter, this.narrationMessageFactory, callback, this.tooltipFactory, this.optionTextOmitted);
         cir.setReturnValue(w);
     }
 
