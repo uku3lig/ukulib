@@ -81,17 +81,17 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     public Optional<Integer> convert(String value) {
         try {
             value = value.replace("#", "");
-            if (value.length() == 6 || (value.length() == 8 && allowAlpha())) {
+            if (value.length() == 6 || (allowAlpha() && value.length() == 8)) {
                 int color = Integer.parseUnsignedInt(value, 16);
                 if (color <= 0xFFFFFF) color |= (defaultAlpha() << 24);
 
                 return Optional.of(color);
-            } else {
-                return Optional.empty();
             }
-        } catch (Exception e) {
-            return Optional.empty();
+        } catch (Exception ignored) {
+            // problem? no color for you owo
         }
+
+        return Optional.empty();
     }
 
     @Override
