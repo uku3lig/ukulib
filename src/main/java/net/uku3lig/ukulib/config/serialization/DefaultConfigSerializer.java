@@ -7,7 +7,6 @@ import net.uku3lig.ukulib.config.IConfig;
 
 import java.io.File;
 import java.io.IOException;
-import java.lang.reflect.Field;
 import java.nio.file.Files;
 import java.util.function.Supplier;
 
@@ -53,9 +52,7 @@ public class DefaultConfigSerializer<T extends IConfig<T>> implements ConfigSeri
         }
 
         try {
-            T config = new Toml().read(file).to(configClass);
-            if (hasNullFields(config)) throw new NullPointerException("null fields were found");
-            return config;
+            return new Toml().read(file).to(configClass);
         } catch (Exception e) {
             log.warn("A corrupted configuration file was found, overwriting it with the default config", e);
             serialize(defaultConfig.get());
@@ -69,17 +66,5 @@ public class DefaultConfigSerializer<T extends IConfig<T>> implements ConfigSeri
         } catch (IOException e) {
             log.warn("Could not write config", e);
         }
-    }
-
-    private boolean hasNullFields(T instance) {
-        for (Field f : configClass.getDeclaredFields()) {
-            try {
-                if (f.get(instance) == null) return true;
-            } catch (IllegalAccessException e) {
-                log.warn("Could not access field {} in class {}", f.getName(), configClass.getSimpleName());
-            }
-        }
-
-        return false;
     }
 }
