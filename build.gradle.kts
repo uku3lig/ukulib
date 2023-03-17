@@ -26,10 +26,6 @@ if (System.getenv().containsKey("PUBLISH_RELEASE")) {
     tasks.publish.get().finalizedBy("modrinth")
 }
 
-loom {
-    accessWidenerPath.set(file("src/main/resources/ukulib.accesswidener"))
-}
-
 repositories {
     maven {
         url = uri("https://maven.uku3lig.net/releases")
