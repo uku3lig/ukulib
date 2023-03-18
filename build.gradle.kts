@@ -16,6 +16,7 @@ val mavenGroup: String by extra
 val archivesBaseName: String by extra
 val toml4jVersion: String by extra
 val fabricVersion: String by extra
+val modMenuVersion: String by extra
 
 
 version = "$modVersion+$minecraftVersion${getVersionMetadata()}"
@@ -33,6 +34,9 @@ repositories {
     maven {
         url = uri("https://maven.uku3lig.net/releases")
     }
+    maven {
+        url = uri("https://maven.terraformersmc.com/releases/")
+    }
 }
 
 dependencies {
@@ -40,6 +44,8 @@ dependencies {
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings("net.fabricmc:yarn:$yarnMappings:v2")
     modImplementation("net.fabricmc:fabric-loader:$loaderVersion")
+
+    modImplementation("com.terraformersmc:modmenu:$modMenuVersion")
 
     include(implementation("com.moandjiezana.toml:toml4j:$toml4jVersion")!!)
     include(implementation("gs.mclo.java:mclogs-java:2.1.1")!!)
