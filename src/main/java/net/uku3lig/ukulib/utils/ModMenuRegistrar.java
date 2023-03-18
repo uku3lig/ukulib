@@ -8,6 +8,9 @@ import net.uku3lig.ukulib.api.UkulibAPI;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * This class is used to integrate mods that use ukulib with Mod Menu.
+ */
 public class ModMenuRegistrar implements ModMenuApi {
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
