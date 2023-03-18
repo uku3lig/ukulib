@@ -14,4 +14,12 @@ public interface UkulibAPI {
      * @return A function that takes a parent screen and returns a config screen.
      */
     Function<Screen, AbstractConfigScreen<?>> supplyConfigScreen();
+
+    /**
+     * This method is used to enable or disable the integration with Mod Menu.
+     * @return Whether to enable the integration with Mod Menu.
+     */
+    default boolean enableModMenuIntegration() {
+        return true;
+    }
 }
