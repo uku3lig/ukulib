@@ -5,7 +5,7 @@ import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.IConfig;
 
-public abstract class AutoSavedConfigScreen<T extends IConfig<T>> extends CloseableScreen {
+public abstract class BaseConfigScreen<T extends IConfig<T>> extends CloseableScreen {
     protected final ConfigManager<T> manager;
 
     /**
@@ -14,7 +14,7 @@ public abstract class AutoSavedConfigScreen<T extends IConfig<T>> extends Closea
      * @param title  The title of the screen
      * @param parent The parent screen
      */
-    protected AutoSavedConfigScreen(Text title, Screen parent, ConfigManager<T> manager) {
+    protected BaseConfigScreen(Text title, Screen parent, ConfigManager<T> manager) {
         super(title, parent);
         this.manager = manager;
     }
