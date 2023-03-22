@@ -4,7 +4,6 @@ import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
@@ -12,7 +11,6 @@ import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 import net.uku3lig.ukulib.config.option.ButtonCreator;
 import net.uku3lig.ukulib.config.option.widget.ButtonCreatorList;
-import net.uku3lig.ukulib.utils.Ukutils;
 
 /**
  * A screen used to edit a config.
@@ -21,12 +19,7 @@ import net.uku3lig.ukulib.utils.Ukutils;
  * @param <T> The type of the config
  */
 @Slf4j
-public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
-    /**
-     * The config manager. Used to load and save the config.
-     */
-    protected final ConfigManager<T> manager;
-
+public abstract class AbstractConfigScreen<T extends IConfig<T>> extends BaseConfigScreen<T> {
     /**
      * The widget used to display the options.
      * @see AbstractConfigScreen#getOptions(IConfig)
@@ -40,8 +33,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
      * @param manager The config manager
      */
     protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
-        super(parent, MinecraftClient.getInstance().options, title);
-        this.manager = manager;
+        super(title, parent, manager);
     }
 
     /**
@@ -70,14 +62,6 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         }
 
         this.addSelectableChild(buttonList);
-        drawFooterButtons();
-    }
-
-    /**
-     * Draws the buttons in the footer.
-     */
-    protected void drawFooterButtons() {
-        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
     }
 
     @Override
@@ -86,10 +70,5 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
         buttonList.render(drawContext, mouseX, mouseY, delta);
         drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         super.render(drawContext, mouseX, mouseY, delta);
-    }
-
-    @Override
-    public void removed() {
-        manager.saveConfig();
     }
 }
