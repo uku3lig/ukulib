@@ -3,10 +3,11 @@ package net.uku3lig.ukulib.config.screen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.utils.Ukutils;
 
-public abstract class BaseConfigScreen<T extends IConfig<T>> extends CloseableScreen {
+import java.io.Serializable;
+
+public abstract class BaseConfigScreen<T extends Serializable> extends CloseableScreen {
     protected final ConfigManager<T> manager;
 
     /**

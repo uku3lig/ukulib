@@ -7,10 +7,11 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 import net.uku3lig.ukulib.config.option.ButtonCreator;
 import net.uku3lig.ukulib.config.option.widget.ButtonCreatorList;
+
+import java.io.Serializable;
 
 /**
  * A screen used to edit a config.
@@ -19,10 +20,10 @@ import net.uku3lig.ukulib.config.option.widget.ButtonCreatorList;
  * @param <T> The type of the config
  */
 @Slf4j
-public abstract class AbstractConfigScreen<T extends IConfig<T>> extends BaseConfigScreen<T> {
+public abstract class AbstractConfigScreen<T extends Serializable> extends BaseConfigScreen<T> {
     /**
      * The widget used to display the options.
-     * @see AbstractConfigScreen#getOptions(IConfig)
+     * @see AbstractConfigScreen#getOptions(Serializable)
      */
     protected ButtonCreatorList buttonList;
 
@@ -52,7 +53,7 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends BaseCon
             buttonList.addAll(getOptions(manager.getConfig()));
         } catch (Exception e) {
             log.error("Error while getting options, replacing config with the default one", e);
-            manager.replaceConfig(manager.getConfig().defaultConfig());
+            manager.replaceConfig(manager.defaultConfig());
             try {
                 buttonList.addAll(getOptions(manager.getConfig()));
             } catch (Exception e2) {

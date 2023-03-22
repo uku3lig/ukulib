@@ -6,6 +6,7 @@ import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.config.serialization.DefaultConfigSerializer;
 import net.uku3lig.ukulib.utils.ReflectionUtils;
 
+import java.io.Serializable;
 import java.nio.file.Path;
 import java.util.function.Supplier;
 
@@ -13,8 +14,11 @@ import java.util.function.Supplier;
  * Manages a config, by holding it, saving it and loading it.
  * @param <T> The type of the config
  */
-public class ConfigManager<T extends IConfig<T>> {
+public class ConfigManager<T extends Serializable> {
     private final ConfigSerializer<T> serializer;
+
+    @Getter
+    private final Class<T> configClass;
 
     /**
      * The config held by the manager.
@@ -28,7 +32,8 @@ public class ConfigManager<T extends IConfig<T>> {
      * @param serializer The serializer
      * @param config The initial config
      */
-    public ConfigManager(ConfigSerializer<T> serializer, T config) {
+    public ConfigManager(Class<T> configClass, ConfigSerializer<T> serializer, T config) {
+        this.configClass = configClass;
         this.serializer = serializer;
         this.config = config;
     }
@@ -37,8 +42,8 @@ public class ConfigManager<T extends IConfig<T>> {
      * Creates a manager which provides an initial config by deserializing the file.
      * @param serializer The serializer
      */
-    public ConfigManager(ConfigSerializer<T> serializer) {
-        this(serializer, serializer.deserialize());
+    public ConfigManager(Class<T> configClass, ConfigSerializer<T> serializer) {
+        this(configClass, serializer, serializer.deserialize());
     }
 
     /**
@@ -50,10 +55,10 @@ public class ConfigManager<T extends IConfig<T>> {
      * @return The generated config manager
      * @param <T> The type of the config
      */
-    public static <T extends IConfig<T>> ConfigManager<T> create(Class<T> configClass, String name) {
+    public static <T extends Serializable> ConfigManager<T> create(Class<T> configClass, String name) {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(name + ".toml");
-        Supplier<T> defaultConfig = () -> ReflectionUtils.newInstance(configClass).defaultConfig();
-        return new ConfigManager<>(new DefaultConfigSerializer<>(configClass, path.toFile(), defaultConfig));
+        Supplier<T> defaultConfig = () -> ReflectionUtils.newInstance(configClass);
+        return new ConfigManager<>(configClass, new DefaultConfigSerializer<>(configClass, path.toFile(), defaultConfig));
     }
 
     /**
@@ -70,5 +75,9 @@ public class ConfigManager<T extends IConfig<T>> {
     public void replaceConfig(T newConfig) {
         config = newConfig;
         serializer.serialize(newConfig);
+    }
+
+    public T defaultConfig() {
+        return ReflectionUtils.newInstance(this.configClass);
     }
 }

@@ -4,10 +4,11 @@ import net.minecraft.client.gui.tab.GridScreenTab;
 import net.minecraft.client.gui.widget.GridWidget;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.IConfig;
 import net.uku3lig.ukulib.config.option.ButtonCreator;
 
-public abstract class ButtonTab<T extends IConfig<T>> extends GridScreenTab {
+import java.io.Serializable;
+
+public abstract class ButtonTab<T extends Serializable> extends GridScreenTab {
     protected final ConfigManager<T> manager;
 
     protected ButtonTab(Text title, ConfigManager<T> manager) {

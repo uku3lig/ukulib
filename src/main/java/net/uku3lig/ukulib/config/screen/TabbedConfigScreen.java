@@ -7,9 +7,10 @@ import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.IConfig;
 
-public abstract class TabbedConfigScreen<T extends IConfig<T>> extends AbstractConfigScreen<T> {
+import java.io.Serializable;
+
+public abstract class TabbedConfigScreen<T extends Serializable> extends AbstractConfigScreen<T> {
     private TabNavigationWidget tabWidget;
     private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
 

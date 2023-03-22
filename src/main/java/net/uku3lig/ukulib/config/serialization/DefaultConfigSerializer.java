@@ -3,10 +3,10 @@ package net.uku3lig.ukulib.config.serialization;
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import lombok.extern.slf4j.Slf4j;
-import net.uku3lig.ukulib.config.IConfig;
 
 import java.io.File;
 import java.io.IOException;
+import java.io.Serializable;
 import java.nio.file.Files;
 import java.util.function.Supplier;
 
@@ -15,7 +15,7 @@ import java.util.function.Supplier;
  * @param <T> The type of the config
  */
 @Slf4j
-public class DefaultConfigSerializer<T extends IConfig<T>> implements ConfigSerializer<T> {
+public class DefaultConfigSerializer<T extends Serializable> implements ConfigSerializer<T> {
     private final Class<T> configClass;
     private final File file;
     private final Supplier<T> defaultConfig;

@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.utils;
 
 import lombok.extern.slf4j.Slf4j;
-import net.uku3lig.ukulib.config.IConfig;
 
+import java.io.Serializable;
 import java.lang.reflect.Constructor;
 import java.util.NoSuchElementException;
 
@@ -21,7 +21,7 @@ public class ReflectionUtils {
      * @param <T> The type of the class
      * @see net.uku3lig.ukulib.config.ConfigManager#create(Class, String) ConfigManager#create(Class, String)
      */
-    public static <T extends IConfig<T>> T newInstance(Class<T> klass) {
+    public static <T extends Serializable> T newInstance(Class<T> klass) {
         try {
             Constructor<T> constructor = klass.getConstructor();
             return constructor.newInstance();
