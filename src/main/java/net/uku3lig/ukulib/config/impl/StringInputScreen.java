@@ -15,15 +15,15 @@ public class StringInputScreen extends TextInputScreen<String> {
     /**
      * Creates an input screen.
      *
+     * @param key      The translation key of the title
      * @param parent   The parent screen
-     * @param title    The title of the screen
      * @param label    The label to be shown above the text input field
      * @param callback The action to be performed when the value is changed
      * @param last     The last known value
      * @param manager  The config manager, used to save the config
      */
-    public StringInputScreen(Screen parent, Text title, Text label, Consumer<String> callback, String last, ConfigManager<?> manager) {
-        super(parent, title, label, callback, last, manager);
+    public StringInputScreen(String key, Screen parent, Text label, Consumer<String> callback, String last, ConfigManager<?> manager) {
+        super(key, parent, label, callback, last, manager);
     }
 
     @Override
