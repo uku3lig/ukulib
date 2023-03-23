@@ -35,7 +35,10 @@ public enum Position implements TranslatableOption {
      */
     MIDDLE(4, "ukulib.position.middle"),
     ;
-    
+
+    /**
+     * Translation key for the position
+     */
     public static final String KEY = "ukulib.position";
 
     private final int id;
