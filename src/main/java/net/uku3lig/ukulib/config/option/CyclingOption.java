@@ -91,6 +91,38 @@ public class CyclingOption<T> implements WidgetCreator {
     }
 
     /**
+     * Creates a new option from a {@link TranslatableOption}.
+     *
+     * @param key            The translation key
+     * @param values         The values to be displayed
+     * @param initialValue   The initial value
+     * @param setter         The callback for the modified value
+     * @param tooltipFactory The tooltip factory
+     * @param <T>            The type of the option
+     * @return The newly constructed option
+     */
+    public static <T extends TranslatableOption> CyclingOption<T> ofTranslatable(
+            String key, Collection<T> values, T initialValue,
+            Consumer<T> setter, SimpleOption.TooltipFactory<T> tooltipFactory
+    ) {
+        return new CyclingOption<>(key, values, initialValue, setter, TranslatableOption::getText, tooltipFactory);
+    }
+
+    /**
+     * Creates a new option from a {@link TranslatableOption}, with an empty tooltip.
+     *
+     * @param key            The translation key
+     * @param values         The values to be displayed
+     * @param initialValue   The initial value
+     * @param setter         The callback for the modified value
+     * @param <T>            The type of the option
+     * @return The newly constructed option
+     */
+    public static <T extends TranslatableOption> CyclingOption<T> ofTranslatable(String key, Collection<T> values, T initialValue, Consumer<T> setter) {
+        return ofTranslatable(key, values, initialValue, setter, SimpleOption.emptyTooltip());
+    }
+
+    /**
      * Creates a new option based on an enum's values.
      *
      * @param key            The translation key
