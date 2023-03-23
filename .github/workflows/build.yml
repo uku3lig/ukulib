@@ -25,6 +25,16 @@ jobs:
           distribution: temurin
       - name: Checkout sources
         uses: actions/checkout@v3
+      - name: Cache/Uncache
+        uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/loom-cache
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/gradle-wrapper.properties') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
       - name: Initialize CodeQL
         uses: github/codeql-action/init@v2
         with:
