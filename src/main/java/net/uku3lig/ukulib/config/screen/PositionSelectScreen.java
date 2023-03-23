@@ -5,8 +5,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.utils.Ukutils;
 import org.lwjgl.glfw.GLFW;
 
 import java.util.function.BiConsumer;
@@ -77,8 +77,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!super.mouseClicked(mouseX, mouseY, button)) {
-            this.x = (int) Ukutils.bound(mouseX, 0, this.width);
-            this.y = (int) Ukutils.bound(mouseY, 0, this.height);
+            this.x = (int) MathHelper.clamp(mouseX, 0, this.width);
+            this.y = (int) MathHelper.clamp(mouseY, 0, this.height);
         }
 
         return true;
@@ -100,8 +100,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
             }
 
             // make sure they are within bounds
-            this.x = Ukutils.bound(x, 0, this.width);
-            this.y = Ukutils.bound(y, 0, this.height);
+            this.x = MathHelper.clamp(x, 0, this.width);
+            this.y = MathHelper.clamp(y, 0, this.height);
         }
 
         return true;
