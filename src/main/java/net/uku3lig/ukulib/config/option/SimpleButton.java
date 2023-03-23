@@ -10,8 +10,8 @@ public class SimpleButton implements ButtonCreator {
     protected final Text text;
     protected final ButtonWidget.PressAction action;
 
-    public SimpleButton(Text text) {
-        this(text, b -> {});
+    public SimpleButton(String key, ButtonWidget.PressAction action) {
+        this(Text.translatable(key), action);
     }
 
     @Override
