@@ -8,9 +8,21 @@ import net.uku3lig.ukulib.config.option.ButtonCreator;
 
 import java.io.Serializable;
 
+/**
+ * A tab made with {@link ButtonCreator} for ease of use.
+ * @param <T> The type of the config
+ */
 public abstract class ButtonTab<T extends Serializable> extends GridScreenTab {
+    /**
+     * The config manager
+     */
     protected final ConfigManager<T> manager;
 
+    /**
+     * Creates a widget tab and adds all the widgets to it
+     * @param title The title of the tab
+     * @param manager The config manager
+     */
     protected ButtonTab(Text title, ConfigManager<T> manager) {
         super(title);
         this.manager = manager;
@@ -22,9 +34,19 @@ public abstract class ButtonTab<T extends Serializable> extends GridScreenTab {
         }
     }
 
+    /**
+     * Creates a widget tab and adds all the widgets to it. The title is created from the given translation key.
+     * @param key The translation key of the title
+     * @param manager The config manager
+     */
     protected ButtonTab(String key, ConfigManager<T> manager) {
         this(Text.translatable(key), manager);
     }
 
+    /**
+     * The widgets to be shown in this tab
+     * @param config The config
+     * @return The array of widgets to be displayed
+     */
     protected abstract ButtonCreator[] getOptions(T config);
 }

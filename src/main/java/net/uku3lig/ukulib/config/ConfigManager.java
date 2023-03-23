@@ -12,16 +12,23 @@ import java.util.function.Supplier;
 
 /**
  * Manages a config, by holding it, saving it and loading it.
+ *
  * @param <T> The type of the config
  */
 public class ConfigManager<T extends Serializable> {
     private final ConfigSerializer<T> serializer;
 
+    /**
+     * The class of the held config
+     *
+     * @return The class
+     */
     @Getter
     private final Class<T> configClass;
 
     /**
      * The config held by the manager.
+     *
      * @return The config
      */
     @Getter
@@ -29,8 +36,10 @@ public class ConfigManager<T extends Serializable> {
 
     /**
      * Creates a manager.
-     * @param serializer The serializer
-     * @param config The initial config
+     *
+     * @param configClass The class of the config
+     * @param serializer  The serializer
+     * @param config      The initial config
      */
     public ConfigManager(Class<T> configClass, ConfigSerializer<T> serializer, T config) {
         this.configClass = configClass;
@@ -40,7 +49,9 @@ public class ConfigManager<T extends Serializable> {
 
     /**
      * Creates a manager which provides an initial config by deserializing the file.
-     * @param serializer The serializer
+     *
+     * @param configClass The class of the config
+     * @param serializer  The serializer
      */
     public ConfigManager(Class<T> configClass, ConfigSerializer<T> serializer) {
         this(configClass, serializer, serializer.deserialize());
@@ -51,9 +62,9 @@ public class ConfigManager<T extends Serializable> {
      * The config will be saved to and read from <code>./config/[name].toml</code> (without the brackets).
      *
      * @param configClass The class of the config
-     * @param name The name of the config, used for the filename
+     * @param name        The name of the config, used for the filename
+     * @param <T>         The type of the config
      * @return The generated config manager
-     * @param <T> The type of the config
      */
     public static <T extends Serializable> ConfigManager<T> create(Class<T> configClass, String name) {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(name + ".toml");
@@ -70,6 +81,7 @@ public class ConfigManager<T extends Serializable> {
 
     /**
      * Replaces the current config with a new one, serializing it in the process.
+     *
      * @param newConfig The new config
      */
     public void replaceConfig(T newConfig) {
@@ -77,6 +89,10 @@ public class ConfigManager<T extends Serializable> {
         serializer.serialize(newConfig);
     }
 
+    /**
+     * Creates a new default config, from a public no-arg constructor.
+     * @return The default config
+     */
     public T defaultConfig() {
         return ReflectionUtils.newInstance(this.configClass);
     }

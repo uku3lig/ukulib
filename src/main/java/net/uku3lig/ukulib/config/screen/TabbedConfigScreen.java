@@ -10,6 +10,11 @@ import net.uku3lig.ukulib.config.ConfigManager;
 
 import java.io.Serializable;
 
+/**
+ * A config screen that utilizes a tabbed layout instead of a simple list of buttons.
+ * @param <T> The type of the config
+ * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
+ */
 public abstract class TabbedConfigScreen<T extends Serializable> extends AbstractConfigScreen<T> {
     private TabNavigationWidget tabWidget;
     private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
@@ -25,6 +30,12 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends Abstrac
         super(parent, title, manager);
     }
 
+    /**
+     * The list of tabs to be displayed.
+     * @param config The config
+     * @return An array of tabs
+     * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
+     */
     protected abstract Tab[] getTabs(T config);
 
     @Override

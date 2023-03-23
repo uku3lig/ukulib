@@ -9,6 +9,11 @@ import net.minecraft.util.math.MathHelper;
 import java.util.function.DoubleConsumer;
 import java.util.function.DoubleFunction;
 
+/**
+ * Implementation of a slider widget for use in {@link net.uku3lig.ukulib.config.option.SliderOption}.
+ *
+ * @see net.uku3lig.ukulib.config.option.SliderOption
+ */
 public class DoubleSlider extends SliderWidget {
     private final String key;
     private final double min;
@@ -18,6 +23,22 @@ public class DoubleSlider extends SliderWidget {
     private final DoubleConsumer setter;
     private final SimpleOption.TooltipFactory<Double> tooltipFactory;
 
+    /**
+     * Constructs a new slider.
+     *
+     * @param key            The translation key
+     * @param valueToText    The function that converts the value to human-readable text
+     * @param initialValue   The initial value
+     * @param min            The minimum value
+     * @param max            The maximum value
+     * @param step           The step between each value
+     * @param setter         The callback for the modified value
+     * @param tooltipFactory The tooltip factory
+     * @param x              The x position of the widget
+     * @param y              The y position of the widget
+     * @param width          The width of the widget
+     * @param height         The height of the widget
+     */
     public DoubleSlider(
             String key, DoubleFunction<Text> valueToText, double initialValue,
             double min, double max, double step,
@@ -51,6 +72,11 @@ public class DoubleSlider extends SliderWidget {
         this.setter.accept(fixedValue());
     }
 
+    /**
+     * Maps the value to the given bounds, and then rounds it up to the closest step.
+     *
+     * @return The fixed value
+     */
     private double fixedValue() {
         double fixed = MathHelper.map(this.value, 0, 1, this.min, this.max);
         double next = MathHelper.ceil(fixed / this.step) * this.step;
