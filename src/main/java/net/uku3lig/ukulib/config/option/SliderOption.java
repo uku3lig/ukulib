@@ -13,7 +13,7 @@ import java.util.function.DoubleFunction;
  *
  * @see DoubleSlider
  */
-public class SliderOption implements ButtonCreator {
+public class SliderOption implements WidgetCreator {
     /**
      * Displays a double with 2 decimals of precision.
      */
@@ -104,7 +104,7 @@ public class SliderOption implements ButtonCreator {
     }
 
     @Override
-    public ClickableWidget createButton(int x, int y, int width, int height) {
+    public ClickableWidget createWidget(int x, int y, int width, int height) {
         return new DoubleSlider(key, valueToText, initialValue, min, max, step, setter, tooltipFactory, x, y, width, height);
     }
 }

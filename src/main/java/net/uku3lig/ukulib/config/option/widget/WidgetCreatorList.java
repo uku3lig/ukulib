@@ -6,15 +6,15 @@ import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
 import net.minecraft.client.util.math.MatrixStack;
-import net.uku3lig.ukulib.config.option.ButtonCreator;
+import net.uku3lig.ukulib.config.option.WidgetCreator;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 /**
- * A list of {@link ButtonCreator}, used to construct a vertical list of widgets
+ * A list of {@link WidgetCreator}, used to construct a vertical list of widgets
  */
-public class ButtonCreatorList extends ElementListWidget<ButtonCreatorList.ButtonEntry> {
+public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.ButtonEntry> {
     /**
      * Creates an empty widget list
      *
@@ -25,7 +25,7 @@ public class ButtonCreatorList extends ElementListWidget<ButtonCreatorList.Butto
      * @param bottom          The bottom position of the list
      * @param itemHeight      The height of each widget, usually 20
      */
-    public ButtonCreatorList(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
+    public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
         super(minecraftClient, width, height, top, bottom, itemHeight);
         this.centerListVertically = false;
     }
@@ -36,7 +36,7 @@ public class ButtonCreatorList extends ElementListWidget<ButtonCreatorList.Butto
      * @param first The first widget creator
      * @param other The second widget creator; nullable
      */
-    public void addEntries(ButtonCreator first, @Nullable ButtonCreator other) {
+    public void addEntries(WidgetCreator first, @Nullable WidgetCreator other) {
         this.addEntry(new ButtonEntry(this.getRowWidth(), first, other));
     }
 
@@ -44,9 +44,9 @@ public class ButtonCreatorList extends ElementListWidget<ButtonCreatorList.Butto
      * Add an array of widget creators.
      *
      * @param options The widget creator
-     * @see ButtonCreatorList#addEntries(ButtonCreator, ButtonCreator)
+     * @see WidgetCreatorList#addEntries(WidgetCreator, WidgetCreator)
      */
-    public void addAll(ButtonCreator[] options) {
+    public void addAll(WidgetCreator[] options) {
         for (int i = 0; i < options.length; i += 2) {
             this.addEntries(options[i], i < options.length - 1 ? options[i + 1] : null);
         }
@@ -74,9 +74,9 @@ public class ButtonCreatorList extends ElementListWidget<ButtonCreatorList.Butto
          * @param first The first entry
          * @param other The second entry; nullable
          */
-        public ButtonEntry(int width, ButtonCreator first, @Nullable ButtonCreator other) {
-            ClickableWidget firstButton = first.createButton(width / 2 - 155, 0, 150, 20);
-            this.widgets = other == null ? List.of(firstButton) : List.of(firstButton, other.createButton(width / 2 + 5, 0, 150, 20));
+        public ButtonEntry(int width, WidgetCreator first, @Nullable WidgetCreator other) {
+            ClickableWidget firstWidget = first.createWidget(width / 2 - 155, 0, 150, 20);
+            this.widgets = other == null ? List.of(firstWidget) : List.of(firstWidget, other.createWidget(width / 2 + 5, 0, 150, 20));
         }
 
         @Override

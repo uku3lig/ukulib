@@ -11,7 +11,7 @@ import java.util.function.UnaryOperator;
 /**
  * A button that opens a screen when clicked.
  */
-public class ScreenOpenButton implements ButtonCreator {
+public class ScreenOpenButton implements WidgetCreator {
     private final String key;
     private final UnaryOperator<Screen> opener;
 
@@ -26,7 +26,7 @@ public class ScreenOpenButton implements ButtonCreator {
     }
 
     @Override
-    public ClickableWidget createButton(int x, int y, int width, int height) {
+    public ClickableWidget createWidget(int x, int y, int width, int height) {
         return ButtonWidget.builder(Text.translatable(key), b -> openScreen())
                 .dimensions(x, y, width, height)
                 .build();

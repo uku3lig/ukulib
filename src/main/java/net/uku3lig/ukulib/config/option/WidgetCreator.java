@@ -6,7 +6,7 @@ import net.minecraft.client.gui.widget.ClickableWidget;
  * An interface used to create clickable widgets
  */
 @FunctionalInterface
-public interface ButtonCreator {
+public interface WidgetCreator {
     /**
      * Creates the widget.
      *
@@ -16,5 +16,5 @@ public interface ButtonCreator {
      * @param height The widget height
      * @return The created widget
      */
-    ClickableWidget createButton(int x, int y, int width, int height);
+    ClickableWidget createWidget(int x, int y, int width, int height);
 }

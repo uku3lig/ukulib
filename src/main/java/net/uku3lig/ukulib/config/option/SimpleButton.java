@@ -7,7 +7,7 @@ import net.minecraft.text.Text;
 /**
  * A simple button that does something when pressed.
  */
-public class SimpleButton implements ButtonCreator {
+public class SimpleButton implements WidgetCreator {
     private final Text text;
     private final ButtonWidget.PressAction action;
 
@@ -33,7 +33,7 @@ public class SimpleButton implements ButtonCreator {
     }
 
     @Override
-    public ClickableWidget createButton(int x, int y, int width, int height) {
+    public ClickableWidget createWidget(int x, int y, int width, int height) {
         return ButtonWidget.builder(text, action)
                 .dimensions(x, y, width, height)
                 .build();

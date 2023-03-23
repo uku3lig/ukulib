@@ -18,7 +18,7 @@ import java.util.function.Function;
  *
  * @param <T> The type of the value
  */
-public class CyclingOption<T> implements ButtonCreator {
+public class CyclingOption<T> implements WidgetCreator {
     /**
      * Boolean to text converter.
      */
@@ -163,7 +163,7 @@ public class CyclingOption<T> implements ButtonCreator {
     }
 
     @Override
-    public ClickableWidget createButton(int x, int y, int width, int height) {
+    public ClickableWidget createWidget(int x, int y, int width, int height) {
         CyclingButtonWidget.Builder<T> builder = CyclingButtonWidget.builder(valueToText)
                 .values(values)
                 .tooltip(tooltipFactory)
