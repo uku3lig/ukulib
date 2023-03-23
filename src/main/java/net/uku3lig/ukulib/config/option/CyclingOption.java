@@ -130,6 +130,23 @@ public class CyclingOption<T> implements WidgetCreator {
     }
 
     /**
+     * Creates a new option based on an enum's values, with an empty tooltip.
+     * The value text is the constant's name.
+     *
+     * @param key          The translation key
+     * @param klass        The class type of the enum
+     * @param initialValue The initial value
+     * @param setter       The callback for the modified value
+     * @param <T>          The type of the enum
+     * @return The newly created option
+     * @see CyclingOption#ofEnum(String, Class, Enum, Consumer, Function, SimpleOption.TooltipFactory)
+     * @see CyclingOption#enumNameToText(Enum)
+     */
+    public static <T extends Enum<T>> CyclingOption<T> ofEnum(String key, Class<T> klass, T initialValue, Consumer<T> setter) {
+        return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, CyclingOption::enumNameToText);
+    }
+
+    /**
      * Creates a new option based on a {@link TranslatableOption translatable} enum's values.
      *
      * @param key            The translation key
@@ -179,7 +196,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param <T>   The type of the enum
      * @return The text
      */
-    public static <T extends Enum<T>> Text enumValueToText(T value) {
+    public static <T extends Enum<T>> Text enumNameToText(T value) {
         return Text.of(value.name());
     }
 }
