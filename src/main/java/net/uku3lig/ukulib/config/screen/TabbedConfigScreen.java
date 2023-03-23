@@ -5,13 +5,13 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
-import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 
 import java.io.Serializable;
 
 /**
  * A config screen that utilizes a tabbed layout instead of a simple list of buttons.
+ *
  * @param <T> The type of the config
  * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
  */
@@ -22,16 +22,17 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends Abstrac
     /**
      * Creates a tabbed config screen.
      *
+     * @param key     The translation key of the title
      * @param parent  The parent screen
-     * @param title   The title of the screen
      * @param manager The config manager
      */
-    protected TabbedConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
-        super(parent, title, manager);
+    protected TabbedConfigScreen(String key, Screen parent, ConfigManager<T> manager) {
+        super(key, parent, manager);
     }
 
     /**
      * The list of tabs to be displayed.
+     *
      * @param config The config
      * @return An array of tabs
      * @see net.uku3lig.ukulib.config.option.widget.ButtonTab

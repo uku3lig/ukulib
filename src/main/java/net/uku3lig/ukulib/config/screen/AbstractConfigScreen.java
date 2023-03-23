@@ -22,22 +22,25 @@ import java.io.Serializable;
 public abstract class AbstractConfigScreen<T extends Serializable> extends BaseConfigScreen<T> {
     /**
      * The widget used to display the options.
+     *
      * @see AbstractConfigScreen#getWidgets(Serializable)
      */
     protected WidgetCreatorList buttonList;
 
     /**
      * Creates a config screen.
-     * @param parent The parent screen
-     * @param title The title of the screen
+     *
+     * @param key     The translation key of the title
+     * @param parent  The parent screen
      * @param manager The config manager
      */
-    protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
-        super(title, parent, manager);
+    protected AbstractConfigScreen(String key, Screen parent, ConfigManager<T> manager) {
+        super(key, parent, manager);
     }
 
     /**
      * The list of widgets that will be shown to the user when this screen is displayed.
+     *
      * @param config The config
      * @return An array of {@link WidgetCreator}
      */

@@ -38,15 +38,15 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     /**
      * Creates an input screen.
      *
+     * @param key      The translation key of the title
      * @param parent   The parent screen
-     * @param title    The title of the screen
      * @param label    The label to be shown above the text input field
      * @param callback The action to be performed when the value is changed
      * @param last     The last known value
      * @param manager  The config manager, used to save the config
      */
-    protected TextInputScreen(Screen parent, Text title, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
-        super(title, parent);
+    protected TextInputScreen(String key, Screen parent, Text label, Consumer<T> callback, T last, ConfigManager<?> manager) {
+        super(key, parent);
         this.label = label;
         this.callback = callback;
         this.last = last;

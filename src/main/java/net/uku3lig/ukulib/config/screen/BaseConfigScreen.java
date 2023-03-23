@@ -1,7 +1,6 @@
 package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.utils.Ukutils;
 
@@ -21,12 +20,12 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
     /**
      * Constructs the screen
      *
-     * @param title   The title of the screen
+     * @param key     The translation key of the title
      * @param parent  The parent screen
      * @param manager The config manager
      */
-    protected BaseConfigScreen(Text title, Screen parent, ConfigManager<T> manager) {
-        super(title, parent);
+    protected BaseConfigScreen(String key, Screen parent, ConfigManager<T> manager) {
+        super(key, parent);
         this.manager = manager;
     }
 

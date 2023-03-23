@@ -23,14 +23,14 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     /**
      * Creates a color selection screen.
      *
-     * @param title    The title of the screen
+     * @param key      The translation key of the title
      * @param parent   The parent screen
      * @param callback The action to be done after the screen is closed
      * @param last     The last known color
      * @param manager  The config manager
      */
-    public ColorSelectScreen(Text title, Screen parent, Consumer<Integer> callback, int last, ConfigManager<?> manager) {
-        super(parent, title, Text.of("Color"), callback, last, manager);
+    public ColorSelectScreen(String key, Screen parent, Consumer<Integer> callback, int last, ConfigManager<?> manager) {
+        super(key, parent, Text.of("Color"), callback, last, manager);
     }
 
     @Override

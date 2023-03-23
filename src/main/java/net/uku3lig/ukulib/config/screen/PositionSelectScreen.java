@@ -24,15 +24,15 @@ public abstract class PositionSelectScreen extends CloseableScreen {
      * Creates a position select screen. If any of <code>x</code> or <code>y</code> is passed as <code>-1</code>,
      * the screen will use the default values.
      *
-     * @param title    The screen's title
+     * @param key      The translation key of the title
      * @param parent   The parent screen
      * @param x        The initial x position
      * @param y        The initial y position
      * @param manager  The config manager, used to save the config
      * @param callback The action to be performed when the position is changed
      */
-    protected PositionSelectScreen(Text title, Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
-        super(title, parent);
+    protected PositionSelectScreen(String key, Screen parent, int x, int y, ConfigManager<?> manager, BiConsumer<Integer, Integer> callback) {
+        super(key, parent);
         this.x = x;
         this.y = y;
         this.manager = manager;
