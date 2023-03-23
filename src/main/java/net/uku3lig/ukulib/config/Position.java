@@ -1,13 +1,12 @@
 package net.uku3lig.ukulib.config;
 
-import com.mojang.serialization.Codec;
 import lombok.Getter;
-import net.minecraft.client.option.SimpleOption;
 import net.minecraft.util.TranslatableOption;
+import net.uku3lig.ukulib.config.option.CyclingOption;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 /**
  * An enum used to represent various positions.
@@ -36,6 +35,8 @@ public enum Position implements TranslatableOption {
      */
     MIDDLE(4, "ukulib.position.middle"),
     ;
+    
+    public static final String KEY = "ukulib.position";
 
     private final int id;
     private final String translationKey;
@@ -47,6 +48,7 @@ public enum Position implements TranslatableOption {
 
     /**
      * Checks if the position is on the right of the screen.
+     *
      * @return <code>true</code> if the position is on the right of the screen
      */
     public boolean isRight() {
@@ -55,6 +57,7 @@ public enum Position implements TranslatableOption {
 
     /**
      * Checks if the position is at the bottom of the screen.
+     *
      * @return <code>true</code> if the position is at the bottom of the screen
      */
     public boolean isBottom() {
@@ -62,28 +65,27 @@ public enum Position implements TranslatableOption {
     }
 
     /**
-     * Creates a {@link SimpleOption} that allows to choose between all of this enum's values.
+     * Creates a {@link CyclingOption} that allows to choose between all of this enum's values.
      *
-     * @param getter Gets the default value for the option
+     * @param initialValue The initial
      * @param setter The action to be performed when the value changes
      * @return The generated option
-     * @see Position#getOption(Collection, Supplier, Consumer)
+     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer) 
      */
-    public static SimpleOption<Position> getOption(Supplier<Position> getter, Consumer<Position> setter) {
-        return getOption(EnumSet.allOf(Position.class), getter, setter);
+    public static CyclingOption<Position> getOption(Position initialValue, Consumer<Position> setter) {
+        return CyclingOption.ofTranslatableEnum(KEY, Position.class, initialValue, setter);
     }
 
     /**
-     * Creates a {@link SimpleOption} that allows to choose between all the <code>allowedValues</code>.
+     * Creates a {@link CyclingOption} that allows to choose between all the <code>allowedValues</code>.
      *
      * @param allowedValues The values the option will cycle through
-     * @param getter Gets the default value for the option
-     * @param setter The action to be performed when the value changes
+     * @param initialValue  The initial value
+     * @param setter        The action to be performed when the value changes
      * @return The generated option
+     * @see CyclingOption#ofTranslatable(String, Collection, TranslatableOption, Consumer)
      */
-    public static SimpleOption<Position> getOption(Collection<Position> allowedValues, Supplier<Position> getter, Consumer<Position> setter) {
-        return new SimpleOption<>("ukulib.position", SimpleOption.emptyTooltip(), SimpleOption.enumValueText(),
-                new SimpleOption.PotentialValuesBasedCallbacks<>(new LinkedList<>(allowedValues), Codec.STRING.xmap(Position::valueOf, Position::name)),
-                getter.get(), setter);
+    public static CyclingOption<Position> getOption(Collection<Position> allowedValues, Position initialValue, Consumer<Position> setter) {
+        return CyclingOption.ofTranslatable(KEY, allowedValues, initialValue, setter);
     }
 }
