@@ -8,7 +8,9 @@
     "uku"
   ],
   "contact": {
-    "repo": "https://github.com/uku3lig/ukulib"
+    "homepage": "https://github.com/uku3lig/ukulib",
+    "issues": "https://github.com/uku3lig/ukulib/issues",
+    "sources": "https://github.com/uku3lig/ukulib"
   },
   "license": "MIT",
   "icon": "assets/ukulib/icon.png",
