@@ -1,13 +1,18 @@
 package net.uku3lig.ukulib.config.screen;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.ConfigManager;
 
 import java.io.Serializable;
+
+import static net.minecraft.client.gui.screen.world.CreateWorldScreen.FOOTER_SEPARATOR_TEXTURE;
 
 /**
  * A config screen that utilizes a tabbed layout instead of a simple list of buttons.
@@ -66,4 +71,12 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
             this.tabManager.setTabArea(screenRect);
         }
     }
+
+    @Override
+	public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
+		this.renderBackground(matrices);
+		RenderSystem.setShaderTexture(0, FOOTER_SEPARATOR_TEXTURE);
+		drawTexture(matrices, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
+		super.render(matrices, mouseX, mouseY, delta);
+	}
 }
