@@ -15,7 +15,7 @@ import java.io.Serializable;
  * @param <T> The type of the config
  * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
  */
-public abstract class TabbedConfigScreen<T extends Serializable> extends AbstractConfigScreen<T> {
+public abstract class TabbedConfigScreen<T extends Serializable> extends BaseConfigScreen<T> {
     private TabNavigationWidget tabWidget;
     private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
 
