@@ -7,6 +7,8 @@ import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import org.joml.Vector2i;
+import org.joml.Vector2ic;
 
 /**
  * Simple class for various utilities.
@@ -37,19 +39,21 @@ public class Ukutils {
      * @param height The height of the icon
      * @return The tuple of coordinates
      */
-    public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
+    public static Vector2ic getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
+        Vector2i vector = new Vector2i(
+                x + (width / 2) - (textRenderer.getWidth(text) / 2), // center
+                y + height + 2 - textRenderer.fontHeight // center
+        );
+
         int rx = x - ((screenWidth - width) / 2);
-        int textX = x + (width / 2) - (textRenderer.getWidth(text) / 2); // center
-        int textY = y + height + 2 - textRenderer.fontHeight; // center
-
         if (Math.abs(rx) >= 2) {
-            textY = y + (height / 2) - (textRenderer.fontHeight / 2); // left/right
-
-            if (rx < 0) textX = x + width + 2; // left
-            else textX = x - 2 - textRenderer.getWidth(text); // right
+            vector.set(
+                    rx < 0 ? x + width + 2 /* left */ : x - 2 - textRenderer.getWidth(text) /* right */,
+                    y + (height / 2) - (textRenderer.fontHeight / 2) // left/right
+            );
         }
 
-        return new Tuple2<>(textX, textY);
+        return vector;
     }
 
     /**
@@ -62,7 +66,7 @@ public class Ukutils {
      * @return The tuple of coordinates
      * @see Ukutils#getTextCoords(Text, int, TextRenderer, int, int, int, int)
      */
-    public static Tuple2<Integer, Integer> getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y) {
+    public static Vector2ic getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y) {
         return getTextCoords(text, screenWidth, textRenderer, x, y, 16, 16);
     }
 
@@ -79,16 +83,6 @@ public class Ukutils {
         });
 
         return builder.toString();
-    }
-
-    /**
-     * Simple 2-tuple.
-     * @param t1 The first element
-     * @param t2 The second element
-     * @param <T1> The type of the first element
-     * @param <T2> The type of the second element
-     */
-    public record Tuple2<T1, T2>(T1 t1, T2 t2) {
     }
 
     private Ukutils() {}
