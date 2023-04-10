@@ -348,7 +348,8 @@ public class TextInputWidget extends ClickableWidget implements Drawable {
             this.textRenderer.drawWithShadow(matrices, this.renderTextProvider.apply(string.substring(cursorStart), this.selectionStart), textEnd, textY, TEXT_COLOR);
         }
 
-        if (!this.suggestion.isBlank()) {
+        boolean canSuggestionBeRendered = this.textRenderer.getWidth(string + suggestion) < this.getInnerWidth();
+        if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
             // render the suggestion (if possible)
             int x = this.getX() + this.getWidth() - 4 - this.textRenderer.getWidth(suggestion);
             this.textRenderer.drawWithShadow(matrices, this.suggestion, x, textY, -8355712);
