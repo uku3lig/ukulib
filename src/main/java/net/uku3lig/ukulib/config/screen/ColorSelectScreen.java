@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.config.screen;
 
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.uku3lig.ukulib.config.ConfigManager;
@@ -22,11 +22,12 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
 
     /**
      * Creates a color selection screen.
-     * @param title The title of the screen
-     * @param parent The parent screen
+     *
+     * @param title    The title of the screen
+     * @param parent   The parent screen
      * @param callback The action to be done after the screen is closed
-     * @param last The last known color
-     * @param manager The config manager
+     * @param last     The last known color
+     * @param manager  The config manager
      */
     public ColorSelectScreen(Text title, Screen parent, Consumer<Integer> callback, int last, ConfigManager<?> manager) {
         super(parent, title, Text.of("Color"), callback, last, manager);
@@ -41,28 +42,30 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        super.render(matrices, mouseX, mouseY, delta);
-        convert(getTextField().getText()).ifPresent(color -> renderColor(matrices, mouseX, mouseY, delta, color));
+    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+        super.render(drawableHelper, mouseX, mouseY, delta);
+        convert(getTextField().getText()).ifPresent(color -> renderColor(drawableHelper, mouseX, mouseY, delta, color));
     }
 
     /**
      * Renders the selected color on the screen
-     * @param matrices The matrix stack
-     * @param mouseX The x position of the mouse
-     * @param mouseY The y position of the mouse
-     * @param delta The time delta
-     * @param color The chosen color
+     *
+     * @param drawableHelper The drawable helper
+     * @param mouseX         The x position of the mouse
+     * @param mouseY         The y position of the mouse
+     * @param delta          The time delta
+     * @param color          The chosen color
      */
     @SuppressWarnings("unused")
-    protected void renderColor(MatrixStack matrices, int mouseX, int mouseY, float delta, int color) {
+    protected void renderColor(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta, int color) {
         int x = this.width / 2 + 105;
         int y = 116;
-        fill(matrices, x, y, x + 20, y + 20, color);
+        drawableHelper.fill(x, y, x + 20, y + 20, color);
     }
 
     /**
      * Sets if alpha is allowed along with the RGB color.
+     *
      * @return <code>true</code> if allowed, <code>false</code> otherwise
      */
     protected boolean allowAlpha() {
@@ -71,6 +74,7 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
 
     /**
      * The default alpha value for the color. Default disables alpha.
+     *
      * @return The default alpha value
      */
     protected byte defaultAlpha() {

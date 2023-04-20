@@ -3,10 +3,10 @@ package net.uku3lig.ukulib.config.screen;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.utils.Ukutils;
@@ -29,6 +29,7 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
 
     /**
      * The text field widget.
+     *
      * @return The widget instance
      */
     @Getter(AccessLevel.PROTECTED)
@@ -83,6 +84,7 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
 
     /**
      * Called when the text field value is changed
+     *
      * @param value The new value
      */
     @SuppressWarnings("unused")
@@ -99,11 +101,11 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        drawTextWithShadow(matrices, this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
-        this.textField.render(matrices, mouseX, mouseY, delta);
-        super.render(matrices, mouseX, mouseY, delta);
+    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawableHelper);
+        drawableHelper.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawableHelper.drawTextWithShadow(this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
+        this.textField.render(drawableHelper, mouseX, mouseY, delta);
+        super.render(drawableHelper, mouseX, mouseY, delta);
     }
 }

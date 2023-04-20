@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.config.screen;
 
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
@@ -109,42 +109,42 @@ public abstract class PositionSelectScreen extends CloseableScreen {
 
     /**
      * Draws the screen and all the components in it.
-     * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
+     * Called in {@link PositionSelectScreen#render(DrawableHelper, int, int, float)}.
      *
-     * @param matrices The matrix stack
-     * @param mouseX   The x position of the mouse
-     * @param mouseY   The y position of the mouse
-     * @param delta    The delta time
-     * @param x        The x position of the element
-     * @param y        The y position of the element
+     * @param drawableHelper The drawable helper
+     * @param mouseX         The x position of the mouse
+     * @param mouseY         The y position of the mouse
+     * @param delta          The delta time
+     * @param x              The x position of the element
+     * @param y              The y position of the element
      */
-    protected abstract void draw(MatrixStack matrices, int mouseX, int mouseY, float delta, int x, int y);
+    protected abstract void draw(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta, int x, int y);
 
     /**
      * Draws the screen and all the components in it, in their default position.
-     * Called in {@link PositionSelectScreen#render(MatrixStack, int, int, float)}.
+     * Called in {@link PositionSelectScreen#render(DrawableHelper, int, int, float)}.
      *
-     * @param matrices The matrix stack
-     * @param mouseX   The x position of the mouse
-     * @param mouseY   The y position of the mouse
-     * @param delta    The delta time
+     * @param drawableHelper The drawable helper
+     * @param mouseX         The x position of the mouse
+     * @param mouseY         The y position of the mouse
+     * @param delta          The delta time
      */
-    protected void drawDefault(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        draw(matrices, mouseX, mouseY, delta, 5, 5);
+    protected void drawDefault(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+        draw(drawableHelper, mouseX, mouseY, delta, 5, 5);
     }
 
     @Override
-    public void render(MatrixStack matrices, int mouseX, int mouseY, float delta) {
-        this.renderBackground(matrices);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFF55);
-        drawCenteredTextWithShadow(matrices, this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFF);
+    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawableHelper);
+        drawableHelper.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawableHelper.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFF55);
+        drawableHelper.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFF);
 
         if (x == -1 || y == -1) {
-            drawDefault(matrices, mouseX, mouseY, delta);
+            drawDefault(drawableHelper, mouseX, mouseY, delta);
         } else {
-            draw(matrices, mouseX, mouseY, delta, x, y);
+            draw(drawableHelper, mouseX, mouseY, delta, x, y);
         }
-        super.render(matrices, mouseX, mouseY, delta);
+        super.render(drawableHelper, mouseX, mouseY, delta);
     }
 }

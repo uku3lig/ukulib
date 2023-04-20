@@ -2,13 +2,13 @@ package net.uku3lig.ukulib.config.impl;
 
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.util.math.MatrixStack;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
 
@@ -18,7 +18,7 @@ import java.util.List;
 
 /**
  * A widget to display the list of mods that have integrated with Ukulib. <br>
- * Most the code is basically copied from {@link net.minecraft.client.gui.widget.ButtonListWidget} lol
+ * Most the code is basically copied from {@link net.minecraft.client.gui.widget.OptionListWidget} lol
  */
 final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
     public EntrypointList(MinecraftClient minecraftClient, int x, int y, int width, int height, int m) {
@@ -61,9 +61,9 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
         }
 
         @Override
-        public void render(MatrixStack matrices, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(DrawableHelper drawableHelper, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             button.setY(y);
-            button.render(matrices, mouseX, mouseY, tickDelta);
+            button.render(drawableHelper, mouseX, mouseY, tickDelta);
         }
     }
 }
