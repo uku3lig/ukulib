@@ -20,6 +20,7 @@ import net.minecraft.text.Style;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
+import net.uku3lig.ukulib.config.option.CheckedOption;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
@@ -27,7 +28,7 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
-public class TextInputWidget extends ClickableWidget implements Drawable {
+public class TextInputWidget extends ClickableWidget implements Drawable, CheckedOption {
     private static final int VERTICAL_CURSOR_COLOR = -3092272;
     private static final String HORIZONTAL_CURSOR = "_";
     public static final int TEXT_COLOR = 14737632;
@@ -453,5 +454,10 @@ public class TextInputWidget extends ClickableWidget implements Drawable {
     @Override
     public void appendClickableNarrations(NarrationMessageBuilder builder) {
         builder.put(NarrationPart.TITLE, this.getNarrationMessage());
+    }
+
+    @Override
+    public boolean isValid() {
+        return this.textPredicate.test(this.text);
     }
 }

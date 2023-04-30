@@ -1,7 +1,9 @@
 package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.Serializable;
@@ -17,6 +19,8 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
      */
     protected final ConfigManager<T> manager;
 
+    private ButtonWidget doneButton;
+
     /**
      * Constructs the screen
      *
@@ -31,7 +35,17 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
 
     @Override
     protected void init() {
-        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+        doneButton = this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+    }
+
+    @Override
+    public void tick() {
+        super.tick();
+
+        doneButton.active = this.children().stream()
+                .filter(CheckedOption.class::isInstance)
+                .map(CheckedOption.class::cast)
+                .allMatch(CheckedOption::isValid);
     }
 
     @Override
