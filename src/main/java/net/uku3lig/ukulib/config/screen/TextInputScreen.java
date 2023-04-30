@@ -3,7 +3,7 @@ package net.uku3lig.ukulib.config.screen;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.TextFieldWidget;
@@ -101,11 +101,11 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
     }
 
     @Override
-    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawableHelper);
-        drawableHelper.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        drawableHelper.drawTextWithShadow(this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
-        this.textField.render(drawableHelper, mouseX, mouseY, delta);
-        super.render(drawableHelper, mouseX, mouseY, delta);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawContext);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
+        drawContext.drawTextWithShadow(this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
+        this.textField.render(drawContext, mouseX, mouseY, delta);
+        super.render(drawContext, mouseX, mouseY, delta);
     }
 }

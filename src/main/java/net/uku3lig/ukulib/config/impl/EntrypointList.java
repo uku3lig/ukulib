@@ -2,7 +2,7 @@ package net.uku3lig.ukulib.config.impl;
 
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.screen.Screen;
@@ -61,9 +61,9 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
         }
 
         @Override
-        public void render(DrawableHelper drawableHelper, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(DrawContext drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
             button.setY(y);
-            button.render(drawableHelper, mouseX, mouseY, tickDelta);
+            button.render(drawContext, mouseX, mouseY, tickDelta);
         }
     }
 }

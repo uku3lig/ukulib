@@ -3,7 +3,7 @@ package net.uku3lig.ukulib.config.impl;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.text.Text;
@@ -39,10 +39,10 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
     }
 
     @Override
-    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawableHelper);
-        entrypointList.render(drawableHelper, mouseX, mouseY, delta);
-        drawableHelper.drawCenteredTextWithShadow(textRenderer, title, width / 2, 20, 0xFFFFFF);
-        super.render(drawableHelper, mouseX, mouseY, delta);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        this.renderBackground(drawContext);
+        entrypointList.render(drawContext, mouseX, mouseY, delta);
+        drawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 20, 0xFFFFFF);
+        super.render(drawContext, mouseX, mouseY, delta);
     }
 }

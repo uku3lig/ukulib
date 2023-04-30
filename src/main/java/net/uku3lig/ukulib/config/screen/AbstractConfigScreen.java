@@ -2,7 +2,7 @@ package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.OptionListWidget;
@@ -80,8 +80,8 @@ public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOpt
     }
 
     @Override
-    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-        render(drawableHelper, optionList, mouseX, mouseY, delta);
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        render(drawContext, optionList, mouseX, mouseY, delta);
     }
 
     @Override

@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.utils;
 
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.util.Identifier;
 
@@ -27,9 +27,9 @@ public class IconButton extends TexturedButtonWidget {
     }
 
     @Override
-    public void renderButton(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-        drawableHelper.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
-        super.renderButton(drawableHelper, mouseX, mouseY, delta);
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        drawContext.drawNineSlicedTexture(WIDGETS_TEXTURE, this.getX(), this.getY(), this.getWidth(), this.getHeight(), 20, 4, 200, 20, 0, this.getTextureY());
+        super.renderButton(drawContext, mouseX, mouseY, delta);
     }
 
     /**

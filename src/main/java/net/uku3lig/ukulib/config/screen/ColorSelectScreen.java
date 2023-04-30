@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.gui.DrawableHelper;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -42,25 +42,25 @@ public class ColorSelectScreen extends TextInputScreen<Integer> {
     }
 
     @Override
-    public void render(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
-        super.render(drawableHelper, mouseX, mouseY, delta);
-        convert(getTextField().getText()).ifPresent(color -> renderColor(drawableHelper, mouseX, mouseY, delta, color));
+    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        super.render(drawContext, mouseX, mouseY, delta);
+        convert(getTextField().getText()).ifPresent(color -> renderColor(drawContext, mouseX, mouseY, delta, color));
     }
 
     /**
      * Renders the selected color on the screen
      *
-     * @param drawableHelper The drawable helper
-     * @param mouseX         The x position of the mouse
-     * @param mouseY         The y position of the mouse
-     * @param delta          The time delta
-     * @param color          The chosen color
+     * @param drawContext The drawable helper
+     * @param mouseX      The x position of the mouse
+     * @param mouseY      The y position of the mouse
+     * @param delta       The time delta
+     * @param color       The chosen color
      */
     @SuppressWarnings("unused")
-    protected void renderColor(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta, int color) {
+    protected void renderColor(DrawContext drawContext, int mouseX, int mouseY, float delta, int color) {
         int x = this.width / 2 + 105;
         int y = 116;
-        drawableHelper.fill(x, y, x + 20, y + 20, color);
+        drawContext.fill(x, y, x + 20, y + 20, color);
     }
 
     /**
