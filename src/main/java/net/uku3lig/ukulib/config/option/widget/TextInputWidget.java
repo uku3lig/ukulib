@@ -5,8 +5,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.DrawableHelper;
 import net.minecraft.client.gui.navigation.GuiNavigation;
 import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.Screen;
@@ -309,12 +309,12 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
     }
 
     @Override
-    public void renderButton(DrawableHelper drawableHelper, int mouseX, int mouseY, float delta) {
+    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (!this.isVisible()) return;
 
         int borderColor = this.isFocused() ? 0xFFFFFFFF : BORDER_COLOR;
-        drawableHelper.fill(this.getX() - 1, this.getY() - 1, this.getX() + this.width + 1, this.getY() + this.height + 1, borderColor);
-        drawableHelper.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, BACKGROUND_COLOR);
+        drawContext.fill(this.getX() - 1, this.getY() - 1, this.getX() + this.width + 1, this.getY() + this.height + 1, borderColor);
+        drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, BACKGROUND_COLOR);
 
         int cursorStart = this.selectionStart - this.firstCharacterIndex;
         int cursorEnd = this.selectionEnd - this.firstCharacterIndex;
@@ -331,7 +331,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             // render the text before the cursor
             String beforeCursor = isSelectionInBounds ? string.substring(0, cursorStart) : string;
             int textColor = this.textPredicate.test(beforeCursor) ? TEXT_COLOR : ERROR_COLOR;
-            textEnd = drawableHelper.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(beforeCursor, this.firstCharacterIndex), textX, textY, textColor);
+            textEnd = drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(beforeCursor, this.firstCharacterIndex), textX, textY, textColor);
         }
 
         boolean isCursorInTheMiddle = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxLength();
@@ -345,30 +345,30 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
 
         if (!string.isEmpty() && isSelectionInBounds && cursorStart < string.length()) {
             // render the text after the cursor
-            drawableHelper.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(string.substring(cursorStart), this.selectionStart), textEnd, textY, TEXT_COLOR);
+            drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(string.substring(cursorStart), this.selectionStart), textEnd, textY, TEXT_COLOR);
         }
 
         boolean canSuggestionBeRendered = this.textRenderer.getWidth(string + suggestion) < this.getInnerWidth();
         if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
             // render the suggestion (if possible)
             int x = this.getX() + this.getWidth() - 4 - this.textRenderer.getWidth(suggestion);
-            drawableHelper.drawTextWithShadow(this.textRenderer, this.suggestion, x, textY, 0xff808080);
+            drawContext.drawTextWithShadow(this.textRenderer, this.suggestion, x, textY, 0xff808080);
         }
 
         if (isCursorInTheMiddle) {
-            drawableHelper.fill(cursorX, textY - 1, cursorX + 1, textY + 1 + 9, VERTICAL_CURSOR_COLOR);
+            drawContext.fill(cursorX, textY - 1, cursorX + 1, textY + 1 + 9, VERTICAL_CURSOR_COLOR);
         } else {
-            drawableHelper.drawTextWithShadow(this.textRenderer, HORIZONTAL_CURSOR, cursorX, textY, TEXT_COLOR);
+            drawContext.drawTextWithShadow(this.textRenderer, HORIZONTAL_CURSOR, cursorX, textY, TEXT_COLOR);
         }
 
         if (cursorEnd != cursorStart) {
             // render the selection highlight
             int p = textX + this.textRenderer.getWidth(string.substring(0, cursorEnd));
-            this.drawSelectionHighlight(drawableHelper, cursorX, textY - 1, p - 1, textY + 1 + 9);
+            this.drawSelectionHighlight(drawContext, cursorX, textY - 1, p - 1, textY + 1 + 9);
         }
     }
 
-    private void drawSelectionHighlight(DrawableHelper drawableHelper, int x1, int y1, int x2, int y2) {
+    private void drawSelectionHighlight(DrawContext drawContext, int x1, int y1, int x2, int y2) {
         if (x1 < x2) {
             int i = x1;
             x1 = x2;
@@ -391,7 +391,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
 
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        drawableHelper.fill(x1, y1, x2, y2, 0xff0000ff);
+        drawContext.fill(x1, y1, x2, y2, 0xff0000ff);
         RenderSystem.disableColorLogicOp();
     }
     private int getMaxLength() {
