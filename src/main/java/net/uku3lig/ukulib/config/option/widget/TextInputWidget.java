@@ -329,10 +329,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             cursorEnd = string.length();
         }
 
+        int textColor = this.isValid() ? TEXT_COLOR : ERROR_COLOR;
+
         if (!string.isEmpty()) {
             // render the text before the cursor
             String beforeCursor = isSelectionInBounds ? string.substring(0, cursorStart) : string;
-            int textColor = this.textPredicate.test(beforeCursor) ? TEXT_COLOR : ERROR_COLOR;
             textEnd = drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(beforeCursor, this.firstCharacterIndex), textX, textY, textColor);
         }
 
@@ -347,7 +348,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
 
         if (!string.isEmpty() && isSelectionInBounds && cursorStart < string.length()) {
             // render the text after the cursor
-            drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(string.substring(cursorStart), this.selectionStart), textEnd, textY, TEXT_COLOR);
+            drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(string.substring(cursorStart), this.selectionStart), textEnd, textY, textColor);
         }
 
         boolean canSuggestionBeRendered = this.textRenderer.getWidth(string + suggestion) < this.getInnerWidth();
