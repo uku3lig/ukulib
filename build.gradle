@@ -99,11 +99,15 @@ publishing {
     }
 }
 
+var release_type = "release"
+if (version.containsIgnoreCase("alpha")) release_type = "alpha"
+else if (version.containsIgnoreCase("beta")) release_type = "beta"
+
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = "Y8uFrUil"
     versionNumber = project.version
-    versionType = "release"
+    versionType = release_type
     uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
     gameVersions = [project.minecraft_version] // Must be an array, even with only one version
     loaders = ["fabric", "quilt"]
