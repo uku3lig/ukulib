@@ -11,8 +11,9 @@ public class ColorInputWidget extends TextInputWidget {
 
     private final boolean allowAlpha;
 
-    public ColorInputWidget(int x, int y, int width, int height, IntConsumer changedListener, String suggestion, boolean allowAlpha) {
-        super(x, y, width - height - 2, height, s -> convert(s, allowAlpha).ifPresent(changedListener::accept), suggestion, IS_COLOR, 9);
+    public ColorInputWidget(int x, int y, int width, int height, int initialValue, IntConsumer changedListener, String suggestion, boolean allowAlpha) {
+        super(x, y, width - height - 2, height, "#" + Integer.toHexString(initialValue).toUpperCase(),
+                s -> convert(s, allowAlpha).ifPresent(changedListener::accept), suggestion, IS_COLOR, 9);
 
         this.allowAlpha = allowAlpha;
     }

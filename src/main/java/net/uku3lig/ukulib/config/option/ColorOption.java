@@ -8,23 +8,25 @@ import java.util.function.IntConsumer;
 
 public class ColorOption implements WidgetCreator {
     private final String suggestionKey;
+    private final int initialValue;
     private final IntConsumer setter;
     private final boolean allowAlpha;
 
-    public ColorOption(String suggestionKey, IntConsumer setter, boolean allowAlpha) {
+    public ColorOption(String suggestionKey, int initialValue, IntConsumer setter, boolean allowAlpha) {
         this.suggestionKey = suggestionKey;
+        this.initialValue = initialValue;
         this.setter = setter;
         this.allowAlpha = allowAlpha;
     }
 
-    public ColorOption(String suggestionKey, IntConsumer setter) {
-        this(suggestionKey, setter, false);
+    public ColorOption(String suggestionKey, int initialValue, IntConsumer setter) {
+        this(suggestionKey, initialValue, setter, false);
     }
 
     @Override
     public ClickableWidget createWidget(int x, int y, int width, int height) {
         String suggestion = Text.translatable(suggestionKey).getString();
 
-        return new ColorInputWidget(x, y, width, height, setter, suggestion, allowAlpha);
+        return new ColorInputWidget(x, y, width, height, initialValue, setter, suggestion, allowAlpha);
     }
 }
