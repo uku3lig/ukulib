@@ -29,11 +29,11 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 public class TextInputWidget extends ClickableWidget implements Drawable, CheckedOption {
-    private static final int VERTICAL_CURSOR_COLOR = -3092272;
+    private static final int VERTICAL_CURSOR_COLOR = 0xffd0d0d0;
     private static final String HORIZONTAL_CURSOR = "_";
-    public static final int TEXT_COLOR = 14737632;
-    private static final int BORDER_COLOR = -6250336;
-    private static final int BACKGROUND_COLOR = -16777216;
+    public static final int TEXT_COLOR = 0xe0e0e0;
+    private static final int BORDER_COLOR = 0xffa0a0a0;
+    private static final int BACKGROUND_COLOR = 0xff000000;
     private static final int ERROR_COLOR = 0xFFFF0000;
 
     private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
@@ -353,7 +353,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
             // render the suggestion (if possible)
             int x = this.getX() + this.getWidth() - 4 - this.textRenderer.getWidth(suggestion);
-            this.textRenderer.drawWithShadow(matrices, this.suggestion, x, textY, -8355712);
+            this.textRenderer.drawWithShadow(matrices, this.suggestion, x, textY, 0xff808080);
         }
 
         if (isCursorInTheMiddle) {
@@ -392,7 +392,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
 
         RenderSystem.enableColorLogicOp();
         RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        fill(matrices, x1, y1, x2, y2, -16776961);
+        fill(matrices, x1, y1, x2, y2, 0xff0000ff);
         RenderSystem.disableColorLogicOp();
     }
     private int getMaxLength() {
