@@ -6,11 +6,26 @@ import java.util.Optional;
 import java.util.function.IntConsumer;
 import java.util.function.Predicate;
 
+/**
+ * A widget that allows the user to input a color.
+ */
 public class ColorInputWidget extends TextInputWidget {
     private static final Predicate<String> IS_COLOR = s -> s.matches("^#?([A-Fa-f0-9]{6}|[A-Fa-f0-9]{8})$");
 
     private final boolean allowAlpha;
 
+    /**
+     * Constructor.
+     *
+     * @param x               the x position
+     * @param y               the y position
+     * @param width           the width
+     * @param height          the height
+     * @param initialValue    the initial value
+     * @param changedListener the listener that is called when the value changes
+     * @param suggestion      the suggestion
+     * @param allowAlpha      whether to allow changing the alpha value
+     */
     public ColorInputWidget(int x, int y, int width, int height, int initialValue, IntConsumer changedListener, String suggestion, boolean allowAlpha) {
         super(x, y, width - height - 2, height, "#" + Integer.toHexString(initialValue).toUpperCase(),
                 s -> convert(s, allowAlpha).ifPresent(changedListener::accept), suggestion, IS_COLOR, 9);

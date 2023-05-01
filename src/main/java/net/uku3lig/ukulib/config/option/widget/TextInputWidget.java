@@ -2,6 +2,7 @@ package net.uku3lig.ukulib.config.option.widget;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
+import lombok.Getter;
 import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -27,15 +28,25 @@ import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
+/**
+ * A widget to input text. Based on {@link net.minecraft.client.gui.widget.TextFieldWidget}.
+ */
 public class TextInputWidget extends ClickableWidget implements Drawable, CheckedOption {
     private static final int VERTICAL_CURSOR_COLOR = 0xffd0d0d0;
     private static final String HORIZONTAL_CURSOR = "_";
-    public static final int TEXT_COLOR = 0xe0e0e0;
+    private static final int TEXT_COLOR = 0xe0e0e0;
     private static final int BORDER_COLOR = 0xffa0a0a0;
     private static final int BACKGROUND_COLOR = 0xff000000;
     private static final int ERROR_COLOR = 0xFFFF0000;
 
     private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
+
+    /**
+     * The text.
+     *
+     * @return the text
+     */
+    @Getter
     private String text = "";
     private boolean selecting;
     /**
@@ -45,6 +56,12 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
     private int selectionStart;
     private int selectionEnd;
 
+    /**
+     * The maximum length of the text.
+     *
+     * @return the maximum length of the text
+     */
+    @Getter
     private final int maxLength;
     private final String suggestion;
     private final Consumer<String> changedListener;
@@ -54,6 +71,19 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             string, Style.EMPTY
     );
 
+    /**
+     * Constructor.
+     *
+     * @param x               the x position
+     * @param y               the y position
+     * @param width           the width
+     * @param height          the height
+     * @param initialValue    the initial value
+     * @param changedListener the callback to set the value
+     * @param suggestion      the suggestion
+     * @param textPredicate   the predicate to check the text
+     * @param maxLength       the maximum length of the text
+     */
     public TextInputWidget(int x, int y, int width, int height, String initialValue, Consumer<String> changedListener, String suggestion, Predicate<String> textPredicate, int maxLength) {
         super(x, y, width, height, Text.empty());
         this.changedListener = changedListener;
@@ -70,6 +100,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         return Text.translatable("gui.narrate.editBox", message, this.text);
     }
 
+    /**
+     * Sets the text.
+     *
+     * @param text the new text
+     */
     public void setText(String text) {
         if (text.length() > this.maxLength) {
             this.text = text.substring(0, this.maxLength);
@@ -82,16 +117,22 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         this.onChanged(text);
     }
 
-    public String getText() {
-        return this.text;
-    }
-
+    /**
+     * Gets the currently selected text, if any.
+     *
+     * @return the selected text
+     */
     public String getSelectedText() {
         int i = Math.min(this.selectionStart, this.selectionEnd);
         int j = Math.max(this.selectionStart, this.selectionEnd);
         return this.text.substring(i, j);
     }
 
+    /**
+     * Writes the given text to the current cursor position.
+     *
+     * @param text the text to write
+     */
     public void write(String text) {
         int i = Math.min(this.selectionStart, this.selectionEnd);
         int j = Math.max(this.selectionStart, this.selectionEnd);
@@ -123,6 +164,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+    /**
+     * Erases words depending on the {@code wordOffset}.
+     *
+     * @param wordOffset the offset
+     */
     public void eraseWords(int wordOffset) {
         if (!this.text.isEmpty()) {
             if (this.selectionEnd != this.selectionStart) {
@@ -133,6 +179,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+    /**
+     * Erases characters depending on the {@code characterOffset}.
+     *
+     * @param characterOffset the offset
+     */
     public void eraseCharacters(int characterOffset) {
         if (!this.text.isEmpty()) {
             if (this.selectionEnd != this.selectionStart) {
@@ -149,10 +200,24 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+    /**
+     * Gets the position of the word to skip to. Used for deleting words.
+     *
+     * @param wordOffset the offset
+     * @return the position of the word to skip to
+     * @see #getWordSkipPosition(int, int)
+     */
     public int getWordSkipPosition(int wordOffset) {
         return this.getWordSkipPosition(wordOffset, this.getCursor());
     }
 
+    /**
+     * Gets the position of the word to skip to. Used for deleting words.
+     *
+     * @param wordOffset     the offset
+     * @param cursorPosition the cursor position
+     * @return the position of the word to skip to
+     */
     private int getWordSkipPosition(int wordOffset, int cursorPosition) {
         int i = cursorPosition;
         boolean bl = wordOffset < 0;
@@ -183,6 +248,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         return i;
     }
 
+    /**
+     * Moves the cursor by the specified offset.
+     *
+     * @param offset the offset
+     */
     public void moveCursor(int offset) {
         this.setCursor(this.getCursorPosWithOffset(offset));
     }
@@ -191,6 +261,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         return Util.moveCursor(this.text, this.selectionStart, offset);
     }
 
+    /**
+     * Sets the cursor position.
+     *
+     * @param cursor the cursor position
+     */
     public void setCursor(int cursor) {
         this.setSelectionStart(cursor);
         if (!this.selecting) {
@@ -200,14 +275,25 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         this.onChanged(this.text);
     }
 
+    /**
+     * Sets the start of the selection.
+     *
+     * @param cursor the start of the selection
+     */
     public void setSelectionStart(int cursor) {
         this.selectionStart = MathHelper.clamp(cursor, 0, this.text.length());
     }
 
+    /**
+     * Sets the cursor position to the start of the text.
+     */
     public void setCursorToStart() {
         this.setCursor(0);
     }
 
+    /**
+     * Sets the cursor position to the end of the text.
+     */
     public void setCursorToEnd() {
         this.setCursor(this.text.length());
     }
@@ -278,6 +364,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+    /**
+     * Checks if the text field is inactive.
+     *
+     * @return {@code true} if the text field is inactive, {@code false} otherwise
+     */
     public boolean isInactive() {
         return !this.isVisible() || !this.isFocused();
     }
@@ -397,10 +488,12 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         drawContext.fill(x1, y1, x2, y2, 0xff0000ff);
         RenderSystem.disableColorLogicOp();
     }
-    private int getMaxLength() {
-        return this.maxLength;
-    }
 
+    /**
+     * Returns the position of the cursor, or the beginning of the selection.
+     *
+     * @return the cursor position
+     */
     public int getCursor() {
         return this.selectionStart;
     }
@@ -420,10 +513,20 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
                 && mouseY < (this.getY() + this.height);
     }
 
+    /**
+     * Returns width of the text field, without the border.
+     *
+     * @return the inner width
+     */
     public int getInnerWidth() {
         return this.width - 8;
     }
 
+    /**
+     * Sets the end of the selection.
+     *
+     * @param index the end of the selection
+     */
     public void setSelectionEnd(int index) {
         int i = this.text.length();
         this.selectionEnd = MathHelper.clamp(index, 0, i);
@@ -449,6 +552,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+    /**
+     * Whether the text field is currently visible.
+     *
+     * @return {@code true} if the text field is visible, {@code false} otherwise
+     */
     public boolean isVisible() {
         return this.visible;
     }
