@@ -2,7 +2,6 @@ package net.uku3lig.ukulib.config.impl;
 
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.entrypoint.EntrypointContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
@@ -16,12 +15,12 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
-import net.uku3lig.ukulib.api.UkulibAPI;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.util.*;
+import java.util.function.UnaryOperator;
 
 /**
  * A widget to display the list of mods that have integrated with ukulib.
@@ -32,8 +31,10 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
         super(minecraftClient, x, y, width, height, m);
     }
 
-    public void addAll(Collection<EntrypointContainer<UkulibAPI>> containers, Screen parent) {
-        containers.stream().map(container -> new ModEntry(container, this.width, parent)).forEach(this::addEntry);
+    public void addAll(Map<ModContainer, UnaryOperator<Screen>> containers, Screen parent) {
+        containers.entrySet().stream()
+                .map(entry -> new ModEntry(entry.getKey(), entry.getValue(), this.width, parent))
+                .forEach(this::addEntry);
     }
 
     @Override
@@ -53,14 +54,12 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
         private final Identifier iconPath;
         private final int iconSize = 16 * MinecraftClient.getInstance().options.getGuiScale().getValue();
 
-        public ModEntry(EntrypointContainer<UkulibAPI> container, int width, Screen parent) {
-            button = ButtonWidget.builder(Text.of(container.getProvider().getMetadata().getName()),
-                            b -> client.setScreen(container.getEntrypoint().supplyConfigScreen().apply(parent)))
+        public ModEntry(ModContainer mod, UnaryOperator<Screen> operator, int width, Screen parent) {
+            button = ButtonWidget.builder(Text.of(mod.getMetadata().getName()), b -> client.setScreen(operator.apply(parent)))
                     .dimensions(width / 2 - 100, 0, 200, iconSize)
-                    .tooltip(Tooltip.of(Text.of(container.getProvider().getMetadata().getDescription())))
+                    .tooltip(Tooltip.of(Text.of(mod.getMetadata().getDescription())))
                     .build();
 
-            ModContainer mod = container.getProvider();
             ModMetadata metadata = mod.getMetadata();
 
             this.iconPath = metadata.getIconPath(iconSize)
