@@ -18,12 +18,6 @@ jobs:
           distribution: temurin
       - name: Checkout sources
         uses: actions/checkout@v3
-      - name: Generate build number
-        id: buildnumber
-        uses: einaregilsson/build-number@v3
-        with:
-          token: ${{ secrets.github_token }}
-          prefix: ${{ github.ref }}
       - name: Publish to the snapshots maven repo
         run: ./gradlew publishAllPublicationsToUkuSnapshotsRepository
         env:
