@@ -8,7 +8,6 @@ import net.uku3lig.ukulib.utils.ReflectionUtils;
 
 import java.io.Serializable;
 import java.nio.file.Path;
-import java.util.function.Supplier;
 
 /**
  * Manages a config, by holding it, saving it and loading it.
@@ -68,8 +67,7 @@ public class ConfigManager<T extends Serializable> {
      */
     public static <T extends Serializable> ConfigManager<T> create(Class<T> configClass, String name) {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(name + ".toml");
-        Supplier<T> defaultConfig = () -> ReflectionUtils.newInstance(configClass);
-        return new ConfigManager<>(configClass, new DefaultConfigSerializer<>(configClass, path.toFile(), defaultConfig));
+        return new ConfigManager<>(configClass, new DefaultConfigSerializer<>(configClass, path.toFile()));
     }
 
     /**

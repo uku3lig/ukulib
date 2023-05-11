@@ -3,68 +3,76 @@ package net.uku3lig.ukulib.config.serialization;
 import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import lombok.extern.slf4j.Slf4j;
+import net.uku3lig.ukulib.utils.ReflectionUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.nio.file.Files;
-import java.util.function.Supplier;
 
 /**
  * A default config serializer, which saves the config in a TOML file.
+ *
  * @param <T> The type of the config
  */
 @Slf4j
 public class DefaultConfigSerializer<T extends Serializable> implements ConfigSerializer<T> {
     private final Class<T> configClass;
     private final File file;
-    private final Supplier<T> defaultConfig;
 
     /**
      * Creates a serializer.
      *
      * @param configClass The class of the config
-     * @param file The file to save the config into
-     * @param defaultConfig The default config
+     * @param file        The file to save the config into
      */
-    public DefaultConfigSerializer(Class<T> configClass, File file, Supplier<T> defaultConfig) {
+    public DefaultConfigSerializer(Class<T> configClass, File file) {
         this.configClass = configClass;
         this.file = file;
-        this.defaultConfig = defaultConfig;
     }
 
     /**
      * Reads the config from the file.
      * If the file isn't found or is corrupted, the file is overwritten by the default config.
+     *
      * @return The deserialized config
      */
+    @Override
     public T deserialize() {
         if (!Files.isRegularFile(file.toPath())) {
             File parent = file.getParentFile();
+            T defaultConfig = makeDefault();
 
             if (!parent.mkdirs() && !Files.isDirectory(parent.toPath())) {
                 log.warn("Could not create directory {}", parent.getAbsolutePath());
             } else {
-                serialize(defaultConfig.get());
+                serialize(defaultConfig);
             }
 
-            return defaultConfig.get();
+            return defaultConfig;
         }
 
         try {
             return new Toml().read(file).to(configClass);
         } catch (Exception e) {
             log.warn("A corrupted configuration file was found, overwriting it with the default config", e);
-            serialize(defaultConfig.get());
-            return defaultConfig.get();
+            T defaultConfig = makeDefault();
+            serialize(defaultConfig);
+            return defaultConfig;
         }
     }
 
+    @Override
     public void serialize(T config) {
         try {
             new TomlWriter().write(config, file);
         } catch (IOException e) {
             log.warn("Could not write config", e);
         }
+    }
+
+    @Override
+    public T makeDefault() {
+        return ReflectionUtils.newInstance(configClass);
     }
 }
