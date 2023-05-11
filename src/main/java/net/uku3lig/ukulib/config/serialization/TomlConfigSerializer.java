@@ -16,7 +16,7 @@ import java.nio.file.Files;
  * @param <T> The type of the config
  */
 @Slf4j
-public class DefaultConfigSerializer<T extends Serializable> implements ConfigSerializer<T> {
+public class TomlConfigSerializer<T extends Serializable> implements ConfigSerializer<T> {
     private final Class<T> configClass;
     private final File file;
 
@@ -26,7 +26,7 @@ public class DefaultConfigSerializer<T extends Serializable> implements ConfigSe
      * @param configClass The class of the config
      * @param file        The file to save the config into
      */
-    public DefaultConfigSerializer(Class<T> configClass, File file) {
+    public TomlConfigSerializer(Class<T> configClass, File file) {
         this.configClass = configClass;
         this.file = file;
     }

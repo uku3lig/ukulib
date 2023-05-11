@@ -19,7 +19,7 @@ public class ReflectionUtils {
      * @param klass The class to be instantiated
      * @return An instance of the class
      * @param <T> The type of the class
-     * @see net.uku3lig.ukulib.config.ConfigManager#create(Class, String) ConfigManager#create(Class, String)
+     * @see net.uku3lig.ukulib.config.ConfigManager#createDefault(Class, String) ConfigManager#create(Class, String)
      */
     public static <T extends Serializable> T newInstance(Class<T> klass) {
         try {

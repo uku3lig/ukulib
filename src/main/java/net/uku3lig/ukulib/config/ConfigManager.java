@@ -3,7 +3,7 @@ package net.uku3lig.ukulib.config;
 import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
-import net.uku3lig.ukulib.config.serialization.DefaultConfigSerializer;
+import net.uku3lig.ukulib.config.serialization.TomlConfigSerializer;
 
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -64,9 +64,9 @@ public class ConfigManager<T extends Serializable> {
      * @param <T>         The type of the config
      * @return The generated config manager
      */
-    public static <T extends Serializable> ConfigManager<T> create(Class<T> configClass, String name) {
+    public static <T extends Serializable> ConfigManager<T> createDefault(Class<T> configClass, String name) {
         Path path = FabricLoader.getInstance().getConfigDir().resolve(name + ".toml");
-        return new ConfigManager<>(configClass, new DefaultConfigSerializer<>(configClass, path.toFile()));
+        return new ConfigManager<>(configClass, new TomlConfigSerializer<>(configClass, path.toFile()));
     }
 
     /**
