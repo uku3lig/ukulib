@@ -54,7 +54,7 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
             buttonList.addAll(getWidgets(manager.getConfig()));
         } catch (Exception e) {
             log.error("Error while getting options, replacing config with the default one", e);
-            manager.replaceConfig(manager.defaultConfig());
+            manager.resetConfig();
             try {
                 buttonList.addAll(getWidgets(manager.getConfig()));
             } catch (Exception e2) {

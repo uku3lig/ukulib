@@ -4,7 +4,6 @@ import lombok.Getter;
 import net.fabricmc.loader.api.FabricLoader;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.config.serialization.DefaultConfigSerializer;
-import net.uku3lig.ukulib.utils.ReflectionUtils;
 
 import java.io.Serializable;
 import java.nio.file.Path;
@@ -88,10 +87,9 @@ public class ConfigManager<T extends Serializable> {
     }
 
     /**
-     * Creates a new default config, from a public no-arg constructor.
-     * @return The default config
+     * Resets the config to its default, from a default provided by the {@link ConfigSerializer}.
      */
-    public T defaultConfig() {
-        return ReflectionUtils.newInstance(this.configClass);
+    public void resetConfig() {
+        this.serializer.serialize(this.serializer.makeDefault());
     }
 }
