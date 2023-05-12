@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.utils;
 
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
@@ -10,6 +11,8 @@ import net.minecraft.text.Text;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
+import java.io.File;
+
 /**
  * Simple class for various utilities.
  */
@@ -17,7 +20,8 @@ import org.joml.Vector2ic;
 public class Ukutils {
     /**
      * Creates a done button.
-     * @param width The width of the screen
+     *
+     * @param width  The width of the screen
      * @param height The height of the screen
      * @param parent The parent screen
      * @return The generated button
@@ -30,13 +34,14 @@ public class Ukutils {
 
     /**
      * Makes text coordinates based on the position of an icon.
-     * @param text The text to be drawn
-     * @param screenWidth The width of the screen
+     *
+     * @param text         The text to be drawn
+     * @param screenWidth  The width of the screen
      * @param textRenderer The text renderer
-     * @param x The x coordinate of the icon
-     * @param y The y coordinate of the icon
-     * @param width The width of the icon
-     * @param height The height of the icon
+     * @param x            The x coordinate of the icon
+     * @param y            The y coordinate of the icon
+     * @param width        The width of the icon
+     * @param height       The height of the icon
      * @return The tuple of coordinates
      */
     public static Vector2ic getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
@@ -58,11 +63,12 @@ public class Ukutils {
 
     /**
      * Makes text coordinates based on the position of a standard 16x16 icon.
-     * @param text The text to be drawn
-     * @param screenWidth The width of the screen
+     *
+     * @param text         The text to be drawn
+     * @param screenWidth  The width of the screen
      * @param textRenderer The text renderer
-     * @param x The x coordinate of the icon
-     * @param y The y coordinate of the icon
+     * @param x            The x coordinate of the icon
+     * @param y            The y coordinate of the icon
      * @return The tuple of coordinates
      * @see Ukutils#getTextCoords(Text, int, TextRenderer, int, int, int, int)
      */
@@ -72,6 +78,7 @@ public class Ukutils {
 
     /**
      * Retrieves the string text from an ordered text.
+     *
      * @param text The ordered text
      * @return The value of the text
      */
@@ -85,5 +92,16 @@ public class Ukutils {
         return builder.toString();
     }
 
-    private Ukutils() {}
+    /**
+     * Creates a config path for a file name.
+     *
+     * @param name The name of the file
+     * @return The path to the file
+     */
+    public static File getConfigPath(String name) {
+        return FabricLoader.getInstance().getConfigDir().resolve(name).toFile();
+    }
+
+    private Ukutils() {
+    }
 }

@@ -4,6 +4,7 @@ import com.moandjiezana.toml.Toml;
 import com.moandjiezana.toml.TomlWriter;
 import lombok.extern.slf4j.Slf4j;
 import net.uku3lig.ukulib.utils.ReflectionUtils;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.File;
 import java.io.IOException;
@@ -24,11 +25,11 @@ public class TomlConfigSerializer<T extends Serializable> implements ConfigSeria
      * Creates a serializer.
      *
      * @param configClass The class of the config
-     * @param file        The file to save the config into
+     * @param name        The name of the config
      */
-    public TomlConfigSerializer(Class<T> configClass, File file) {
+    public TomlConfigSerializer(Class<T> configClass, String name) {
         this.configClass = configClass;
-        this.file = file;
+        this.file = Ukutils.getConfigPath(name + ".toml");
     }
 
     /**

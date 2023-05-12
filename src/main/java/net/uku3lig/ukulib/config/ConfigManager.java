@@ -1,12 +1,10 @@
 package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
-import net.fabricmc.loader.api.FabricLoader;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.config.serialization.TomlConfigSerializer;
 
 import java.io.Serializable;
-import java.nio.file.Path;
 
 /**
  * Manages a config, by holding it, saving it and loading it.
@@ -15,14 +13,6 @@ import java.nio.file.Path;
  */
 public class ConfigManager<T extends Serializable> {
     private final ConfigSerializer<T> serializer;
-
-    /**
-     * The class of the held config
-     *
-     * @return The class
-     */
-    @Getter
-    private final Class<T> configClass;
 
     /**
      * The config held by the manager.
@@ -35,12 +25,10 @@ public class ConfigManager<T extends Serializable> {
     /**
      * Creates a manager.
      *
-     * @param configClass The class of the config
-     * @param serializer  The serializer
-     * @param config      The initial config
+     * @param serializer The serializer
+     * @param config     The initial config
      */
-    public ConfigManager(Class<T> configClass, ConfigSerializer<T> serializer, T config) {
-        this.configClass = configClass;
+    public ConfigManager(ConfigSerializer<T> serializer, T config) {
         this.serializer = serializer;
         this.config = config;
     }
@@ -48,11 +36,10 @@ public class ConfigManager<T extends Serializable> {
     /**
      * Creates a manager which provides an initial config by deserializing the file.
      *
-     * @param configClass The class of the config
-     * @param serializer  The serializer
+     * @param serializer The serializer
      */
-    public ConfigManager(Class<T> configClass, ConfigSerializer<T> serializer) {
-        this(configClass, serializer, serializer.deserialize());
+    public ConfigManager(ConfigSerializer<T> serializer) {
+        this(serializer, serializer.deserialize());
     }
 
     /**
@@ -65,8 +52,7 @@ public class ConfigManager<T extends Serializable> {
      * @return The generated config manager
      */
     public static <T extends Serializable> ConfigManager<T> createDefault(Class<T> configClass, String name) {
-        Path path = FabricLoader.getInstance().getConfigDir().resolve(name + ".toml");
-        return new ConfigManager<>(configClass, new TomlConfigSerializer<>(configClass, path.toFile()));
+        return new ConfigManager<>(new TomlConfigSerializer<>(configClass, name));
     }
 
     /**
