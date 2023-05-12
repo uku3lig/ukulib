@@ -1,11 +1,13 @@
 package net.uku3lig.ukulib.config.serialization;
 
+import java.io.Serializable;
+
 /**
  * Manages the serialization of a configuration file.
  *
  * @param <T> The type of the config
  */
-public interface ConfigSerializer<T> {
+public interface ConfigSerializer<T extends Serializable> {
     /**
      * Deserializes the config.
      *
