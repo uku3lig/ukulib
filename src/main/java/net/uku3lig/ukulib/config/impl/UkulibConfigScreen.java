@@ -8,7 +8,6 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
-import net.uku3lig.ukulib.api.UkulibProvider;
 import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.util.HashMap;
@@ -38,13 +37,16 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
         Map<ModContainer, UnaryOperator<Screen>> containers = new HashMap<>();
 
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
-                .forEach(e -> containers.put(e.getProvider(), e.getEntrypoint().supplyConfigScreen()));
+                .forEach(entry -> {
+                    if (entry.getEntrypoint().supplyConfigScreen() != null)
+                        containers.put(entry.getProvider(), entry.getEntrypoint().supplyConfigScreen());
 
-        FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibProvider.class)
-                .stream()
-                .flatMap(e -> e.getEntrypoint().getProvidedConfigScreens().entrySet().stream())
-                .forEach(e -> FabricLoader.getInstance().getModContainer(e.getKey())
-                        .ifPresent(c -> containers.put(c, e.getValue())));
+                    entry.getEntrypoint().getProvidedConfigScreens().forEach((modId, screen) -> {
+                        if (screen != null) {
+                            FabricLoader.getInstance().getModContainer(modId).ifPresent(c -> containers.put(c, screen));
+                        }
+                    });
+                });
 
         entrypointList.addAll(containers, this);
         this.addSelectableChild(entrypointList);

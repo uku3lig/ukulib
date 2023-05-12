@@ -2,6 +2,8 @@ package net.uku3lig.ukulib.api;
 
 import net.minecraft.client.gui.screen.Screen;
 
+import java.util.Collections;
+import java.util.Map;
 import java.util.function.UnaryOperator;
 
 /**
@@ -13,7 +15,9 @@ public interface UkulibAPI {
      * The lambda parameter is the parent screen.
      * @return A function that takes a parent screen and returns a config screen.
      */
-    UnaryOperator<Screen> supplyConfigScreen();
+    default UnaryOperator<Screen> supplyConfigScreen() {
+        return null;
+    }
 
     /**
      * This method is used to enable or disable the integration with Mod Menu.
@@ -21,5 +25,14 @@ public interface UkulibAPI {
      */
     default boolean enableModMenuIntegration() {
         return true;
+    }
+
+    /**
+     * The map of the config screens, linked to their mod id.
+     *
+     * @return the map
+     */
+    default Map<String, UnaryOperator<Screen>> getProvidedConfigScreens() {
+        return Collections.emptyMap();
     }
 }
