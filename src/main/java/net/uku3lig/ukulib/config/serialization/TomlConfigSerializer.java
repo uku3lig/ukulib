@@ -29,7 +29,7 @@ public class TomlConfigSerializer<T extends Serializable> implements ConfigSeria
      */
     public TomlConfigSerializer(Class<T> configClass, String name) {
         this.configClass = configClass;
-        this.file = Ukutils.getConfigPath(name + ".toml");
+        this.file = Ukutils.getConfigPath(name + ".toml").toFile();
     }
 
     /**

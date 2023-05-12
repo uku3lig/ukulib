@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
-import java.io.File;
+import java.nio.file.Path;
 
 /**
  * Simple class for various utilities.
@@ -98,8 +98,8 @@ public class Ukutils {
      * @param name The name of the file
      * @return The path to the file
      */
-    public static File getConfigPath(String name) {
-        return FabricLoader.getInstance().getConfigDir().resolve(name).toFile();
+    public static Path getConfigPath(String name) {
+        return FabricLoader.getInstance().getConfigDir().resolve(name);
     }
 
     private Ukutils() {
