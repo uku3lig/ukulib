@@ -13,6 +13,7 @@ import net.minecraft.client.gui.navigation.GuiNavigationPath;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
@@ -92,6 +93,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         this.maxLength = maxLength;
 
         this.setText(initialValue);
+        this.setTooltip(Tooltip.of(Text.of(this.suggestion)));
     }
 
     @Override
