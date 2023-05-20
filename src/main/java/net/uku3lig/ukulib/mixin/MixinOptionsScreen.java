@@ -7,7 +7,7 @@ import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.api.UkulibAPI;
-import net.uku3lig.ukulib.config.impl.UkulibConfigScreen;
+import net.uku3lig.ukulib.config.impl.ModListScreen;
 import net.uku3lig.ukulib.utils.IconButton;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -29,7 +29,7 @@ public class MixinOptionsScreen extends Screen {
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
 
-        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new UkulibConfigScreen(this))));
+        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
     }
 
     /**

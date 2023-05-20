@@ -17,7 +17,7 @@ import java.util.function.UnaryOperator;
 /**
  * Ukulib's config screen. Shows all the mods that have integrated with Ukulib.
  */
-public final class UkulibConfigScreen extends GameOptionsScreen {
+public final class ModListScreen extends GameOptionsScreen {
     private EntrypointList entrypointList;
 
     /**
@@ -25,7 +25,7 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
      *
      * @param parent The parent screen
      */
-    public UkulibConfigScreen(Screen parent) {
+    public ModListScreen(Screen parent) {
         super(parent, MinecraftClient.getInstance().options, Text.of("Ukulib Config"));
     }
 
