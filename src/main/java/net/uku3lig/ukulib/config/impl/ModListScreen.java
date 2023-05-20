@@ -6,9 +6,10 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.GameOptionsScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
-import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -51,7 +52,13 @@ public final class ModListScreen extends GameOptionsScreen {
         entrypointList.addAll(containers, this);
         this.addSelectableChild(entrypointList);
 
-        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+        MinecraftClient mc = MinecraftClient.getInstance();
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> mc.setScreen(this.parent))
+                .dimensions(this.width / 2 - 155, this.height - 27, 150, 20)
+                .build());
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.config.title"), button -> mc.setScreen(new UkulibConfigScreen(this)))
+                .dimensions(this.width / 2 + 5, this.height - 27, 150, 20)
+                .build());
     }
 
     @Override

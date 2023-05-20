@@ -6,5 +6,9 @@
   "ukulib.position.bottomRight": "Bottom Right",
   "ukulib.position.middle": "Above XP Bar",
   "ukulib.position.desc": "Click somewhere on the screen to change the element's position.",
-  "ukulib.position.desc.move": "Press the §earrow keys§r to precisely adjust the element's position."
+  "ukulib.position.desc.move": "Press the §earrow keys§r to precisely adjust the element's position.",
+
+  "ukulib.config.title": "Ukulib Config",
+  "ukulib.config.buttonInOptions": "Button In Options",
+  "ukulib.config.modMenuIntegration": "ModMenu Integration"
 }
