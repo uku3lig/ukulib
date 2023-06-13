@@ -37,7 +37,7 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param other The second widget creator; nullable
      */
     public void addEntries(WidgetCreator first, @Nullable WidgetCreator other) {
-        this.addEntry(new ButtonEntry(this.getRowWidth(), first, other));
+        this.addEntry(new ButtonEntry(this.width, first, other));
     }
 
     /**
