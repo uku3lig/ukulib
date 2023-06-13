@@ -49,20 +49,20 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
 
     public final class ModEntry extends ElementListWidget.Entry<ModEntry> {
         private static final Identifier UNKNOWN_ICON = new Identifier("ukulib", "unknown.png");
+        private static final int ICON_SIZE = 32;
 
         private final ButtonWidget button;
         private final Identifier iconPath;
-        private final int iconSize = 16 * MinecraftClient.getInstance().options.getGuiScale().getValue();
 
         public ModEntry(ModContainer mod, UnaryOperator<Screen> operator, int width, Screen parent) {
             button = ButtonWidget.builder(Text.of(mod.getMetadata().getName()), b -> client.setScreen(operator.apply(parent)))
-                    .dimensions(width / 2 - 100, 0, 200, iconSize)
+                    .dimensions(width / 2 - 100, 0, 200, ICON_SIZE)
                     .tooltip(Tooltip.of(Text.of(mod.getMetadata().getDescription())))
                     .build();
 
             ModMetadata metadata = mod.getMetadata();
 
-            this.iconPath = metadata.getIconPath(iconSize)
+            this.iconPath = metadata.getIconPath(ICON_SIZE)
                     .flatMap(mod::findPath)
                     .flatMap(path -> {
                         try (InputStream inputStream = Files.newInputStream(path)) {
@@ -96,7 +96,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
             button.setY(y);
             button.render(drawContext, mouseX, mouseY, tickDelta);
 
-            drawContext.drawTexture(this.iconPath, button.getX() - iconSize - 5, y, 0, 0, iconSize, iconSize, iconSize, iconSize);
+            drawContext.drawTexture(this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }
