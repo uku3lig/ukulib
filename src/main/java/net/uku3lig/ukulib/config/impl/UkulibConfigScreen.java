@@ -5,6 +5,9 @@ import net.uku3lig.ukulib.config.option.CyclingOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 import net.uku3lig.ukulib.config.screen.AbstractConfigScreen;
 
+/**
+ * ukulib's config screen.
+ */
 public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
     /**
      * Creates a config screen.

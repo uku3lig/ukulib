@@ -10,6 +10,11 @@ import java.util.function.Consumer;
 import java.util.function.Function;
 import java.util.function.Predicate;
 
+/**
+ * A {@link WidgetCreator} which creates a {@link TextInputWidget} with a converter and validator.
+ *
+ * @param <T> the type of the value
+ */
 public class TypedInputOption<T> implements WidgetCreator {
     private final String suggestionKey;
     private final String initialValue;

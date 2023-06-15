@@ -10,6 +10,11 @@ import java.io.Serializable;
 import java.nio.file.Files;
 import java.nio.file.Path;
 
+/**
+ * A config serializer that uses JSON via {@link Gson}.
+ *
+ * @param <T> The type of the config
+ */
 @Slf4j
 public class JsonConfigSerializer<T extends Serializable> implements ConfigSerializer<T> {
     private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
@@ -17,6 +22,12 @@ public class JsonConfigSerializer<T extends Serializable> implements ConfigSeria
     private final Class<T> configClass;
     private final Path path;
 
+    /**
+     * Creates a serializer. Uses <code>`name`.json</code> as the file name.
+     *
+     * @param configClass The class of the config
+     * @param name        The name of the config
+     */
     public JsonConfigSerializer(Class<T> configClass, String name) {
         this.configClass = configClass;
         this.path = Ukutils.getConfigPath(name + ".json");
