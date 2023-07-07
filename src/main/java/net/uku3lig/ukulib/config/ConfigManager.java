@@ -1,17 +1,23 @@
 package net.uku3lig.ukulib.config;
 
 import lombok.Getter;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
+import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.config.serialization.TomlConfigSerializer;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 /**
  * Manages a config, by holding it, saving it and loading it.
  *
  * @param <T> The type of the config
  */
-public class ConfigManager<T extends Serializable> {
+public class ConfigManager<T extends Serializable> implements SimpleSynchronousResourceReloadListener {
     private final ConfigSerializer<T> serializer;
 
     /**
@@ -31,6 +37,7 @@ public class ConfigManager<T extends Serializable> {
     public ConfigManager(ConfigSerializer<T> serializer, T config) {
         this.serializer = serializer;
         this.config = config;
+        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
     }
 
     /**
@@ -59,7 +66,7 @@ public class ConfigManager<T extends Serializable> {
      * Saves the stored config.
      */
     public void saveConfig() {
-        serializer.serialize(config);
+        this.serializer.serialize(config);
     }
 
     /**
@@ -68,8 +75,8 @@ public class ConfigManager<T extends Serializable> {
      * @param newConfig The new config
      */
     public void replaceConfig(T newConfig) {
-        config = newConfig;
-        serializer.serialize(newConfig);
+        this.config = newConfig;
+        this.serializer.serialize(newConfig);
     }
 
     /**
@@ -77,5 +84,17 @@ public class ConfigManager<T extends Serializable> {
      */
     public void resetConfig() {
         this.serializer.serialize(this.serializer.makeDefault());
+    }
+
+    // Config reload stuff :3
+    @Override
+    public Identifier getFabricId() {
+        String className = String.join(".", config.getClass().getPackageName(), config.getClass().getSimpleName());
+        return new Identifier("ukulib", className.toLowerCase(Locale.ROOT) + "_reloader");
+    }
+
+    @Override
+    public void reload(ResourceManager manager) {
+        this.replaceConfig(this.serializer.deserialize());
     }
 }
