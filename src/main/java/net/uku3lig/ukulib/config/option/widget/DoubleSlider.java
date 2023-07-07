@@ -15,7 +15,7 @@ import java.util.function.DoubleFunction;
  * @see net.uku3lig.ukulib.config.option.SliderOption
  */
 public class DoubleSlider extends SliderWidget {
-    private final String key;
+    private final Text text;
     private final double min;
     private final double max;
     private final double step;
@@ -26,7 +26,7 @@ public class DoubleSlider extends SliderWidget {
     /**
      * Constructs a new slider.
      *
-     * @param key            The translation key
+     * @param text           The text
      * @param valueToText    The function that converts the value to human-readable text
      * @param initialValue   The initial value
      * @param min            The minimum value
@@ -40,17 +40,17 @@ public class DoubleSlider extends SliderWidget {
      * @param height         The height of the widget
      */
     public DoubleSlider(
-            String key, DoubleFunction<Text> valueToText, double initialValue,
+            Text text, DoubleFunction<Text> valueToText, double initialValue,
             double min, double max, double step,
             DoubleConsumer setter, SimpleOption.TooltipFactory<Double> tooltipFactory,
             int x, int y, int width, int height
     ) {
-        super(x, y, width, height, Text.translatable(key), MathHelper.map(initialValue, min, max, 0, 1));
+        super(x, y, width, height, text, MathHelper.map(initialValue, min, max, 0, 1));
 
         if (step <= 0) throw new IllegalArgumentException("step cannot be negative or null");
         if (min > max) throw new IllegalArgumentException("min cannot be greater than max");
 
-        this.key = key;
+        this.text = text;
         this.valueToText = valueToText;
         this.min = min;
         this.max = max;
@@ -63,7 +63,7 @@ public class DoubleSlider extends SliderWidget {
 
     @Override
     protected void updateMessage() {
-        this.setMessage(GameOptions.getGenericValueText(Text.translatable(this.key), this.valueToText.apply(fixedValue())));
+        this.setMessage(GameOptions.getGenericValueText(this.text, this.valueToText.apply(fixedValue())));
         this.setTooltip(this.tooltipFactory.apply(fixedValue()));
     }
 

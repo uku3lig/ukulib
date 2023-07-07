@@ -105,6 +105,6 @@ public class SliderOption implements WidgetCreator {
 
     @Override
     public ClickableWidget createWidget(int x, int y, int width, int height) {
-        return new DoubleSlider(key, valueToText, initialValue, min, max, step, setter, tooltipFactory, x, y, width, height);
+        return new DoubleSlider(Text.translatable(key), valueToText, initialValue, min, max, step, setter, tooltipFactory, x, y, width, height);
     }
 }
