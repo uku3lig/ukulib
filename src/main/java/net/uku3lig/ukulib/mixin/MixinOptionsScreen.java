@@ -11,6 +11,7 @@ import net.uku3lig.ukulib.config.impl.ModListScreen;
 import net.uku3lig.ukulib.config.impl.UkulibConfig;
 import net.uku3lig.ukulib.utils.IconButton;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -20,6 +21,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(OptionsScreen.class)
 public class MixinOptionsScreen extends Screen {
+    @Unique
     private static final Identifier ICON = new Identifier("ukulib", "uku.png");
 
     /**

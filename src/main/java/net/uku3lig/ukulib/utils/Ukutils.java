@@ -16,7 +16,6 @@ import java.nio.file.Path;
 /**
  * Simple class for various utilities.
  */
-@SuppressWarnings("unused")
 public class Ukutils {
     /**
      * Creates a done button.
@@ -82,6 +81,7 @@ public class Ukutils {
      * @param text The ordered text
      * @return The value of the text
      */
+    @SuppressWarnings("unused")
     public static String getText(OrderedText text) {
         StringBuilder builder = new StringBuilder();
         text.accept((index, style, codePoint) -> {
