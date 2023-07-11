@@ -1,11 +1,17 @@
 package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.stream.Collectors;
 
 /**
  * Simple abstract class which provides utilities for config screens
@@ -41,21 +47,34 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
     public void tick() {
         super.tick();
 
-        doneButton.active = this.isEverythingValid();
-        // TODO add tooltip
+        Collection<ClickableWidget> invalid = this.getInvalidOptions();
+        doneButton.active = invalid.isEmpty();
+
+        if (doneButton.active) {
+            doneButton.setTooltip(Tooltip.of(Text.empty()));
+        } else {
+            String invalidNames = invalid.stream()
+                    .map(ClickableWidget::getMessage)
+                    .map(Text::getString)
+                    .collect(Collectors.joining(", "));
+
+            doneButton.setTooltip(Tooltip.of(Text.translatable("ukulib.option.invalid", invalidNames)));
+        }
     }
 
     /**
-     * Checks if every option in the current config screen is valid. Called once every tick.
+     * Finds invalid options in the config screen. Called once every tick.
      *
-     * @return {@code true} if everything is correct, {@code false} otherwise.
+     * @return The collection of invalid options.
      */
-    protected boolean isEverythingValid() {
-        return true;
+    protected Collection<ClickableWidget> getInvalidOptions() {
+        return Collections.emptyList();
     }
 
     @Override
     public void removed() {
-        manager.saveConfig();
+        if (getInvalidOptions().isEmpty()) {
+            manager.saveConfig();
+        }
     }
 }

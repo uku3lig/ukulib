@@ -6,6 +6,7 @@ import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
 import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.ConfigManager;
@@ -13,7 +14,9 @@ import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.mixin.TabNavigationWidgetAccessor;
 
 import java.io.Serializable;
-import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
 
 import static net.minecraft.client.gui.screen.world.CreateWorldScreen.FOOTER_SEPARATOR_TEXTURE;
 
@@ -76,19 +79,19 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     }
 
     @Override
-    protected boolean isEverythingValid() {
-        final AtomicBoolean valid = new AtomicBoolean(true);
+    protected Collection<ClickableWidget> getInvalidOptions() {
+        Set<ClickableWidget> invalid = new HashSet<>();
         ImmutableList<Tab> tabs = ((TabNavigationWidgetAccessor) this.tabWidget).getTabs();
 
         for (Tab tab : tabs) {
             tab.forEachChild(c -> {
                 if (c instanceof CheckedOption option && !option.isValid()) {
-                    valid.set(false);
+                    invalid.add(c);
                 }
             });
         }
 
-        return valid.get();
+        return invalid;
     }
 
     @Override

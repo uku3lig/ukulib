@@ -86,7 +86,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
      * @param maxLength       the maximum length of the text
      */
     public TextInputWidget(int x, int y, int width, int height, String initialValue, Consumer<String> changedListener, String suggestion, Predicate<String> textPredicate, int maxLength) {
-        super(x, y, width, height, Text.empty());
+        super(x, y, width, height, Text.of(suggestion));
         this.changedListener = changedListener;
         this.suggestion = suggestion;
         this.textPredicate = textPredicate;

@@ -3,7 +3,6 @@ package net.uku3lig.ukulib.config.screen;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.uku3lig.ukulib.config.ConfigManager;
@@ -13,6 +12,7 @@ import net.uku3lig.ukulib.config.option.WidgetCreator;
 import net.uku3lig.ukulib.config.option.widget.WidgetCreatorList;
 
 import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * A screen used to edit a config.
@@ -70,16 +70,13 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
     }
 
     @Override
-    protected boolean isEverythingValid() {
-        for (WidgetCreatorList.ButtonEntry entry : buttonList.children()) {
-            for (Element element : entry.children()) {
-                if (element instanceof CheckedOption option && !option.isValid()) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+    protected Collection<ClickableWidget> getInvalidOptions() {
+        return buttonList.children().stream()
+                .flatMap(e -> e.children().stream())
+                .filter(ClickableWidget.class::isInstance)
+                .map(e -> (ClickableWidget) e)
+                .filter(w -> w instanceof CheckedOption option && !option.isValid())
+                .toList();
     }
 
     @Override
