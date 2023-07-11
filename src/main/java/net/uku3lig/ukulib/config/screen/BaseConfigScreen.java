@@ -3,7 +3,6 @@ package net.uku3lig.ukulib.config.screen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.Serializable;
@@ -42,10 +41,17 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
     public void tick() {
         super.tick();
 
-        doneButton.active = this.children().stream()
-                .filter(CheckedOption.class::isInstance)
-                .map(CheckedOption.class::cast)
-                .allMatch(CheckedOption::isValid);
+        doneButton.active = this.isEverythingValid();
+        // TODO add tooltip
+    }
+
+    /**
+     * Checks if every option in the current config screen is valid. Called once every tick.
+     *
+     * @return {@code true} if everything is correct, {@code false} otherwise.
+     */
+    protected boolean isEverythingValid() {
+        return true;
     }
 
     @Override
