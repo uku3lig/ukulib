@@ -88,7 +88,7 @@ public class SliderOption implements WidgetCreator {
      * @param max          The maximum value
      */
     public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Text> valueToText, double min, double max) {
-        this(key, initialValue, setter, valueToText, min, max, 1);
+        this(key, initialValue, setter, valueToText, min, max, 0.01);
     }
 
     /**
