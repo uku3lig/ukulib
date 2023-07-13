@@ -1,0 +1,11 @@
+{
+  "modmenu.descriptionTranslation.ukulib": "модларымда кулланган кечкенә файдалылык китапханәсе",
+  "ukulib.position": "Урын",
+  "ukulib.position.topLeft": "Өске сул",
+  "ukulib.position.topRight": "Өске уң",
+  "ukulib.position.bottomLeft": "Аскы сул",
+  "ukulib.position.bottomRight": "Аскы уң",
+  "ukulib.position.middle": "XP аслыгыннан югарырак",
+  "ukulib.position.desc": "Элементның урынын үзгәртү өчен каядыр экранга басыгыз.",
+  "ukulib.position.desc.move": "Элементның урынын төгәл төзәтү өчен §Ук төймәләренә§r басыгыз."
+}
