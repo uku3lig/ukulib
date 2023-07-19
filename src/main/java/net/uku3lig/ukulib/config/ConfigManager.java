@@ -83,7 +83,7 @@ public class ConfigManager<T extends Serializable> implements SimpleSynchronousR
      * Resets the config to its default, from a default provided by the {@link ConfigSerializer}.
      */
     public void resetConfig() {
-        this.serializer.serialize(this.serializer.makeDefault());
+        this.replaceConfig(this.serializer.makeDefault());
     }
 
     // Config reload stuff :3
