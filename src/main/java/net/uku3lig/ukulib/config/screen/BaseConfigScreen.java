@@ -1,9 +1,11 @@
 package net.uku3lig.ukulib.config.screen;
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.utils.Ukutils;
@@ -40,7 +42,18 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
 
     @Override
     protected void init() {
-        doneButton = this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+        doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
+                .dimensions(width / 2 - 155, height - 27, 150, 20)
+                .build());
+
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.option.reset"), button -> {
+                    MinecraftClient.getInstance().setScreen(parent);
+                    manager.resetConfig();
+                    manager.saveConfig();
+                    Ukutils.sendToast(Text.of("Sucessfully reset config!"), null);
+                })
+                .dimensions(width / 2 + 5, height - 27, 150, 20)
+                .build());
     }
 
     @Override
