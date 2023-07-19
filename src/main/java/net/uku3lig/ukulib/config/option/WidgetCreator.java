@@ -17,4 +17,8 @@ public interface WidgetCreator {
      * @return The created widget
      */
     ClickableWidget createWidget(int x, int y, int width, int height);
+
+    default WideWidgetCreator wide() {
+        return new WideWidgetCreator(this);
+    }
 }
