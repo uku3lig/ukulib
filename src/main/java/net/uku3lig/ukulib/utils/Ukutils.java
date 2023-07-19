@@ -5,9 +5,12 @@ import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.toast.SystemToast;
+import net.minecraft.client.toast.ToastManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
@@ -100,6 +103,17 @@ public class Ukutils {
      */
     public static Path getConfigPath(String name) {
         return FabricLoader.getInstance().getConfigDir().resolve(name);
+    }
+
+    /**
+     * Displays a simple toast message.
+     *
+     * @param title The title of the message
+     * @param body  The body of the message
+     */
+    public static void sendToast(Text title, @Nullable Text body) {
+        ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
+        SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, title, body);
     }
 
     private Ukutils() {

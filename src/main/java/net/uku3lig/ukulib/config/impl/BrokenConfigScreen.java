@@ -12,8 +12,6 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.ToastManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.uku3lig.ukulib.utils.Ukutils;
@@ -83,8 +81,7 @@ public class BrokenConfigScreen extends Screen {
             }
         } catch (Exception e) {
             log.error("Error while uploading logs to mclo.gs: {}", e.getMessage());
-            ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
-            SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, Text.of("Error while uploading logs"), Text.of(e.getMessage()));
+            Ukutils.sendToast(Text.of("Error while uploading logs"), Text.of(e.getMessage()));
         }
     }
 }
