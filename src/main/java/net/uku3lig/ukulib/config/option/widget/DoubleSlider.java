@@ -13,6 +13,7 @@ import java.util.function.DoubleFunction;
  * Implementation of a slider widget for use in {@link net.uku3lig.ukulib.config.option.SliderOption}.
  *
  * @see net.uku3lig.ukulib.config.option.SliderOption
+ * @see net.uku3lig.ukulib.config.option.IntSliderOption
  */
 public class DoubleSlider extends SliderWidget {
     private final Text text;
