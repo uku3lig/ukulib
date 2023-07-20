@@ -18,6 +18,11 @@ public interface WidgetCreator {
      */
     ClickableWidget createWidget(int x, int y, int width, int height);
 
+    /**
+     * Makes a widget wide.
+     *
+     * @return The wide widget
+     */
     default WideWidgetCreator wide() {
         return new WideWidgetCreator(this);
     }

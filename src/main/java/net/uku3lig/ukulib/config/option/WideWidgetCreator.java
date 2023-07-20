@@ -8,6 +8,11 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 public class WideWidgetCreator implements WidgetCreator {
     private final WidgetCreator creator;
 
+    /**
+     * Creates a wide widget.
+     *
+     * @param creator The widget creator to be wrapped.
+     */
     public WideWidgetCreator(WidgetCreator creator) {
         this.creator = creator;
     }
