@@ -5,11 +5,11 @@ import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
+import net.uku3lig.ukulib.config.screen.CloseableScreen;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,7 +18,7 @@ import java.util.function.UnaryOperator;
 /**
  * Ukulib's config screen. Shows all the mods that have integrated with Ukulib.
  */
-public final class ModListScreen extends GameOptionsScreen {
+public final class ModListScreen extends CloseableScreen {
     private EntrypointList entrypointList;
 
     /**
@@ -27,7 +27,7 @@ public final class ModListScreen extends GameOptionsScreen {
      * @param parent The parent screen
      */
     public ModListScreen(Screen parent) {
-        super(parent, MinecraftClient.getInstance().options, Text.of("Ukulib Config"));
+        super("Ukulib Config", parent);
     }
 
     @Override

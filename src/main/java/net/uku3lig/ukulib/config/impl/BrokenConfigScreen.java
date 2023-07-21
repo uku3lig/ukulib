@@ -14,6 +14,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
+import net.uku3lig.ukulib.config.screen.CloseableScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.File;
@@ -24,16 +25,14 @@ import java.nio.file.Path;
  * Simple screen shown when a config screen is broken.
  */
 @Slf4j
-public class BrokenConfigScreen extends Screen {
-    private final Screen parent;
-
+public class BrokenConfigScreen extends CloseableScreen {
     /**
      * Creates the screen.
+     *
      * @param parent The parent screen
      */
     public BrokenConfigScreen(Screen parent) {
-        super(Text.of("Broken config screen"));
-        this.parent = parent;
+        super(Text.of("Broken config screen"), parent);
     }
 
     static {
@@ -44,11 +43,6 @@ public class BrokenConfigScreen extends Screen {
                 .map(ModMetadata::getVersion)
                 .map(Version::getFriendlyString)
                 .orElse("unknown");
-    }
-
-    @Override
-    public void close() {
-        MinecraftClient.getInstance().setScreen(parent);
     }
 
     @Override
