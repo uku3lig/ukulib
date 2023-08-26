@@ -37,4 +37,9 @@ public class UkulibConfig implements Serializable {
      * Whether to enable the automatic mod menu integration
      */
     private boolean modMenuIntegration = true;
+
+    /**
+     * The UUID of the head used in the options screen button
+     */
+    private String headName = "uku3lig";
 }

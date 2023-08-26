@@ -10,6 +10,7 @@ import net.minecraft.client.toast.ToastManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
@@ -114,6 +115,16 @@ public class Ukutils {
     public static void sendToast(Text title, @Nullable Text body) {
         ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
         SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, title, body);
+    }
+
+    /**
+     * Checks if a texture exists and is registered.
+     *
+     * @param texture The texture to check
+     * @return Whether the texture exists
+     */
+    public static boolean textureExists(Identifier texture) {
+        return MinecraftClient.getInstance().getTextureManager().getOrDefault(texture, null) != null;
     }
 
     private Ukutils() {
