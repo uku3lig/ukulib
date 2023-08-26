@@ -72,6 +72,10 @@ jar {
     }
 }
 
+javadoc {
+    exclude("net/uku3lig/ukulib/config/impl/UkulibConfig.java")
+}
+
 // configure the maven publication
 publishing {
     publications {
