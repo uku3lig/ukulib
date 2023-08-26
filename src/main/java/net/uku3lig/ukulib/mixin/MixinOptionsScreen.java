@@ -31,7 +31,7 @@ public class MixinOptionsScreen extends Screen {
     @Inject(method = "init", at = @At("RETURN"))
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
-        if (!UkulibConfig.getManager().getConfig().isButtonInOptions()) return;
+        if (!UkulibConfig.get().isButtonInOptions()) return;
 
         this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
     }

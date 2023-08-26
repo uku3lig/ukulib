@@ -21,6 +21,15 @@ public class UkulibConfig implements Serializable {
     private static final ConfigManager<UkulibConfig> manager = ConfigManager.createDefault(UkulibConfig.class, "ukulib");
 
     /**
+     * The config instance
+     *
+     * @return The config
+     */
+    public static UkulibConfig get() {
+        return manager.getConfig();
+    }
+
+    /**
      * Whether to show the button in the options menu
      *
      * @param buttonInOptions the new value

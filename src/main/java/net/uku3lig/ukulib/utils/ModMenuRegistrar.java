@@ -23,7 +23,7 @@ public class ModMenuRegistrar implements ModMenuApi {
 
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
-        if (!UkulibConfig.getManager().getConfig().isModMenuIntegration())
+        if (!UkulibConfig.get().isModMenuIntegration())
             return Collections.emptyMap();
 
         return FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).stream()
