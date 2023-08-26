@@ -26,6 +26,7 @@ public class MixinOptionsScreen extends Screen {
 
     /**
      * Adds a button to open the config screen.
+     *
      * @param ci callback info
      */
     @Inject(method = "init", at = @At("RETURN"))
@@ -33,11 +34,12 @@ public class MixinOptionsScreen extends Screen {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
         if (!UkulibConfig.get().isButtonInOptions()) return;
 
-        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
+        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20, ICON, 16, 16, button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
     }
 
     /**
      * constructor :D
+     *
      * @param title the title of the screen
      */
     protected MixinOptionsScreen(Text title) {
