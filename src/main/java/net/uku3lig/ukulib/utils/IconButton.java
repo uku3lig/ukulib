@@ -12,6 +12,7 @@ import net.minecraft.util.Identifier;
  */
 @Getter
 @Setter
+@SuppressWarnings("javadoc")
 public class IconButton extends ButtonWidget {
     /**
      * The texture of the icon

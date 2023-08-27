@@ -11,5 +11,6 @@
   "ukulib.option.reset": "Reset To Default",
   "ukulib.config.title": "Ukulib Config",
   "ukulib.config.buttonInOptions": "Button In Options",
-  "ukulib.config.modMenuIntegration": "ModMenu Integration"
+  "ukulib.config.modMenuIntegration": "ModMenu Integration",
+  "ukulib.config.headName": "Username of the head in options"
 }

@@ -41,14 +41,13 @@ public class MixinOptionsScreen extends Screen {
 
         String username = UkulibConfig.get().getHeadName();
         Identifier texture = Ukutils.getHeadTex(username);
+        texture = Ukutils.textureExists(texture) ? texture : DEFAULT_ICON;
 
         this.ukulibButton = this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20,
-                Ukutils.textureExists(texture) ? texture : DEFAULT_ICON, 16, 16,
+                texture, 16, 16,
                 button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
 
-        if (!Ukutils.textureExists(DEFAULT_ICON)) {
-            UkulibConfigScreen.registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(Ukutils.getHeadTex(username)));
-        }
+        UkulibConfigScreen.registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(Ukutils.getHeadTex(username)));
     }
 
     /**
