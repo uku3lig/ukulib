@@ -40,6 +40,10 @@ dependencies {
     modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
 }
 
+loom {
+    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
+}
+
 tasks.processResources {
     inputs.property("version", project.version)
     filteringCharset = "UTF-8"

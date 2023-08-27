@@ -1,6 +1,5 @@
 package net.uku3lig.ukulib.config.screen;
 
-import com.google.common.collect.ImmutableList;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.ScreenRect;
 import net.minecraft.client.gui.screen.Screen;
@@ -11,7 +10,6 @@ import net.minecraft.client.gui.widget.TabNavigationWidget;
 import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
-import net.uku3lig.ukulib.mixin.TabNavigationWidgetAccessor;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -81,9 +79,8 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     protected Collection<ClickableWidget> getInvalidOptions() {
         Set<ClickableWidget> invalid = new HashSet<>();
-        ImmutableList<Tab> tabs = ((TabNavigationWidgetAccessor) this.tabWidget).getTabs();
 
-        for (Tab tab : tabs) {
+        for (Tab tab : this.tabWidget.tabs) {
             tab.forEachChild(c -> {
                 if (c instanceof CheckedOption option && !option.isValid()) {
                     invalid.add(c);
