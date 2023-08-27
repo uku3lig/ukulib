@@ -11,7 +11,7 @@ import net.minecraft.text.Text;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.function.UnaryOperator;
 
@@ -34,8 +34,8 @@ public final class ModListScreen extends CloseableScreen {
     protected void init() {
         super.init();
 
-        entrypointList = new EntrypointList(this.client, this.width, this.height, 32, this.height - 32, 25);
-        Map<ModContainer, UnaryOperator<Screen>> containers = new HashMap<>();
+        entrypointList = new EntrypointList(this.client, this.width, this.height, 32, this.height - 32, 36);
+        Map<ModContainer, UnaryOperator<Screen>> containers = new LinkedHashMap<>();
 
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
                 .forEach(entry -> {

@@ -27,8 +27,8 @@ import java.util.function.UnaryOperator;
  */
 @Slf4j
 final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
-    public EntrypointList(MinecraftClient minecraftClient, int x, int y, int width, int height, int m) {
-        super(minecraftClient, x, y, width, height, m);
+    public EntrypointList(MinecraftClient minecraftClient, int x, int y, int width, int height, int itemHeight) {
+        super(minecraftClient, x, y, width, height, itemHeight);
     }
 
     public void addAll(Map<ModContainer, UnaryOperator<Screen>> containers, Screen parent) {
