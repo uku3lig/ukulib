@@ -451,7 +451,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             drawContext.drawTextWithShadow(this.textRenderer, this.suggestion, x, textY, 0xff808080);
         }
 
-        if (this.isSelected()) {
+        if (this.isFocused()) {
             if (isCursorInTheMiddle) {
                 drawContext.fill(cursorX, textY - 1, cursorX + 1, textY + 1 + 9, VERTICAL_CURSOR_COLOR);
             } else {
