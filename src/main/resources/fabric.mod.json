@@ -12,7 +12,7 @@
     "issues": "https://github.com/uku3lig/ukulib/issues",
     "sources": "https://github.com/uku3lig/ukulib"
   },
-  "license": "MIT",
+  "license": "MPL-2.0",
   "icon": "assets/ukulib/icon.png",
   "environment": "client",
   "entrypoints": {
