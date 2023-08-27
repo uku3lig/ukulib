@@ -22,7 +22,9 @@ import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.Locale;
+import java.util.NoSuchElementException;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 
 /**
  * ukulib's config screen.
@@ -55,22 +57,26 @@ public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
         registerHeadTex(UkulibConfig.get().getHeadName());
     }
 
-    private void registerHeadTex(String username) {
+    public static CompletableFuture<Void> registerHeadTex(String username) {
+        Identifier texture = Ukutils.getHeadTex(username);
+        if (Ukutils.textureExists(texture)) {
+            return CompletableFuture.completedFuture(null);
+        }
+
         HttpRequest uuidReq = HttpRequest.newBuilder(URI.create("https://api.mojang.com/users/profiles/minecraft/" + username))
                 .GET().build();
 
-        HTTP_CLIENT.sendAsync(uuidReq, HttpResponse.BodyHandlers.ofString())
+        return HTTP_CLIENT.sendAsync(uuidReq, HttpResponse.BodyHandlers.ofString())
                 .thenAccept(res -> {
                     if (res.statusCode() != 200) {
                         log.error("Error while getting UUID of " + username + ": " + res.statusCode() + " " + res.body());
-                        return;
+                        throw new CompletionException(new NoSuchElementException("Error while getting UUID of " + username));
                     }
 
                     JsonObject json = new Gson().fromJson(res.body(), JsonObject.class);
                     String uuid = json.get("id").getAsString();
 
                     TextureManager texManager = MinecraftClient.getInstance().getTextureManager();
-                    Identifier texture = new Identifier("ukulib", "head_" + username.toLowerCase(Locale.ROOT));
 
                     if (!Ukutils.textureExists(texture)) {
                         try {
@@ -81,6 +87,7 @@ public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
                             }
                         } catch (IOException e) {
                             log.error("Could not fetch head texture", e);
+                            throw new CompletionException(e);
                         }
                     }
                 });

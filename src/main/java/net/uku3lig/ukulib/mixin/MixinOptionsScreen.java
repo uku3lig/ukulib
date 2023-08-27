@@ -9,6 +9,7 @@ import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.impl.ModListScreen;
 import net.uku3lig.ukulib.config.impl.UkulibConfig;
+import net.uku3lig.ukulib.config.impl.UkulibConfigScreen;
 import net.uku3lig.ukulib.utils.IconButton;
 import net.uku3lig.ukulib.utils.Ukutils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,8 +18,6 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.Locale;
-
 /**
  * Mixin for {@link OptionsScreen}.
  */
@@ -26,6 +25,9 @@ import java.util.Locale;
 public class MixinOptionsScreen extends Screen {
     @Unique
     private static final Identifier DEFAULT_ICON = new Identifier("ukulib", "uku.png");
+
+    @Unique
+    private IconButton ukulibButton;
 
     /**
      * Adds a button to open the config screen.
@@ -37,11 +39,16 @@ public class MixinOptionsScreen extends Screen {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
         if (!UkulibConfig.get().isButtonInOptions()) return;
 
-        String username = UkulibConfig.get().getHeadName().toLowerCase(Locale.ROOT);
-        Identifier texture = new Identifier("ukulib", "head_" + username);
-        texture = Ukutils.textureExists(texture) ? texture : DEFAULT_ICON;
+        String username = UkulibConfig.get().getHeadName();
+        Identifier texture = Ukutils.getHeadTex(username);
 
-        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20, texture, 16, 16, button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
+        this.ukulibButton = this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20,
+                Ukutils.textureExists(texture) ? texture : DEFAULT_ICON, 16, 16,
+                button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
+
+        if (!Ukutils.textureExists(DEFAULT_ICON)) {
+            UkulibConfigScreen.registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(Ukutils.getHeadTex(username)));
+        }
     }
 
     /**

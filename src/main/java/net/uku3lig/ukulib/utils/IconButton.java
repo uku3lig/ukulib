@@ -1,5 +1,7 @@
 package net.uku3lig.ukulib.utils;
 
+import lombok.Getter;
+import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
@@ -8,14 +10,64 @@ import net.minecraft.util.Identifier;
 /**
  * A simple button with an icon. Works best when the button is square.
  */
+@Getter
+@Setter
 public class IconButton extends ButtonWidget {
-    private final Identifier texture;
-    private final int u;
-    private final int v;
-    private final int iconWidth;
-    private final int iconHeight;
-    private final int textureWidth;
-    private final int textureHeight;
+    /**
+     * The texture of the icon
+     *
+     * @param texture The new texture
+     * @return The texture
+     */
+    private Identifier texture;
+
+    /**
+     * The x position of the icon in the texture
+     *
+     * @param u The new x position
+     * @return The x position
+     */
+    private int u;
+
+    /**
+     * The y position of the icon in the texture
+     *
+     * @param v The new y position
+     * @return The y position
+     */
+    private int v;
+
+    /**
+     * The width of the icon
+     *
+     * @param iconWidth The new width
+     * @return The width
+     */
+    private int iconWidth;
+
+    /**
+     * The height of the icon
+     *
+     * @param iconHeight The new height
+     * @return The height
+     */
+    private int iconHeight;
+
+    /**
+     * The width of the texture
+     *
+     * @param textureWidth The new width
+     * @return The width
+     */
+    private int textureWidth;
+
+    /**
+     * The height of the texture
+     *
+     * @param textureHeight The new height
+     * @return The height
+     */
+    private int textureHeight;
 
     /**
      * Makes a new button with a centered icon.

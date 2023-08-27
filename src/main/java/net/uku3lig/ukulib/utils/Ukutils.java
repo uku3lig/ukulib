@@ -16,6 +16,7 @@ import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
 import java.nio.file.Path;
+import java.util.Locale;
 
 /**
  * Simple class for various utilities.
@@ -125,6 +126,17 @@ public class Ukutils {
      */
     public static boolean textureExists(Identifier texture) {
         return MinecraftClient.getInstance().getTextureManager().getOrDefault(texture, null) != null;
+    }
+
+    /**
+     * Gets the texture of a player's head.
+     *
+     * @param username The username of the player
+     * @return The texture of the player's head
+     */
+    public static Identifier getHeadTex(String username) {
+        username = username.toLowerCase(Locale.ROOT);
+        return new Identifier("ukulib", "head_" + username);
     }
 
     private Ukutils() {
