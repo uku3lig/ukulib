@@ -49,16 +49,17 @@ tasks.processResources {
     }
 }
 
-sourceCompatibility = JavaVersion.VERSION_17
-targetCompatibility = JavaVersion.VERSION_17
-
 tasks.withType(JavaCompile).configureEach {
     it.options.encoding = "UTF-8"
 }
 
+base {
+    archivesName = project.archives_base_name
+}
 
 java {
-    archivesBaseName = project.archives_base_name
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
 
     if (grgit != null && grgit.status().clean) {
         withSourcesJar()
