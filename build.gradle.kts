@@ -1,7 +1,7 @@
 plugins {
-    id("fabric-loom") version "1.2-SNAPSHOT"
-    id("io.github.juuxel.loom-quiltflower") version "1.10.0"
-    id("io.freefair.lombok") version "8.0.1"
+    id("fabric-loom") version "1.3-SNAPSHOT"
+    id("io.github.juuxel.loom-vineflower") version "1.11.0"
+    id("io.freefair.lombok") version "8.3"
     id("org.ajoberstar.grgit") version "5.0.0"
 
     `maven-publish`
