@@ -49,12 +49,6 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     protected abstract Tab[] getTabs(T config);
 
     @Override
-    public void tick() {
-        super.tick();
-        this.tabManager.tick();
-    }
-
-    @Override
     protected void init() {
         super.init();
         this.tabWidget = TabNavigationWidget.builder(this.tabManager, this.width)
@@ -93,8 +87,7 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawContext);
-        drawContext.drawTexture(FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
         super.render(drawContext, mouseX, mouseY, delta);
+        drawContext.drawTexture(FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
     }
 }

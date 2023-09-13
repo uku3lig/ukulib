@@ -81,9 +81,8 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawContext);
+        super.render(drawContext, mouseX, mouseY, delta);
         buttonList.render(drawContext, mouseX, mouseY, delta);
         drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        super.render(drawContext, mouseX, mouseY, delta);
     }
 }
