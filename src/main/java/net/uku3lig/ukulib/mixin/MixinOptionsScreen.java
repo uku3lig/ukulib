@@ -10,6 +10,7 @@ import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.impl.UkulibConfigScreen;
 import net.uku3lig.ukulib.utils.IconButton;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -19,6 +20,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
  */
 @Mixin(OptionsScreen.class)
 public class MixinOptionsScreen extends Screen {
+    @Unique
     private static final Identifier ICON = new Identifier("ukulib", "uku.png");
 
     /**
@@ -29,7 +31,7 @@ public class MixinOptionsScreen extends Screen {
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
 
-        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 120 - 6, 20, 20, 0, 0, 20, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new UkulibConfigScreen(this))));
+        this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 120 - 6, 20, 20, 0, 0, ICON, 20, 20, button -> MinecraftClient.getInstance().setScreen(new UkulibConfigScreen(this))));
     }
 
     /**

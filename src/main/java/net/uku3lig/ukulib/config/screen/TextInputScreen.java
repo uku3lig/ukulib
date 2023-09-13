@@ -102,10 +102,9 @@ public abstract class TextInputScreen<T> extends CloseableScreen {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawContext);
+        super.render(drawContext, mouseX, mouseY, delta);
         drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
         drawContext.drawTextWithShadow(this.textRenderer, label, this.width / 2 - 100, 100, 0xA0A0A0);
         this.textField.render(drawContext, mouseX, mouseY, delta);
-        super.render(drawContext, mouseX, mouseY, delta);
     }
 }

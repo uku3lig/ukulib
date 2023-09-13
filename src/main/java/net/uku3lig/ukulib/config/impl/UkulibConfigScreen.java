@@ -40,9 +40,9 @@ public final class UkulibConfigScreen extends GameOptionsScreen {
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        this.renderBackground(drawContext);
+        super.render(drawContext, mouseX, mouseY, delta);
+
         entrypointList.render(drawContext, mouseX, mouseY, delta);
         drawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 20, 0xFFFFFF);
-        super.render(drawContext, mouseX, mouseY, delta);
     }
 }
