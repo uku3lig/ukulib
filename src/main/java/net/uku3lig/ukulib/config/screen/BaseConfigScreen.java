@@ -49,7 +49,20 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
         this.manager = manager;
     }
 
-    protected <R> R getConfigChecked(Function<T, R> mapper) {
+    /**
+     * Tries to apply the current config to a function (eg. {@code getWidgets}).
+     * If an exception is thrown, the config is first reset and applied again,
+     * and if it fails a second time, a notice is shown to the end user.
+     * This is mainly useful to prevent {@link NullPointerException}s.
+     * <p>
+     * Example: {@code buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]))}
+     *
+     * @param mapper       The function that needs a config
+     * @param defaultValue The default value, in case the config is broken. Only here to avoid returning null.
+     * @param <R>          The type of the return value of the applied function
+     * @return The result of the function, if the config is working
+     */
+    protected <R> R applyConfigChecked(Function<T, R> mapper, R defaultValue) {
         try {
             return mapper.apply(manager.getConfig());
         } catch (Exception e) {
@@ -63,7 +76,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
             }
         }
 
-        return null;
+        return defaultValue;
     }
 
     @Override

@@ -52,7 +52,7 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     protected void init() {
         super.init();
         this.tabWidget = TabNavigationWidget.builder(this.tabManager, this.width)
-                .tabs(getConfigChecked(this::getTabs))
+                .tabs(applyConfigChecked(this::getTabs, new Tab[0]))
                 .build();
         this.addDrawableChild(this.tabWidget);
         this.tabWidget.selectTab(0, false);
