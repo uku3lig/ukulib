@@ -1,12 +1,10 @@
 package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 import net.uku3lig.ukulib.config.option.widget.WidgetCreatorList;
@@ -52,19 +50,7 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
     protected void init() {
         super.init();
         buttonList = new WidgetCreatorList(this.client, this.width, this.height, 32, this.height - 32, 25);
-
-        try {
-            buttonList.addAll(getWidgets(manager.getConfig()));
-        } catch (Exception e) {
-            log.error("Error while getting options, replacing config with the default one", e);
-            manager.resetConfig();
-            try {
-                buttonList.addAll(getWidgets(manager.getConfig()));
-            } catch (Exception e2) {
-                log.error("Error while getting options with the default config, this is a bug", e2);
-                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
-            }
-        }
+        buttonList.addAll(getConfigChecked(this::getWidgets));
 
         this.addSelectableChild(buttonList);
     }

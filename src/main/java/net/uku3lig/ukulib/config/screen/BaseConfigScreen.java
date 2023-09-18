@@ -8,11 +8,15 @@ import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.Serializable;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +30,11 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
      */
     protected final ConfigManager<T> manager;
 
+    /*
+     * Logger
+     */
+    protected final Logger log = LoggerFactory.getLogger(this.getClass());
+
     private ButtonWidget doneButton;
 
     /**
@@ -38,6 +47,23 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
     protected BaseConfigScreen(String key, Screen parent, ConfigManager<T> manager) {
         super(key, parent);
         this.manager = manager;
+    }
+
+    protected <R> R getConfigChecked(Function<T, R> mapper) {
+        try {
+            return mapper.apply(manager.getConfig());
+        } catch (Exception e) {
+            log.error("Error while getting options, replacing config with the default one", e);
+            manager.resetConfig();
+            try {
+                return mapper.apply(manager.getConfig());
+            } catch (Exception e2) {
+                log.error("Error while getting options with the default config, this is a bug", e2);
+                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
+            }
+        }
+
+        return null;
     }
 
     @Override
