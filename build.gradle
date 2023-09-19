@@ -129,7 +129,7 @@ def getVersionMetadata() {
 
     if (ENV.PUBLISH_RELEASE) return ""
 
-    def build_id = ENV.BUILD_NUMBER
+    def build_id = ENV.GITHUB_RUN_NUMBER
 
     // CI builds only
     if (build_id != null) {
