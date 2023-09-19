@@ -1,4 +1,4 @@
-package net.uku3lig.ukulib.config;
+package net.uku3lig.ukulib.utils;
 
 import lombok.Getter;
 import net.minecraft.util.TranslatableOption;
