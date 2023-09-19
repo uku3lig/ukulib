@@ -1,23 +1,24 @@
 package net.uku3lig.ukulib.config;
 
+import lombok.AccessLevel;
 import lombok.Getter;
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.config.serialization.ConfigSerializer;
 import net.uku3lig.ukulib.config.serialization.TomlConfigSerializer;
 
 import java.io.Serializable;
-import java.util.Locale;
 
 /**
  * Manages a config, by holding it, saving it and loading it.
  *
  * @param <T> The type of the config
  */
-public class ConfigManager<T extends Serializable> implements SimpleSynchronousResourceReloadListener {
+public class ConfigManager<T extends Serializable> {
+    /**
+     * The serializer used to save the config to disk.
+     *
+     * @return The serializer
+     */
+    @Getter(AccessLevel.PACKAGE)
     private final ConfigSerializer<T> serializer;
 
     /**
@@ -37,7 +38,7 @@ public class ConfigManager<T extends Serializable> implements SimpleSynchronousR
     public ConfigManager(ConfigSerializer<T> serializer, T config) {
         this.serializer = serializer;
         this.config = config;
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(this);
+        ConfigManagerReloader.addManager(this);
     }
 
     /**
@@ -84,17 +85,5 @@ public class ConfigManager<T extends Serializable> implements SimpleSynchronousR
      */
     public void resetConfig() {
         this.replaceConfig(this.serializer.makeDefault());
-    }
-
-    // Config reload stuff :3
-    @Override
-    public Identifier getFabricId() {
-        String className = String.join(".", config.getClass().getPackageName(), config.getClass().getSimpleName());
-        return new Identifier("ukulib", className.toLowerCase(Locale.ROOT) + "_reloader");
-    }
-
-    @Override
-    public void reload(ResourceManager manager) {
-        this.replaceConfig(this.serializer.deserialize());
     }
 }
