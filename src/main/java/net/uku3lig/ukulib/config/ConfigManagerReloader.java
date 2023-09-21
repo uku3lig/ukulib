@@ -10,6 +10,9 @@ import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
+/**
+ * Reloads all config managers when the resource manager reloads (e.g. on F3+T).
+ */
 public class ConfigManagerReloader implements SimpleSynchronousResourceReloadListener {
     private static final Set<ConfigManager<?>> managers = new HashSet<>();
 
@@ -17,6 +20,11 @@ public class ConfigManagerReloader implements SimpleSynchronousResourceReloadLis
         ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new ConfigManagerReloader());
     }
 
+    /**
+     * Adds a config manager to be reloaded.
+     *
+     * @param manager the config manager
+     */
     public static void addManager(ConfigManager<?> manager) {
         managers.add(manager);
     }

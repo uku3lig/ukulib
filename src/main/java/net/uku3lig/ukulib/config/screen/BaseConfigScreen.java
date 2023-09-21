@@ -30,8 +30,8 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
      */
     protected final ConfigManager<T> manager;
 
-    /*
-     * Logger
+    /**
+     * SLF4J Logger
      */
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 

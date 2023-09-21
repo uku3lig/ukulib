@@ -57,6 +57,13 @@ public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
         registerHeadTex(UkulibConfig.get().getHeadName());
     }
 
+    /**
+     * <h4>WARNING: INTERNAL METHOD, DO NOT USE !!!!!!!!</h4>
+     * Registers the head texture of a player.
+     *
+     * @param username the username of the player
+     * @return a future that completes when the texture is registered
+     */
     public static CompletableFuture<Void> registerHeadTex(String username) {
         Identifier texture = Ukutils.getHeadTex(username);
         if (Ukutils.textureExists(texture)) {
