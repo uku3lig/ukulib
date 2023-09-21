@@ -8,9 +8,11 @@
     "uku"
   ],
   "contact": {
-    "repo": "https://github.com/uku3lig/ukulib"
+    "homepage": "https://github.com/uku3lig/ukulib",
+    "issues": "https://github.com/uku3lig/ukulib/issues",
+    "sources": "https://github.com/uku3lig/ukulib"
   },
-  "license": "MIT",
+  "license": "MPL-2.0",
   "icon": "assets/ukulib/icon.png",
   "environment": "client",
   "entrypoints": {
@@ -21,6 +23,9 @@
   "depends": {
     "fabricloader": ">=0.13",
     "fabric-resource-loader-v0": "*"
+  },
+  "recommends": {
+    "fabric-command-api-v2": "*"
   },
   "mixins": [
     "ukulib.mixins.json"

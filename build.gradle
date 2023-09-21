@@ -1,0 +1,153 @@
+plugins {
+    id "fabric-loom" version "1.3-SNAPSHOT"
+    id "io.github.juuxel.loom-vineflower" version "1.11.0"
+    id "io.freefair.lombok" version "8.3"
+    id "org.ajoberstar.grgit" version "5.0.0"
+
+    id "maven-publish"
+    id "com.modrinth.minotaur" version "2.+"
+}
+
+version = "${project.mod_version}+${project.minecraft_version}${getVersionMetadata()}"
+group = project.maven_group
+
+if (System.getenv("PUBLISH_RELEASE")) {
+    publish.finalizedBy "modrinth"
+}
+
+repositories {
+    maven {
+        url = uri("https://maven.uku3lig.net/releases")
+    }
+    maven {
+        url = uri("https://maven.terraformersmc.com/releases/")
+    }
+}
+
+dependencies {
+    // To change the versions see the gradle.properties file
+    minecraft("com.mojang:minecraft:${project.minecraft_version}")
+    mappings("net.fabricmc:yarn:${project.yarn_mappings}:v2")
+    modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
+
+    include(implementation("com.moandjiezana.toml:toml4j:${project.toml4j_version}"))
+    include(implementation("gs.mclo.java:mclogs-java:2.1.1"))
+
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)))
+
+    // optional deps
+    modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
+    modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
+}
+
+loom {
+    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
+}
+
+tasks.processResources {
+    inputs.property("version", project.version)
+    filteringCharset = "UTF-8"
+
+    filesMatching("fabric.mod.json") {
+        expand "version": project.version
+    }
+}
+
+tasks.withType(JavaCompile).configureEach {
+    it.options.encoding = "UTF-8"
+}
+
+base {
+    archivesName = project.archives_base_name
+}
+
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_17
+
+    if (grgit != null && grgit.status().clean) {
+        withSourcesJar()
+        withJavadocJar()
+    }
+}
+
+jar {
+    from("LICENSE") {
+        rename { "${it}_${project.archives_base_name}" }
+    }
+}
+
+javadoc {
+    exclude("net/uku3lig/ukulib/config/impl/UkulibConfig.java")
+}
+
+// configure the maven publication
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            from components.java
+        }
+    }
+
+    repositories {
+        maven {
+            name = "UkuReleases"
+            url "https://maven.uku3lig.net/releases"
+            credentials {
+                username = "uku"
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
+            name = "UkuSnapshots"
+            url = "https://maven.uku3lig.net/snapshots"
+            credentials {
+                username = "uku"
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
+}
+
+var release_type = "release"
+if (version.containsIgnoreCase("alpha")) release_type = "alpha"
+else if (version.containsIgnoreCase("beta")) release_type = "beta"
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "Y8uFrUil"
+    versionNumber = project.version
+    versionType = release_type
+    uploadFile = remapJar // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    gameVersions = [project.minecraft_version] // Must be an array, even with only one version
+    loaders = ["fabric", "quilt"]
+    changelog = "See https://github.com/uku3lig/ukulib/releases/tag/${project.version}"
+}
+
+def getVersionMetadata() {
+    def ENV = System.getenv()
+
+    if (ENV.PUBLISH_RELEASE) return ""
+
+    def build_id = ENV.GITHUB_RUN_NUMBER
+
+    // CI builds only
+    if (build_id != null) {
+        return "-build.${build_id}"
+    }
+
+    if (grgit != null) {
+        def head = grgit.head()
+        def id = head.abbreviatedId
+
+        // Flag the build if the build tree is not clean
+        if (!grgit.status().clean) {
+            id += "-dirty"
+        }
+
+        return "-rev.${id}"
+    }
+
+    // No tracking information could be found about the build
+    return "-unknown"
+}

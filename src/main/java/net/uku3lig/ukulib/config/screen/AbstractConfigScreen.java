@@ -1,17 +1,16 @@
 package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.screen.option.GameOptionsScreen;
-import net.minecraft.client.gui.widget.OptionListWidget;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.widget.ClickableWidget;
 import net.uku3lig.ukulib.config.ConfigManager;
-import net.uku3lig.ukulib.config.IConfig;
-import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
-import net.uku3lig.ukulib.utils.Ukutils;
+import net.uku3lig.ukulib.config.option.CheckedOption;
+import net.uku3lig.ukulib.config.option.WidgetCreator;
+import net.uku3lig.ukulib.config.option.widget.WidgetCreatorList;
+
+import java.io.Serializable;
+import java.util.Collection;
 
 /**
  * A screen used to edit a config.
@@ -20,72 +19,56 @@ import net.uku3lig.ukulib.utils.Ukutils;
  * @param <T> The type of the config
  */
 @Slf4j
-public abstract class AbstractConfigScreen<T extends IConfig<T>> extends GameOptionsScreen {
-    /**
-     * The config manager. Used to load and save the config.
-     */
-    protected final ConfigManager<T> manager;
-
+public abstract class AbstractConfigScreen<T extends Serializable> extends BaseConfigScreen<T> {
     /**
      * The widget used to display the options.
-     * @see AbstractConfigScreen#getOptions(IConfig)
+     *
+     * @see AbstractConfigScreen#getWidgets(Serializable)
      */
-    protected OptionListWidget optionList;
+    protected WidgetCreatorList buttonList;
 
     /**
      * Creates a config screen.
-     * @param parent The parent screen
-     * @param title The title of the screen
+     *
+     * @param key     The translation key of the title
+     * @param parent  The parent screen
      * @param manager The config manager
      */
-    protected AbstractConfigScreen(Screen parent, Text title, ConfigManager<T> manager) {
-        super(parent, MinecraftClient.getInstance().options, title);
-        this.manager = manager;
+    protected AbstractConfigScreen(String key, Screen parent, ConfigManager<T> manager) {
+        super(key, parent, manager);
     }
 
     /**
-     * The list of options that will be shown to the user when this screen is displayed.
+     * The list of widgets that will be shown to the user when this screen is displayed.
+     *
      * @param config The config
-     * @return An array of {@link SimpleOption}
+     * @return An array of {@link WidgetCreator}
      */
-    protected abstract SimpleOption<?>[] getOptions(T config);
+    protected abstract WidgetCreator[] getWidgets(T config);
 
     @Override
     protected void init() {
         super.init();
-        optionList = new OptionListWidget(this.client, this.width, this.height, 32, this.height - 32, 25);
+        buttonList = new WidgetCreatorList(this.client, this.width, this.height, 32, this.height - 32, 25);
+        buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
 
-        try {
-            optionList.addAll(getOptions(manager.getConfig()));
-        } catch (Exception e) {
-            log.error("Error while getting options, replacing config with the default one", e);
-            manager.replaceConfig(manager.getConfig().defaultConfig());
-            try {
-                optionList.addAll(getOptions(manager.getConfig()));
-            } catch (Exception e2) {
-                log.error("Error while getting options with the default config, this is a bug", e2);
-                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
-            }
-        }
-
-        this.addSelectableChild(optionList);
-        drawFooterButtons();
+        this.addSelectableChild(buttonList);
     }
 
-    /**
-     * Draws the buttons in the footer.
-     */
-    protected void drawFooterButtons() {
-        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+    @Override
+    protected Collection<ClickableWidget> getInvalidOptions() {
+        return buttonList.children().stream()
+                .flatMap(e -> e.children().stream())
+                .filter(ClickableWidget.class::isInstance)
+                .map(e -> (ClickableWidget) e)
+                .filter(w -> w instanceof CheckedOption option && !option.isValid())
+                .toList();
     }
 
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        render(drawContext, optionList, mouseX, mouseY, delta);
-    }
-
-    @Override
-    public void removed() {
-        manager.saveConfig();
+        super.render(drawContext, mouseX, mouseY, delta);
+        buttonList.render(drawContext, mouseX, mouseY, delta);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
     }
 }

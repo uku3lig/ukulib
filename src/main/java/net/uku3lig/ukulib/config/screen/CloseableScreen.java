@@ -14,12 +14,23 @@ public abstract class CloseableScreen extends Screen {
 
     /**
      * Constructs a closeable screen
-     * @param title The title of the screen
+     *
+     * @param title  The title of the screen
      * @param parent The parent screen
      */
     protected CloseableScreen(Text title, Screen parent) {
         super(title);
         this.parent = parent;
+    }
+
+    /**
+     * Constructs a closeable screen from a translation key
+     *
+     * @param key    The translation key of the title
+     * @param parent The parent screen
+     */
+    protected CloseableScreen(String key, Screen parent) {
+        this(Text.translatable(key), parent);
     }
 
     @Override
