@@ -42,6 +42,9 @@ public class ColorInputWidget extends TextInputWidget {
             int x = this.getX() + this.width + 2;
             int y = this.getY();
             int size = this.height;
+
+            if (color <= 0xFFFFFF && !allowAlpha) color |= (0xFF << 24);
+
             drawContext.fill(x, y, x + size, y + size, color);
         });
     }
@@ -53,7 +56,7 @@ public class ColorInputWidget extends TextInputWidget {
             value = value.replace("#", "");
             if (value.length() == 6 || (allowAlpha && value.length() == 8)) {
                 int color = Integer.parseUnsignedInt(value, 16);
-                if (color <= 0xFFFFFF) color |= (0xFF << 24);
+                if (color <= 0xFFFFFF && allowAlpha) color |= (0xFF << 24);
 
                 return Optional.of(color);
             }
