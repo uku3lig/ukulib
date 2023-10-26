@@ -3,11 +3,13 @@ package net.uku3lig.ukulib.config.impl;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
+import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import net.uku3lig.ukulib.config.option.CyclingOption;
 import net.uku3lig.ukulib.config.option.InputOption;
@@ -54,7 +56,14 @@ public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
     @Override
     public void removed() {
         super.removed();
-        registerHeadTex(UkulibConfig.get().getHeadName());
+        if (FabricLoader.getInstance().isModLoaded("vulkanmod")) {
+            log.warn("VulkanMod detected, disabling custom heads.");
+            if (this.manager.getConfig().getHeadName().equalsIgnoreCase("uku3lig")) {
+                Ukutils.sendToast(Text.of("Warning!"), Text.of("Custom heads do not work with VulkanMod."));
+            }
+        } else {
+            registerHeadTex(UkulibConfig.get().getHeadName());
+        }
     }
 
     /**
