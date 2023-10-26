@@ -40,14 +40,22 @@ public class MixinOptionsScreen extends Screen {
         if (!UkulibConfig.get().isButtonInOptions()) return;
 
         String username = UkulibConfig.get().getHeadName();
-        Identifier texture = Ukutils.getHeadTex(username);
-        texture = Ukutils.textureExists(texture) ? texture : DEFAULT_ICON;
+        Identifier texture = DEFAULT_ICON;
+
+        // custom heads cause a crash with vulkanmod, see https://github.com/uku3lig/ukulib/issues/12
+        // TODO: custom icon caching?
+        if (!FabricLoader.getInstance().isModLoaded("vulkanmod")) {
+            Identifier customHeadTex = Ukutils.getHeadTex(username);
+            if (Ukutils.textureExists(customHeadTex)) {
+                texture = customHeadTex;
+            } else {
+                UkulibConfigScreen.registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(customHeadTex));
+            }
+        }
 
         this.ukulibButton = this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20,
                 texture, 16, 16,
                 button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
-
-        UkulibConfigScreen.registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(Ukutils.getHeadTex(username)));
     }
 
     /**
