@@ -19,7 +19,7 @@
       }: {
         devShells.default = pkgs.mkShell {
           buildInputs = with pkgs; [
-            jdk
+            temurin-bin-17
           ];
 
           LD_LIBRARY_PATH = with pkgs;
