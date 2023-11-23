@@ -49,7 +49,7 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
     @Override
     protected void init() {
         super.init();
-        buttonList = new WidgetCreatorList(this.client, this.width, this.height, 32, this.height - 32, 25);
+        buttonList = new WidgetCreatorList(this.client, this.width, this.height - 64, 32, 25);
         buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
 
         this.addSelectableChild(buttonList);

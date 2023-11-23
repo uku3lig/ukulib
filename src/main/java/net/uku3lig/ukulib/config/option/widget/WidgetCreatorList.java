@@ -25,11 +25,28 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param width           The width of the list
      * @param height          The height of the list
      * @param top             The top position of the list
-     * @param bottom          The bottom position of the list
+     * @param bottom          UNUSED PARAMETER, USE OTHER CONSTRUCTOR
+     * @param itemHeight      The height of each widget, usually 20
+     *
+     * @deprecated Mojang (rightfully) removed the bottom in 1.20.3, use {@link WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)} instead
+     * @see WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)
+     */
+    @Deprecated(since = "1.1.0", forRemoval = true)
+    public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, @SuppressWarnings("unused") int bottom, int itemHeight) {
+        this(minecraftClient, width, height, top, itemHeight);
+    }
+
+    /**
+     * Creates an empty widget list
+     *
+     * @param minecraftClient The Minecraft client instance
+     * @param width           The width of the list
+     * @param height          The height of the list
+     * @param top             The top position of the list
      * @param itemHeight      The height of each widget, usually 20
      */
-    public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, int bottom, int itemHeight) {
-        super(minecraftClient, width, height, top, bottom, itemHeight);
+    public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, int itemHeight) {
+        super(minecraftClient, width, height, top, itemHeight);
         this.centerListVertically = false;
     }
 

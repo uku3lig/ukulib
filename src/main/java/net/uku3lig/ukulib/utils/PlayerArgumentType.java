@@ -44,7 +44,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
         PlayerSelector selector = context.getArgument(name, PlayerSelector.class);
 
         return context.getSource().getWorld().getPlayers().stream()
-                .filter(p -> p.getEntityName().equalsIgnoreCase(selector.name) || p.getUuidAsString().equalsIgnoreCase(selector.name))
+                .filter(p -> p.getNameForScoreboard().equalsIgnoreCase(selector.name) || p.getUuidAsString().equalsIgnoreCase(selector.name))
                 .findFirst()
                 .orElseThrow(PLAYER_NOT_FOUND_EXCEPTION::create);
     }
@@ -57,7 +57,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         if (context.getSource() instanceof FabricClientCommandSource source) {
-            return CommandSource.suggestMatching(source.getWorld().getPlayers().stream().map(PlayerEntity::getEntityName), builder);
+            return CommandSource.suggestMatching(source.getWorld().getPlayers().stream().map(PlayerEntity::getNameForScoreboard), builder);
         } else {
             return CommandSource.suggestMatching(Collections.emptyList(), builder);
         }

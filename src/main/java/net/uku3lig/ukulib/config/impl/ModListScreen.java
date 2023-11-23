@@ -34,7 +34,7 @@ public final class ModListScreen extends CloseableScreen {
     protected void init() {
         super.init();
 
-        entrypointList = new EntrypointList(this.client, this.width, this.height, 32, this.height - 32, 36);
+        entrypointList = new EntrypointList(this.client, this.width, this.height - 64, 32, 36);
         Map<ModContainer, UnaryOperator<Screen>> containers = new LinkedHashMap<>();
 
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
