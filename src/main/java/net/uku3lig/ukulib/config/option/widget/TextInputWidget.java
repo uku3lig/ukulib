@@ -404,7 +404,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         if (!this.isVisible()) return;
 
         int borderColor = this.isFocused() ? 0xFFFFFFFF : BORDER_COLOR;

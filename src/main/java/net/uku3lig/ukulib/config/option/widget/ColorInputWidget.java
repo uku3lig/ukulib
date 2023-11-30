@@ -34,8 +34,8 @@ public class ColorInputWidget extends TextInputWidget {
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.renderButton(drawContext, mouseX, mouseY, delta);
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        super.renderWidget(drawContext, mouseX, mouseY, delta);
         if (!this.isVisible()) return;
 
         convert(this.getText(), this.allowAlpha).ifPresent(color -> {

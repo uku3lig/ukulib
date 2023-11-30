@@ -31,8 +31,8 @@ public class LinedTextWidget extends TextWidget {
     }
 
     @Override
-    public void renderButton(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.renderButton(drawContext, mouseX, mouseY, delta);
+    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+        super.renderWidget(drawContext, mouseX, mouseY, delta);
         if (drawLine) {
             // draw a line before the text
             int lineWidth = (this.width - this.getTextRenderer().getWidth(this.getMessage())) / 2 - (2 * this.padding);
