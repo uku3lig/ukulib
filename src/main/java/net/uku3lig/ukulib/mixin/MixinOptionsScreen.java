@@ -1,7 +1,5 @@
 package net.uku3lig.ukulib.mixin;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonObject;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -24,15 +22,11 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URI;
-import java.net.URL;
 import java.net.http.HttpClient;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
-import java.util.NoSuchElementException;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.CompletionException;
 
 /**
  * Mixin for {@link OptionsScreen}.
@@ -79,7 +73,6 @@ public class MixinOptionsScreen extends Screen {
     }
 
     /**
-     * <h4>WARNING: INTERNAL METHOD, DO NOT USE !!!!!!!!</h4>
      * Registers the head texture of a player.
      *
      * @param username the username of the player
@@ -92,34 +85,21 @@ public class MixinOptionsScreen extends Screen {
             return CompletableFuture.completedFuture(null);
         }
 
-        HttpRequest uuidReq = HttpRequest.newBuilder(URI.create("https://api.mojang.com/users/profiles/minecraft/" + username))
-                .GET().build();
+        TextureManager texManager = MinecraftClient.getInstance().getTextureManager();
+        HttpRequest req = HttpRequest.newBuilder(URI.create("https://mc-heads.net/avatar/" + username + "/16.png")).GET().build();
 
-        return HTTP_CLIENT.sendAsync(uuidReq, HttpResponse.BodyHandlers.ofString())
-                .thenAccept(res -> {
-                    if (res.statusCode() != 200) {
-                        log.error("Error while getting UUID of " + username + ": " + res.statusCode() + " " + res.body());
-                        throw new CompletionException(new NoSuchElementException("Error while getting UUID of " + username));
-                    }
-
-                    JsonObject json = new Gson().fromJson(res.body(), JsonObject.class);
-                    String uuid = json.get("id").getAsString();
-
-                    TextureManager texManager = MinecraftClient.getInstance().getTextureManager();
-
-                    if (!Ukutils.textureExists(texture)) {
-                        try {
-                            URL url = new URL("https://crafatar.com/avatars/" + uuid + "?overlay&size=16");
-                            try (InputStream stream = url.openStream()) {
-                                NativeImage image = NativeImage.read(stream);
-                                texManager.registerTexture(texture, new NativeImageBackedTexture(image));
-                            }
-                        } catch (IOException e) {
-                            log.error("Could not fetch head texture", e);
-                            throw new CompletionException(e);
-                        }
-                    }
-                });
+        return HTTP_CLIENT.sendAsync(req, HttpResponse.BodyHandlers.ofByteArray()).thenAccept(r -> {
+            if (r.statusCode() == 200) {
+                try {
+                    NativeImage image = NativeImage.read(r.body());
+                    texManager.registerTexture(texture, new NativeImageBackedTexture(image));
+                } catch (IOException e) {
+                    log.error("Failed to register head texture", e);
+                }
+            } else {
+                log.error("Could not fetch head texture: {} {}", r.statusCode(), new String(r.body()));
+            }
+        });
     }
 
     /**
