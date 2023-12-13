@@ -125,7 +125,11 @@ public class Ukutils {
      * @return Whether the texture exists
      */
     public static boolean textureExists(Identifier texture) {
-        return MinecraftClient.getInstance().getTextureManager().getOrDefault(texture, null) != null;
+        if (texture == null) {
+            return false;
+        } else {
+            return MinecraftClient.getInstance().getTextureManager().getOrDefault(texture, null) != null;
+        }
     }
 
     /**
@@ -134,9 +138,14 @@ public class Ukutils {
      * @param username The username of the player
      * @return The texture of the player's head
      */
+    @Nullable
     public static Identifier getHeadTex(String username) {
-        username = username.toLowerCase(Locale.ROOT);
-        return new Identifier("ukulib", "head_" + username);
+        if (Identifier.isPathValid(username)) {
+            username = username.toLowerCase(Locale.ROOT);
+            return new Identifier("ukulib", "head_" + username);
+        } else {
+            return null;
+        }
     }
 
     private Ukutils() {

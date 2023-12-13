@@ -10,6 +10,8 @@ import net.uku3lig.ukulib.config.option.WidgetCreator;
 import net.uku3lig.ukulib.config.screen.AbstractConfigScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
 
+import java.util.Locale;
+
 /**
  * ukulib's config screen.
  */
@@ -29,7 +31,8 @@ public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
         return new WidgetCreator[]{
                 CyclingOption.ofBoolean("ukulib.config.buttonInOptions", config.isButtonInOptions(), config::setButtonInOptions),
                 CyclingOption.ofBoolean("ukulib.config.modMenuIntegration", config.isModMenuIntegration(), config::setModMenuIntegration),
-                new InputOption("ukulib.config.headName", config.getHeadName(), config::setHeadName)
+                new InputOption("ukulib.config.headName", config.getHeadName(), config::setHeadName,
+                        s -> s.toLowerCase(Locale.ROOT).matches("[a-z0-9_-]+"))
         };
     }
 
