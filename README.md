@@ -75,3 +75,9 @@ You then need to add the `ukulib` entrypoint in your `fabric.mod.json`:
     ]
   }
 ```
+
+## Sponsors
+
+<img src="https://upload.wikimedia.org/wikipedia/commons/4/46/Tutanota_logo.svg" width=300 />
+
+Massive thanks to [Tuta](https://tuta.com) for their support!
