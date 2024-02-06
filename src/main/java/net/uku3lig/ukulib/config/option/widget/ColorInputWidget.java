@@ -56,7 +56,7 @@ public class ColorInputWidget extends TextInputWidget {
             value = value.replace("#", "");
             if (value.length() == 6 || (allowAlpha && value.length() == 8)) {
                 int color = Integer.parseUnsignedInt(value, 16);
-                if (color <= 0xFFFFFF && allowAlpha) color |= (0xFF << 24);
+                if (color <= 0xFFFFFF && !allowAlpha) color |= (0xFF << 24);
 
                 return Optional.of(color);
             }
