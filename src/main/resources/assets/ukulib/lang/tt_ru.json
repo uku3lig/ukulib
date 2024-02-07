@@ -1,6 +1,5 @@
 {
   "modmenu.descriptionTranslation.ukulib": "модларымда кулланган кечкенә файдалылык китапханәсе",
-
   "ukulib.position": "Урын",
   "ukulib.position.topLeft": "Өске сул",
   "ukulib.position.topRight": "Өске уң",
@@ -9,10 +8,10 @@
   "ukulib.position.middle": "XP аслыгыннан югарырак",
   "ukulib.position.desc": "Элементның урынын үзгәртү өчен каядыр экранга басыгыз.",
   "ukulib.position.desc.move": "Элементның урынын төгәл төзәтү өчен §eУк төймәләренә§r басыгыз.",
-
   "ukulib.option.invalid": "Көйләүдә кертелгән кайбер кыйммәтләр дөрес түгел: %s.\n«Esc» төймәсенә басып, Сез һаман да чыга аласыз, ләкин көйләү сакланмаячак.",
-
+  "ukulib.option.reset": "Әүвәлге",
   "ukulib.config.title": "Ukulib көйләүләре",
   "ukulib.config.buttonInOptions": "Көйләүләрдә төймә",
-  "ukulib.config.modMenuIntegration": "ModMenu интеграциясе"
+  "ukulib.config.modMenuIntegration": "ModMenu интеграциясе",
+  "ukulib.config.headName": "Башның кулланучы исеме көйләүләрдә"
 }
