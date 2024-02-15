@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.mixin;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -56,15 +57,12 @@ public class MixinOptionsScreen extends Screen {
         String username = UkulibConfig.get().getHeadName();
         Identifier texture = DEFAULT_ICON;
 
-        // custom heads cause a crash with vulkanmod, see https://github.com/uku3lig/ukulib/issues/12
         // TODO: custom icon caching?
-        if (!FabricLoader.getInstance().isModLoaded("vulkanmod")) {
-            Identifier customHeadTex = Ukutils.getHeadTex(username);
-            if (Ukutils.textureExists(customHeadTex)) {
-                texture = customHeadTex;
-            } else {
-                registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(customHeadTex));
-            }
+        Identifier customHeadTex = Ukutils.getHeadTex(username);
+        if (Ukutils.textureExists(customHeadTex)) {
+            texture = customHeadTex;
+        } else {
+            registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(customHeadTex));
         }
 
         this.ukulibButton = this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20,
@@ -80,8 +78,8 @@ public class MixinOptionsScreen extends Screen {
      */
     @Unique
     private static CompletableFuture<Void> registerHeadTex(String username) {
-        Identifier texture = Ukutils.getHeadTex(username);
-        if (Ukutils.textureExists(texture)) {
+        Identifier identifier = Ukutils.getHeadTex(username);
+        if (Ukutils.textureExists(identifier)) {
             return CompletableFuture.completedFuture(null);
         }
 
@@ -91,8 +89,8 @@ public class MixinOptionsScreen extends Screen {
         return HTTP_CLIENT.sendAsync(req, HttpResponse.BodyHandlers.ofByteArray()).thenAccept(r -> {
             if (r.statusCode() == 200) {
                 try {
-                    NativeImage image = NativeImage.read(r.body());
-                    texManager.registerTexture(texture, new NativeImageBackedTexture(image));
+                    NativeImage image = NativeImage.read(r.body()); // crashes if put in a try-with-resources
+                    RenderSystem.recordRenderCall(() -> texManager.registerTexture(identifier, new NativeImageBackedTexture(image)));
                 } catch (IOException e) {
                     log.error("Failed to register head texture", e);
                 }

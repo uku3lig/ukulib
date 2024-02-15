@@ -1,14 +1,11 @@
 package net.uku3lig.ukulib.config.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.option.CyclingOption;
 import net.uku3lig.ukulib.config.option.InputOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 import net.uku3lig.ukulib.config.screen.AbstractConfigScreen;
-import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.util.Locale;
 
@@ -34,14 +31,5 @@ public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
                 new InputOption("ukulib.config.headName", config.getHeadName(), config::setHeadName,
                         s -> s.toLowerCase(Locale.ROOT).matches("[a-z0-9_-]+"))
         };
-    }
-
-    @Override
-    public void removed() {
-        super.removed();
-        if (FabricLoader.getInstance().isModLoaded("vulkanmod") && this.manager.getConfig().getHeadName().equalsIgnoreCase("uku3lig")) {
-            log.warn("VulkanMod detected, disabling custom heads.");
-            Ukutils.sendToast(Text.of("Warning!"), Text.of("Custom heads do not work with VulkanMod."));
-        }
     }
 }
