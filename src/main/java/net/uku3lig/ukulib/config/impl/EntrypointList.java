@@ -43,8 +43,8 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
     }
 
     @Override
-    protected int getScrollbarPositionX() {
-        return super.getScrollbarPositionX() + 32;
+    protected int getScrollbarX() {
+        return super.getScrollbarX() + 32;
     }
 
     public final class ModEntry extends ElementListWidget.Entry<ModEntry> {

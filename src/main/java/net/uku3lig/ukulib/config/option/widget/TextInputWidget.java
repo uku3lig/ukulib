@@ -3,7 +3,6 @@ package net.uku3lig.ukulib.config.option.widget;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
-import net.minecraft.SharedConstants;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.DrawContext;
@@ -139,14 +138,13 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         int i = Math.min(this.selectionStart, this.selectionEnd);
         int j = Math.max(this.selectionStart, this.selectionEnd);
         int k = this.maxLength - this.text.length() - (i - j);
-        String string = SharedConstants.stripInvalidChars(text);
-        int l = string.length();
+        int l = text.length();
         if (k < l) {
-            string = string.substring(0, k);
+            text = text.substring(0, k);
             l = k;
         }
 
-        this.text = new StringBuilder(this.text).replace(i, j, string).toString();
+        this.text = new StringBuilder(this.text).replace(i, j, text).toString();
         this.setSelectionStart(i + l);
         this.setSelectionEnd(this.selectionStart);
         this.onChanged(this.text);
@@ -379,7 +377,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
     public boolean charTyped(char chr, int modifiers) {
         if (this.isInactive()) {
             return false;
-        } else if (SharedConstants.isValidChar(chr)) {
+        } else if (chr >= ' ') {
             this.write(Character.toString(chr));
             return true;
         } else {

@@ -100,8 +100,8 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
     }
 
     @Override
-    protected int getScrollbarPositionX() {
-        return super.getScrollbarPositionX() + 32;
+    protected int getScrollbarX() {
+        return super.getScrollbarX() + 32;
     }
 
     /**

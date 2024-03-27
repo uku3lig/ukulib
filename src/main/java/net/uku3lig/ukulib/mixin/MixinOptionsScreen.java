@@ -4,8 +4,11 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.Drawable;
+import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
@@ -65,7 +68,14 @@ public class MixinOptionsScreen extends Screen {
             registerHeadTex(username).thenRun(() -> this.ukulibButton.setTexture(customHeadTex));
         }
 
-        this.ukulibButton = this.addDrawableChild(new IconButton(this.width / 2 + 158, this.height / 6 + 144 - 6, 20, 20,
+        // ugly
+        ButtonWidget credits = this.children().stream()
+                .filter(c -> c instanceof ButtonWidget b && b.getMessage().equals(Text.translatable("options.credits_and_attribution")))
+                .map(ButtonWidget.class::cast)
+                .findFirst()
+                .orElseGet(() -> ButtonWidget.builder(Text.empty(), b -> {}).build()); // should never happen
+
+        this.ukulibButton = this.addDrawableChild(new IconButton(credits.getRight() + 2, credits.getY(), 20, 20,
                 texture, 16, 16,
                 button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this))));
     }
