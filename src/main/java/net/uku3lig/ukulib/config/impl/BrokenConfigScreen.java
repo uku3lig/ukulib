@@ -85,6 +85,6 @@ public class BrokenConfigScreen extends CloseableScreen {
                 });
     }
 
-    public record APIResponse(boolean success, String id, String url, String error) {
+    private record APIResponse(boolean success, String id, String url, String error) {
     }
 }

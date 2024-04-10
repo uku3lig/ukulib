@@ -74,4 +74,6 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
      */
     public record PlayerSelector(String name) {
     }
+
+    private PlayerArgumentType() {}
 }

@@ -43,4 +43,6 @@ public class ConfigManagerReloader implements SimpleSynchronousResourceReloadLis
     private <T extends Serializable> void reloadConfig(ConfigManager<T> manager) {
         manager.replaceConfig(manager.getSerializer().deserialize());
     }
+
+    private ConfigManagerReloader() {}
 }
