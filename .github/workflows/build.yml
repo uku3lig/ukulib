@@ -7,10 +7,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-      - name: Setup Temurin 17
+      - name: Setup Temurin 21
         uses: actions/setup-java@v3
         with:
-          java-version: 17
+          java-version: 21
           distribution: temurin
       - name: Checkout sources
         uses: actions/checkout@v3
