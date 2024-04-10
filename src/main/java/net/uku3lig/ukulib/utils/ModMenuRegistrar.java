@@ -30,4 +30,6 @@ public class ModMenuRegistrar implements ModMenuApi {
                 .filter(c -> c.getEntrypoint().enableModMenuIntegration() && c.getEntrypoint().supplyConfigScreen() != null)
                 .collect(Collectors.toMap(c -> c.getProvider().getMetadata().getId(), c -> parent -> c.getEntrypoint().supplyConfigScreen().apply(parent)));
     }
+
+    private ModMenuRegistrar() {}
 }
