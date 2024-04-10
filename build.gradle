@@ -30,7 +30,6 @@ dependencies {
     modImplementation("net.fabricmc:fabric-loader:${project.loader_version}")
 
     include(implementation("com.moandjiezana.toml:toml4j:${project.toml4j_version}"))
-    include(implementation("gs.mclo.java:mclogs-java:2.1.1"))
 
     include(modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)))
 
