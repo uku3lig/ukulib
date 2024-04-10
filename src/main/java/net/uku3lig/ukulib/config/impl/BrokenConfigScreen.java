@@ -1,12 +1,7 @@
 package net.uku3lig.ukulib.config.impl;
 
-import gs.mclo.java.APIResponse;
-import gs.mclo.java.MclogsAPI;
+import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
-import net.fabricmc.loader.api.Version;
-import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
@@ -19,6 +14,11 @@ import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URI;
+import java.net.http.HttpClient;
+import java.net.http.HttpRequest;
+import java.net.http.HttpResponse;
+import java.nio.file.Files;
 import java.nio.file.Path;
 
 /**
@@ -26,6 +26,10 @@ import java.nio.file.Path;
  */
 @Slf4j
 public class BrokenConfigScreen extends CloseableScreen {
+    private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
+    private static final Gson GSON = new Gson();
+    private static final URI API_URL = URI.create("https://api.mclo.gs/1/log");
+
     /**
      * Creates the screen.
      *
@@ -33,16 +37,6 @@ public class BrokenConfigScreen extends CloseableScreen {
      */
     public BrokenConfigScreen(Screen parent) {
         super(Text.of("Broken config screen"), parent);
-    }
-
-    static {
-        MclogsAPI.mcversion = MinecraftClient.getInstance().getGameVersion();
-        MclogsAPI.userAgent = "ukulib";
-        MclogsAPI.version = FabricLoader.getInstance().getModContainer("ukulib")
-                .map(ModContainer::getMetadata)
-                .map(ModMetadata::getVersion)
-                .map(Version::getFriendlyString)
-                .orElse("unknown");
     }
 
     @Override
@@ -60,22 +54,37 @@ public class BrokenConfigScreen extends CloseableScreen {
     private void uploadLogs() {
         Path logFile = new File(MinecraftClient.getInstance().runDirectory, "logs/latest.log").toPath();
 
+        String content;
         try {
-            APIResponse response = MclogsAPI.share(logFile);
-
-            if (!response.success || response.url == null) {
-                throw new IOException(response.error);
-            } else {
-                log.info("Uploaded logs to {}", response.url);
-
-                MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
-                    if (confirmed) Util.getOperatingSystem().open(response.url);
-                    this.close();
-                }, response.url, true));
-            }
-        } catch (Exception e) {
-            log.error("Error while uploading logs to mclo.gs: {}", e.getMessage());
-            Ukutils.sendToast(Text.of("Error while uploading logs"), Text.of(e.getMessage()));
+            content = Files.readString(logFile);
+        } catch (IOException e) {
+            log.error("Failed to read log file", e);
+            return;
         }
+
+        HttpRequest request = HttpRequest.newBuilder(API_URL)
+                .POST(HttpRequest.BodyPublishers.ofString("content=" + content))
+                .header("User-Agent", "uku3lig/ukulib")
+                .build();
+
+        HTTP_CLIENT.sendAsync(request, HttpResponse.BodyHandlers.ofString())
+                .thenAccept(res -> {
+                    APIResponse apiRes = GSON.fromJson(res.body(), APIResponse.class);
+
+                    if (apiRes.success && apiRes.url != null) {
+                        log.info("Uploaded logs to {}", apiRes.url);
+
+                        MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                            if (confirmed) Util.getOperatingSystem().open(apiRes.url);
+                            this.close();
+                        }, apiRes.url, true));
+                    } else {
+                        log.error("Error while uploading logs to mclo.gs: {}", apiRes.error);
+                        Ukutils.sendToast(Text.of("Error while uploading logs"), Text.of(apiRes.error));
+                    }
+                });
+    }
+
+    public record APIResponse(boolean success, String id, String url, String error) {
     }
 }
