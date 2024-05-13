@@ -8,7 +8,7 @@
     "uku"
   ],
   "contact": {
-    "homepage": "https://github.com/uku3lig/ukulib",
+    "homepage": "https://modrinth.com/mod/ukulib",
     "issues": "https://github.com/uku3lig/ukulib/issues",
     "sources": "https://github.com/uku3lig/ukulib"
   },
@@ -22,9 +22,7 @@
   },
   "depends": {
     "fabricloader": ">=0.15",
-    "fabric-resource-loader-v0": "*"
-  },
-  "recommends": {
+    "fabric-resource-loader-v0": "*",
     "fabric-command-api-v2": "*"
   },
   "mixins": [
