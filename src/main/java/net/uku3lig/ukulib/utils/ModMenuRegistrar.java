@@ -31,5 +31,10 @@ public class ModMenuRegistrar implements ModMenuApi {
                 .collect(Collectors.toMap(c -> c.getProvider().getMetadata().getId(), c -> parent -> c.getEntrypoint().supplyConfigScreen().apply(parent)));
     }
 
-    private ModMenuRegistrar() {}
+    /**
+     * Empty default constructor, required for the entrypoint to be constructed. See #18
+     */
+    public ModMenuRegistrar() {
+        // see javadoc
+    }
 }
