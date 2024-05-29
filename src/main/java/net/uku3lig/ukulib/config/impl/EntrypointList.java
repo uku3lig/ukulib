@@ -15,6 +15,7 @@ import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.uku3lig.ukulib.Ukulib;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -48,7 +49,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
     }
 
     public final class ModEntry extends ElementListWidget.Entry<ModEntry> {
-        private static final Identifier UNKNOWN_ICON = new Identifier("ukulib", "unknown.png");
+        private static final Identifier UNKNOWN_ICON = Ukulib.identifier("unknown.png");
         private static final int ICON_SIZE = 32;
 
         private final ButtonWidget button;
@@ -74,7 +75,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
                         }
                     })
                     .map(tex -> {
-                        Identifier identifier = new Identifier("ukulib", metadata.getId() + "_icon");
+                        Identifier identifier = Ukulib.identifier(metadata.getId() + "_icon");
                         MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, tex);
                         return identifier;
                     })

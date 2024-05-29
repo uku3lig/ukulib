@@ -11,6 +11,7 @@ import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.uku3lig.ukulib.Ukulib;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
@@ -142,7 +143,7 @@ public class Ukutils {
     public static Identifier getHeadTex(String username) {
         if (Identifier.isPathValid(username)) {
             username = username.toLowerCase(Locale.ROOT);
-            return new Identifier("ukulib", "head_" + username);
+            return Ukulib.identifier("head_" + username);
         } else {
             return null;
         }

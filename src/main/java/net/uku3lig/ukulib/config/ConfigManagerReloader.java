@@ -5,6 +5,7 @@ import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
 import net.minecraft.util.Identifier;
+import net.uku3lig.ukulib.Ukulib;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -31,7 +32,7 @@ public class ConfigManagerReloader implements SimpleSynchronousResourceReloadLis
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier("ukulib", "config_reloader");
+        return Ukulib.identifier("config_reloader");
     }
 
     @Override

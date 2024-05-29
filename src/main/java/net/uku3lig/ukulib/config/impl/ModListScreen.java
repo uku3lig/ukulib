@@ -8,6 +8,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
+import net.uku3lig.ukulib.Ukulib;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 
@@ -37,7 +38,7 @@ public final class ModListScreen extends CloseableScreen {
         entrypointList = new EntrypointList(this.client, this.width, this.height - 64, 32, 36);
         Map<ModContainer, UnaryOperator<Screen>> containers = new LinkedHashMap<>();
 
-        FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
+        FabricLoader.getInstance().getEntrypointContainers(Ukulib.MOD_ID, UkulibAPI.class)
                 .forEach(entry -> {
                     if (entry.getEntrypoint().supplyConfigScreen() != null)
                         containers.put(entry.getProvider(), entry.getEntrypoint().supplyConfigScreen());

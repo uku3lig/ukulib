@@ -3,8 +3,9 @@ package net.uku3lig.ukulib.utils;
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;
 import net.fabricmc.loader.api.FabricLoader;
+import net.uku3lig.ukulib.Ukulib;
 import net.uku3lig.ukulib.api.UkulibAPI;
-import net.uku3lig.ukulib.config.impl.UkulibConfig;
+import net.uku3lig.ukulib.config.impl.UkulibClientConfig;
 import net.uku3lig.ukulib.config.impl.UkulibConfigScreen;
 
 import java.util.Collections;
@@ -23,10 +24,10 @@ public class ModMenuRegistrar implements ModMenuApi {
 
     @Override
     public Map<String, ConfigScreenFactory<?>> getProvidedConfigScreenFactories() {
-        if (!UkulibConfig.get().isModMenuIntegration())
+        if (!UkulibClientConfig.get().isModMenuIntegration())
             return Collections.emptyMap();
 
-        return FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).stream()
+        return FabricLoader.getInstance().getEntrypointContainers(Ukulib.MOD_ID, UkulibAPI.class).stream()
                 .filter(c -> c.getEntrypoint().enableModMenuIntegration() && c.getEntrypoint().supplyConfigScreen() != null)
                 .collect(Collectors.toMap(c -> c.getProvider().getMetadata().getId(), c -> parent -> c.getEntrypoint().supplyConfigScreen().apply(parent)));
     }

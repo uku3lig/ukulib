@@ -31,10 +31,10 @@ dependencies {
 
     include(implementation("com.moandjiezana.toml:toml4j:${project.toml4j_version}"))
 
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version)))
-    include(modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version)))
+    modImplementation(fabricApi.module("fabric-resource-loader-v0", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-command-api-v2", project.fabric_version))
+    modImplementation(fabricApi.module("fabric-networking-api-v1", project.fabric_version))
 
-    // optional deps
     modCompileOnly("com.terraformersmc:modmenu:${project.modmenu_version}")
 }
 

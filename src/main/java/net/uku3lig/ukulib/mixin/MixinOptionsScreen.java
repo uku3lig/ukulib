@@ -4,8 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -14,9 +12,10 @@ import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.uku3lig.ukulib.Ukulib;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.impl.ModListScreen;
-import net.uku3lig.ukulib.config.impl.UkulibConfig;
+import net.uku3lig.ukulib.config.impl.UkulibClientConfig;
 import net.uku3lig.ukulib.utils.IconButton;
 import net.uku3lig.ukulib.utils.Ukutils;
 import org.spongepowered.asm.mixin.Mixin;
@@ -39,7 +38,7 @@ import java.util.concurrent.CompletableFuture;
 @Mixin(OptionsScreen.class)
 public class MixinOptionsScreen extends Screen {
     @Unique
-    private static final Identifier DEFAULT_ICON = new Identifier("ukulib", "uku.png");
+    private static final Identifier DEFAULT_ICON = Ukulib.identifier("uku.png");
 
     @Unique
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
@@ -55,9 +54,9 @@ public class MixinOptionsScreen extends Screen {
     @Inject(method = "init", at = @At("RETURN"))
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
-        if (!UkulibConfig.get().isButtonInOptions()) return;
+        if (!UkulibClientConfig.get().isButtonInOptions()) return;
 
-        String username = UkulibConfig.get().getHeadName();
+        String username = UkulibClientConfig.get().getHeadName();
         Identifier texture = DEFAULT_ICON;
 
         // TODO: custom icon caching?

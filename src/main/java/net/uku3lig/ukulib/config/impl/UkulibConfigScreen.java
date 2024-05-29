@@ -13,18 +13,18 @@ import java.util.Locale;
  * ukulib's config screen.
  */
 @Slf4j
-public class UkulibConfigScreen extends AbstractConfigScreen<UkulibConfig> {
+public class UkulibConfigScreen extends AbstractConfigScreen<UkulibClientConfig> {
     /**
      * Creates a config screen.
      *
      * @param parent The parent screen
      */
     public UkulibConfigScreen(Screen parent) {
-        super("ukulib.config.title", parent, UkulibConfig.getManager());
+        super("ukulib.config.title", parent, UkulibClientConfig.getManager());
     }
 
     @Override
-    protected WidgetCreator[] getWidgets(UkulibConfig config) {
+    protected WidgetCreator[] getWidgets(UkulibClientConfig config) {
         return new WidgetCreator[]{
                 CyclingOption.ofBoolean("ukulib.config.buttonInOptions", config.isButtonInOptions(), config::setButtonInOptions),
                 CyclingOption.ofBoolean("ukulib.config.modMenuIntegration", config.isModMenuIntegration(), config::setModMenuIntegration),
