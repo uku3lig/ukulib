@@ -4,8 +4,6 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
@@ -39,7 +37,7 @@ import java.util.concurrent.CompletableFuture;
 @Mixin(OptionsScreen.class)
 public class MixinOptionsScreen extends Screen {
     @Unique
-    private static final Identifier DEFAULT_ICON = new Identifier("ukulib", "uku.png");
+    private static final Identifier DEFAULT_ICON = Identifier.of("ukulib", "uku.png");
 
     @Unique
     private static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();

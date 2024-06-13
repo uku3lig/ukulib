@@ -31,7 +31,7 @@ public class ConfigManagerReloader implements SimpleSynchronousResourceReloadLis
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier("ukulib", "config_reloader");
+        return Identifier.of("ukulib", "config_reloader");
     }
 
     @Override

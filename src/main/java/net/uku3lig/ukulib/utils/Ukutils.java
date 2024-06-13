@@ -142,7 +142,7 @@ public class Ukutils {
     public static Identifier getHeadTex(String username) {
         if (Identifier.isPathValid(username)) {
             username = username.toLowerCase(Locale.ROOT);
-            return new Identifier("ukulib", "head_" + username);
+            return Identifier.of("ukulib", "head_" + username);
         } else {
             return null;
         }

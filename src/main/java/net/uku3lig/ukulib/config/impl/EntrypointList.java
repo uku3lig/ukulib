@@ -48,7 +48,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
     }
 
     public final class ModEntry extends ElementListWidget.Entry<ModEntry> {
-        private static final Identifier UNKNOWN_ICON = new Identifier("ukulib", "unknown.png");
+        private static final Identifier UNKNOWN_ICON = Identifier.of("ukulib", "unknown.png");
         private static final int ICON_SIZE = 32;
 
         private final ButtonWidget button;
@@ -74,7 +74,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
                         }
                     })
                     .map(tex -> {
-                        Identifier identifier = new Identifier("ukulib", metadata.getId() + "_icon");
+                        Identifier identifier = Identifier.of("ukulib", metadata.getId() + "_icon");
                         MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, tex);
                         return identifier;
                     })
