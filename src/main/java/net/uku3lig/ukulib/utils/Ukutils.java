@@ -1,27 +1,47 @@
 package net.uku3lig.ukulib.utils;
 
+import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
+import lombok.Getter;
+import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.option.KeyBinding;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
 import java.nio.file.Path;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
+import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
 
 /**
  * Simple class for various utilities.
  */
 public class Ukutils {
+    private static final Text ON = Text.literal("ON").formatted(Formatting.BOLD, Formatting.GREEN);
+    private static final Text OFF = Text.literal("OFF").formatted(Formatting.BOLD, Formatting.RED);
+
+    /**
+     * The map of keybindings and their respective actions.
+     *
+     * @return The map.
+     */
+    @Getter
+    private static final Map<KeyBinding, Consumer<MinecraftClient>> keybindings = new HashMap<>();
+
     /**
      * Creates a done button.
      *
@@ -146,6 +166,41 @@ public class Ukutils {
         } else {
             return null;
         }
+    }
+
+    /**
+     * Register a keybinding.
+     *
+     * @param keyBinding The keybinding
+     * @param action     The action to be performed when the key is pressed
+     */
+    public static void registerKeybinding(KeyBinding keyBinding, Consumer<MinecraftClient> action) {
+        KeyBindingHelper.registerKeyBinding(keyBinding);
+        keybindings.put(keyBinding, action);
+    }
+
+    /**
+     * Register a keybinding for a boolean option that can be toggled.
+     * Warning: for the consumer, make sure NOT to use method reference if you're using ukulib's config;
+     * do something like {@code b -> manager.getConfig().setValue(b)} instead.
+     *
+     * @param keyBinding The keybinding
+     * @param getter     The boolean value getter
+     * @param setter     The boolean value setter
+     * @param message    The message to be displayed to the player when the key is pressed.
+     *                   The new state (ON or OFF) will be appended to this message.
+     */
+    public static void registerToggleBind(KeyBinding keyBinding, BooleanSupplier getter, BooleanConsumer setter, Text message) {
+        Consumer<MinecraftClient> action = client -> {
+            boolean newValue = !getter.getAsBoolean();
+            setter.accept(newValue);
+
+            if (client.player != null) {
+                client.player.sendMessage(message.copy().append(" ").append(newValue ? ON : OFF), true);
+            }
+        };
+
+        Ukutils.registerKeybinding(keyBinding, action);
     }
 
     private Ukutils() {

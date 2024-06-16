@@ -21,9 +21,11 @@
     ]
   },
   "depends": {
+    "minecraft": ">=1.21",
     "fabricloader": ">=0.15",
     "fabric-resource-loader-v0": "*",
-    "fabric-command-api-v2": "*"
+    "fabric-command-api-v2": "*",
+    "fabric-key-binding-api-v1": "*"
   },
   "mixins": [
     "ukulib.mixins.json"
