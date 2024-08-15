@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 
@@ -122,7 +123,7 @@ public class IconButton extends ButtonWidget {
         int ry = this.getY() + (this.height - this.iconHeight) / 2;
 
         if (Ukutils.textureExists(this.texture)) {
-            context.drawTexture(this.texture, rx, ry, 0, this.u, this.v, this.iconWidth, this.iconHeight, this.textureWidth, this.textureHeight);
+            context.drawTexture(RenderLayer::method_62277, this.texture, rx, ry, 0, this.u, this.v, this.iconWidth, this.iconHeight, this.textureWidth, this.textureHeight);
         }
     }
 }

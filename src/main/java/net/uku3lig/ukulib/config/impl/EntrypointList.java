@@ -11,6 +11,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
@@ -96,7 +97,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
             button.setY(y);
             button.render(drawContext, mouseX, mouseY, tickDelta);
 
-            drawContext.drawTexture(this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            drawContext.drawTexture(RenderLayer::method_62277, this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }
