@@ -87,6 +87,6 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         super.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawTexture(RenderLayer::method_62277, FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
     }
 }

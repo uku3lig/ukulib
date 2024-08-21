@@ -97,7 +97,7 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
             button.setY(y);
             button.render(drawContext, mouseX, mouseY, tickDelta);
 
-            drawContext.drawTexture(RenderLayer::method_62277, this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            drawContext.drawTexture(RenderLayer::getGuiTextured, this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }
