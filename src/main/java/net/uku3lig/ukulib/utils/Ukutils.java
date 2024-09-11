@@ -9,6 +9,8 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.KeyBinding;
+import net.minecraft.client.texture.ResourceTexture;
+import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.screen.ScreenTexts;
@@ -20,6 +22,7 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
+import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
@@ -143,12 +146,22 @@ public class Ukutils {
      *
      * @param texture The texture to check
      * @return Whether the texture exists
+     * @implNote contender for worst ukulib method ever
      */
     public static boolean textureExists(Identifier texture) {
+        TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+
         if (texture == null) {
             return false;
+        } else if (textureManager.getOrDefault(texture, null) != null) {
+            return true;
         } else {
-            return MinecraftClient.getInstance().getTextureManager().getOrDefault(texture, null) != null;
+            try (ResourceTexture resourceTexture = new ResourceTexture(texture)) {
+                resourceTexture.load(MinecraftClient.getInstance().getResourceManager());
+                return true;
+            } catch (IOException e) {
+                return false;
+            }
         }
     }
 
