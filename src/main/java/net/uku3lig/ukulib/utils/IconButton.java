@@ -123,7 +123,7 @@ public class IconButton extends ButtonWidget {
         int ry = this.getY() + (this.height - this.iconHeight) / 2;
 
         if (Ukutils.textureExists(this.texture)) {
-            context.drawTexture(RenderLayer::getGuiTextured, this.texture, rx, ry, 0, this.u, this.v, this.iconWidth, this.iconHeight, this.textureWidth, this.textureHeight);
+            context.drawTexture(RenderLayer::getGuiTextured, this.texture, rx, ry, this.u, this.v, this.iconWidth, this.iconHeight, this.textureWidth, this.textureHeight);
         }
     }
 }
