@@ -1,6 +1,7 @@
 package net.uku3lig.ukulib.config.option.widget;
 
 import net.minecraft.client.gui.DrawContext;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
 import java.util.function.IntConsumer;
@@ -27,7 +28,7 @@ public class ColorInputWidget extends TextInputWidget {
      * @param allowAlpha      whether to allow changing the alpha value
      */
     public ColorInputWidget(int x, int y, int width, int height, int initialValue, IntConsumer changedListener, String suggestion, boolean allowAlpha) {
-        super(x, y, width - height - 2, height, "#" + Integer.toHexString(initialValue).toUpperCase(),
+        super(x, y, width - height - 2, height, formatNumber(initialValue, allowAlpha),
                 s -> convert(s, allowAlpha).ifPresent(changedListener::accept), suggestion, IS_COLOR, 9);
 
         this.allowAlpha = allowAlpha;
@@ -47,6 +48,12 @@ public class ColorInputWidget extends TextInputWidget {
 
             drawContext.fill(x, y, x + size, y + size, color);
         });
+    }
+
+    private static String formatNumber(int number, boolean allowAlpha) {
+        if (!allowAlpha) number &= 0xFFFFFF;
+        String value = Integer.toHexString(number).toUpperCase();
+        return "#" + StringUtils.leftPad(value, allowAlpha ? 8 : 6, '0');
     }
 
     private static Optional<Integer> convert(String value, boolean allowAlpha) {
