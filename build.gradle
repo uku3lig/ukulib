@@ -1,7 +1,6 @@
 plugins {
     id "fabric-loom" version "1.7-SNAPSHOT"
     id "io.freefair.lombok" version "8.7.1"
-    id "org.ajoberstar.grgit" version "5.0.0"
 
     id "maven-publish"
     id "com.modrinth.minotaur" version "2.+"
@@ -64,10 +63,8 @@ java {
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 
-    if (grgit != null && grgit.status().clean) {
-        withSourcesJar()
-        withJavadocJar()
-    }
+    withSourcesJar()
+    withJavadocJar()
 }
 
 jar {
@@ -123,7 +120,7 @@ modrinth {
     changelog = "See https://github.com/uku3lig/ukulib/releases/tag/${project.version}"
 }
 
-def getVersionMetadata() {
+static def getVersionMetadata() {
     def ENV = System.getenv()
 
     if (ENV.PUBLISH_RELEASE) return ""
@@ -133,20 +130,7 @@ def getVersionMetadata() {
     // CI builds only
     if (build_id != null) {
         return "-build.${build_id}"
+    } else {
+        return "-local"
     }
-
-    if (grgit != null) {
-        def head = grgit.head()
-        def id = head.abbreviatedId
-
-        // Flag the build if the build tree is not clean
-        if (!grgit.status().clean) {
-            id += "-dirty"
-        }
-
-        return "-rev.${id}"
-    }
-
-    // No tracking information could be found about the build
-    return "-unknown"
 }
