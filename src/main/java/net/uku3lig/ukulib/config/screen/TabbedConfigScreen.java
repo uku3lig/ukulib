@@ -55,11 +55,11 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
                 .build();
         this.addDrawableChild(this.tabWidget);
         this.tabWidget.selectTab(0, false);
-        this.initTabNavigation();
+        this.refreshWidgetPositions();
     }
 
     @Override
-    protected void initTabNavigation() {
+    protected void refreshWidgetPositions() {
         if (this.tabWidget != null) {
             this.tabWidget.setWidth(this.width);
             this.tabWidget.init();
