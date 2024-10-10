@@ -146,7 +146,6 @@ public class Ukutils {
      *
      * @param texture The texture to check
      * @return Whether the texture exists
-     * @implNote contender for worst ukulib method ever
      */
     public static boolean textureExists(Identifier texture) {
         TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
