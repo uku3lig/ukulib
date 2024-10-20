@@ -3,7 +3,7 @@
   "ukulib.position.topLeft": "Superior Izquierdo",
   "ukulib.position.topRight": "Superior Derecho",
   "ukulib.position.bottomLeft": "Inferior Izquierdo",
-  "ukulib.position.bottomRight": "Inferior Izquierdo",
+  "ukulib.position.bottomRight": "Inferior Derecho",
   "ukulib.position.middle": "Por encima barra XP",
   "ukulib.position.desc": "Haga clic en algún lugar de la pantalla para cambiar la posición del elemento.",
   "ukulib.position.desc.move": "Pulse las §eteclas de flecha§r para ajustar con precisión la posición del elemento.",
