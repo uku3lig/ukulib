@@ -7,7 +7,7 @@
   "ukulib.position.middle": "Por encima barra XP",
   "ukulib.position.desc": "Haga clic en algún lugar de la pantalla para cambiar la posición del elemento.",
   "ukulib.position.desc.move": "Pulse las §eteclas de flecha§r para ajustar con precisión la posición del elemento.",
-  "ukulib.option.invalid": "Algunos de los valores introducidos en la configuración son inválidos: %s.\ntodavía puede salir pulsando ESC, pero la configuración no se guardará.",
+  "ukulib.option.invalid": "Algunos de los valores introducidos en la configuración son inválidos: %s.\nTodavía puede salir pulsando ESC, pero la configuración no se guardará.",
   "ukulib.option.reset": "Restaurar Valores Predeterminados",
   "ukulib.config.title": "Ukulib Configuración",
   "ukulib.config.buttonInOptions": "Botones En Las Opciones",
