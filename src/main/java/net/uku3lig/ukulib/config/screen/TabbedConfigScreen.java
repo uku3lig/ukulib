@@ -7,6 +7,7 @@ import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
@@ -15,8 +16,6 @@ import java.io.Serializable;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-
-import static net.minecraft.client.gui.screen.world.CreateWorldScreen.FOOTER_SEPARATOR_TEXTURE;
 
 /**
  * A config screen that utilizes a tabbed layout instead of a simple list of buttons.
@@ -56,11 +55,11 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
                 .build();
         this.addDrawableChild(this.tabWidget);
         this.tabWidget.selectTab(0, false);
-        this.initTabNavigation();
+        this.refreshWidgetPositions();
     }
 
     @Override
-    protected void initTabNavigation() {
+    protected void refreshWidgetPositions() {
         if (this.tabWidget != null) {
             this.tabWidget.setWidth(this.width);
             this.tabWidget.init();
@@ -88,6 +87,6 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         super.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawTexture(FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
+        drawContext.drawTexture(RenderLayer::getGuiTextured, FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
     }
 }
