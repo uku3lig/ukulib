@@ -9,10 +9,10 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.texture.ResourceTexture;
 import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
+import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
@@ -22,7 +22,6 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
 
-import java.io.IOException;
 import java.nio.file.Path;
 import java.util.HashMap;
 import java.util.Locale;
@@ -149,19 +148,9 @@ public class Ukutils {
      */
     public static boolean textureExists(Identifier texture) {
         TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+        ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
 
-        if (texture == null) {
-            return false;
-        } else if (textureManager.getOrDefault(texture, null) != null) {
-            return true;
-        } else {
-            try (ResourceTexture resourceTexture = new ResourceTexture(texture)) {
-                resourceTexture.load(MinecraftClient.getInstance().getResourceManager());
-                return true;
-            } catch (IOException e) {
-                return false;
-            }
-        }
+        return texture != null && (textureManager.textures.containsKey(texture) || resourceManager.getResource(texture).isPresent());
     }
 
     /**
