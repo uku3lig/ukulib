@@ -1,0 +1,17 @@
+{
+  "modmenu.descriptionTranslation.ukulib": "Невелика бібліотека утиліт, для моїх модів",
+  "ukulib.position": "Позиція",
+  "ukulib.position.topLeft": "Зверху зліва",
+  "ukulib.position.topRight": "Зверху справа",
+  "ukulib.position.bottomLeft": "Знизу зліва",
+  "ukulib.position.bottomRight": "Знизу справа",
+  "ukulib.position.middle": "Вище шкали досвіду",
+  "ukulib.position.desc": "Клацніть десь на екрані, щоб змінити положення елемента",
+  "ukulib.position.desc.move": "Натисніть §клавіші стрілок§r, щоб точно налаштувати положення елемента",
+  "ukulib.option.invalid": "Деякі значення, в налаштуваннях, недійсні: %s\nВи можете вийти, натиснувши Escape, але налаштування не буде збережено",
+  "ukulib.option.reset": "Скинути",
+  "ukulib.config.title": "Налаштування Ukulib",
+  "ukulib.config.buttonInOptions": "Кнопка в налаштуваннях",
+  "ukulib.config.modMenuIntegration": "Інтеграція Mod Menu",
+  "ukulib.config.headName": "Головна назва в налаштуваннях"
+}
