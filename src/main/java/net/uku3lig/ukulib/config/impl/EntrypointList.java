@@ -62,20 +62,20 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
                     .build();
 
             ModMetadata metadata = mod.getMetadata();
+            Identifier identifier = Identifier.of("ukulib", metadata.getId() + "_icon");
 
             this.iconPath = metadata.getIconPath(ICON_SIZE)
                     .flatMap(mod::findPath)
                     .flatMap(path -> {
                         try (InputStream inputStream = Files.newInputStream(path)) {
                             NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
-                            return Optional.of(new NativeImageBackedTexture(image));
+                            return Optional.of(new NativeImageBackedTexture(identifier::toString, image));
                         } catch (IOException e) {
                             log.warn("Failed to load icon from mod jar: {}", path, e);
                             return Optional.empty();
                         }
                     })
                     .map(tex -> {
-                        Identifier identifier = Identifier.of("ukulib", metadata.getId() + "_icon");
                         MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, tex);
                         return identifier;
                     })

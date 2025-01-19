@@ -1,7 +1,5 @@
 package net.uku3lig.ukulib.config.option.widget;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
@@ -14,10 +12,12 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
+import net.minecraft.util.Colors;
 import net.minecraft.util.Util;
 import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.option.CheckedOption;
@@ -485,10 +485,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             x1 = this.getX() + this.width;
         }
 
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        drawContext.fill(x1, y1, x2, y2, 0xff0000ff);
-        RenderSystem.disableColorLogicOp();
+        drawContext.fill(RenderLayer.getGuiTextHighlight(), x1, y1, x2, y2, Colors.BLUE);
     }
 
     /**

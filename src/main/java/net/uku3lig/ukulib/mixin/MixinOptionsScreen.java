@@ -1,6 +1,5 @@
 package net.uku3lig.ukulib.mixin;
 
-import com.mojang.blaze3d.systems.RenderSystem;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -89,6 +88,9 @@ public class MixinOptionsScreen extends Screen {
         Identifier identifier = Ukutils.getHeadTex(username);
         if (Ukutils.textureExists(identifier)) {
             return CompletableFuture.completedFuture(null);
+        } else if (identifier == null) {
+            log.warn("Head texture name for {} was null", username);
+            return CompletableFuture.completedFuture(null);
         }
 
         TextureManager texManager = MinecraftClient.getInstance().getTextureManager();
@@ -98,7 +100,7 @@ public class MixinOptionsScreen extends Screen {
             if (r.statusCode() == 200) {
                 try {
                     NativeImage image = NativeImage.read(r.body()); // crashes if put in a try-with-resources
-                    RenderSystem.recordRenderCall(() -> texManager.registerTexture(identifier, new NativeImageBackedTexture(image)));
+                    texManager.registerTexture(identifier, new NativeImageBackedTexture(identifier::toString, image));
                 } catch (IOException e) {
                     log.error("Failed to register head texture", e);
                 }

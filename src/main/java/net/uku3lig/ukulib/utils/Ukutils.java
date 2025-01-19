@@ -18,6 +18,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
 import org.joml.Vector2ic;
@@ -146,6 +147,7 @@ public class Ukutils {
      * @param texture The texture to check
      * @return Whether the texture exists
      */
+    @Contract("null -> false")
     public static boolean textureExists(Identifier texture) {
         TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
         ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
