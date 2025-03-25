@@ -8,6 +8,7 @@ plugins {
 
 version = "${project.mod_version}+${project.minecraft_version}${getVersionMetadata()}"
 group = project.maven_group
+archives_base_name = providers.gradleProperty("archives_base_name").get()
 
 if (System.getenv("PUBLISH_RELEASE")) {
     publish.finalizedBy "modrinth"
@@ -43,11 +44,11 @@ loom {
 }
 
 tasks.processResources {
-    inputs.property("version", project.version)
+    inputs.property("version", version)
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand "version": project.version
+        expand "version": version
     }
 }
 
@@ -56,7 +57,7 @@ tasks.withType(JavaCompile).configureEach {
 }
 
 base {
-    archivesName = project.archives_base_name
+    archivesName = archives_base_name
 }
 
 java {
@@ -69,7 +70,7 @@ java {
 
 jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}" }
+        rename { "${it}_${archives_base_name}" }
     }
 }
 
@@ -80,7 +81,7 @@ javadoc {
 publishing {
     publications {
         create("mavenJava", MavenPublication) {
-            artifactId = project.base.archivesName.get()
+            artifactId = archives_base_name
             from components.java
         }
     }
@@ -88,7 +89,7 @@ publishing {
     repositories {
         maven {
             name = "UkuReleases"
-            url "https://maven.uku3lig.net/releases"
+            url = "https://maven.uku3lig.net/releases"
             credentials {
                 username = "uku"
                 password = System.getenv("MAVEN_PASSWORD")
