@@ -14,6 +14,7 @@ import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.screen.ScreenTexts;
+import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
@@ -118,6 +119,23 @@ public class Ukutils {
         });
 
         return builder.toString();
+    }
+
+    /**
+     * Retrieves the styled text from an ordered text.
+     *
+     * @param text The ordered text
+     * @return The styled text
+     */
+    @SuppressWarnings("unused")
+    public static MutableText getStyledText(OrderedText text) {
+        MutableText builder = Text.empty();
+        text.accept((index, style, codePoint) -> {
+            builder.append(Text.literal(Character.toString(codePoint)).setStyle(style));
+            return true;
+        });
+
+        return builder;
     }
 
     /**
