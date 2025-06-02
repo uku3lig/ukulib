@@ -3,6 +3,7 @@ package net.uku3lig.ukulib.config.option.widget;
 import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.navigation.GuiNavigation;
@@ -12,7 +13,6 @@ import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.render.RenderLayer;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -425,7 +425,9 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         if (!string.isEmpty()) {
             // render the text before the cursor
             String beforeCursor = isSelectionInBounds ? string.substring(0, cursorStart) : string;
-            textEnd = drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(beforeCursor, this.firstCharacterIndex), textX, textY, textColor);
+            OrderedText orderedText = this.renderTextProvider.apply(beforeCursor, this.firstCharacterIndex);
+            drawContext.drawTextWithShadow(this.textRenderer, orderedText, textX, textY, textColor);
+            textEnd += this.textRenderer.getWidth(orderedText) + 1;
         }
 
         boolean isCursorInTheMiddle = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxLength();
@@ -485,7 +487,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             x1 = this.getX() + this.width;
         }
 
-        drawContext.fill(RenderLayer.getGuiTextHighlight(), x1, y1, x2, y2, Colors.BLUE);
+        drawContext.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, x1, y1, x2, y2, Colors.BLUE);
     }
 
     /**
