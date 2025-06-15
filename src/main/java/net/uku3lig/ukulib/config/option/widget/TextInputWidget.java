@@ -34,7 +34,7 @@ import java.util.function.Predicate;
 public class TextInputWidget extends ClickableWidget implements Drawable, CheckedOption {
     private static final int VERTICAL_CURSOR_COLOR = 0xffd0d0d0;
     private static final String HORIZONTAL_CURSOR = "_";
-    private static final int TEXT_COLOR = 0xe0e0e0;
+    private static final int TEXT_COLOR = 0xffe0e0e0;
     private static final int BORDER_COLOR = 0xffa0a0a0;
     private static final int BACKGROUND_COLOR = 0xff000000;
     private static final int ERROR_COLOR = 0xFFFF0000;
