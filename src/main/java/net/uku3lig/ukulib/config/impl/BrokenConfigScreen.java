@@ -43,8 +43,8 @@ public class BrokenConfigScreen extends CloseableScreen {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         super.render(drawContext, mouseX, mouseY, delta);
 
-        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("There was an issue with this config screen.").asOrderedText(), width / 2, 100, 0xFFFFFF);
-        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("Please report this issue to the mod author.").asOrderedText(), width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFF);
+        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("There was an issue with this config screen.").asOrderedText(), width / 2, 100, 0xFFFFFFFF);
+        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("Please report this issue to the mod author.").asOrderedText(), width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFFFF);
 
         this.addDrawableChild(ButtonWidget.builder(Text.of("Upload logs to mclo.gs"), button -> uploadLogs())
                 .dimensions(this.width / 2 - 100, this.height - 51, 200, 20).build());

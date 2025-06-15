@@ -65,6 +65,6 @@ public final class ModListScreen extends CloseableScreen {
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         super.render(drawContext, mouseX, mouseY, delta);
         entrypointList.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 20, 0xFFFFFF);
+        drawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 20, 0xFFFFFFFF);
     }
 }

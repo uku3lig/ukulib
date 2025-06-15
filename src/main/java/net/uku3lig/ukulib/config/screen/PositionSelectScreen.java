@@ -120,9 +120,9 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     @Override
     public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
         super.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFF);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFF55);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFF);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFFFF);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFFFF55);
+        drawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFFFF);
 
         if (x == -1 || y == -1) {
             drawDefault(drawContext, mouseX, mouseY, delta);
