@@ -30,6 +30,28 @@ public class CyclingOption<T> implements WidgetCreator {
     private final Consumer<T> setter;
     private final Function<T, Text> valueToText;
     private final SimpleOption.TooltipFactory<T> tooltipFactory;
+    private final boolean active;
+
+    /**
+     * Constructs a new generic cycling option.
+     *
+     * @param key            The translation key
+     * @param values         The possible option values
+     * @param initialValue   The initial displayed value
+     * @param setter         The callback for the modified value
+     * @param valueToText    The function that converts the value to human-readable text
+     * @param tooltipFactory The tooltip factory
+     * @param active         Whether the button can be clicked
+     */
+    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Text> valueToText, SimpleOption.TooltipFactory<T> tooltipFactory, boolean active) {
+        this.key = key;
+        this.values = values;
+        this.initialValue = initialValue;
+        this.setter = setter;
+        this.valueToText = valueToText;
+        this.tooltipFactory = tooltipFactory;
+        this.active = active;
+    }
 
     /**
      * Constructs a new generic cycling option.
@@ -42,12 +64,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param tooltipFactory The tooltip factory
      */
     public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Text> valueToText, SimpleOption.TooltipFactory<T> tooltipFactory) {
-        this.key = key;
-        this.values = values;
-        this.initialValue = initialValue;
-        this.setter = setter;
-        this.valueToText = valueToText;
-        this.tooltipFactory = tooltipFactory;
+        this(key, values, initialValue, setter, valueToText, tooltipFactory, true);
     }
 
     /**
@@ -111,11 +128,11 @@ public class CyclingOption<T> implements WidgetCreator {
     /**
      * Creates a new option from a {@link TranslatableOption}, with an empty tooltip.
      *
-     * @param key            The translation key
-     * @param values         The values to be displayed
-     * @param initialValue   The initial value
-     * @param setter         The callback for the modified value
-     * @param <T>            The type of the option
+     * @param key          The translation key
+     * @param values       The values to be displayed
+     * @param initialValue The initial value
+     * @param setter       The callback for the modified value
+     * @param <T>          The type of the option
      * @return The newly constructed option
      */
     public static <T extends TranslatableOption> CyclingOption<T> ofTranslatable(String key, Collection<T> values, T initialValue, Consumer<T> setter) {
@@ -213,12 +230,14 @@ public class CyclingOption<T> implements WidgetCreator {
 
     @Override
     public ClickableWidget createWidget(int x, int y, int width, int height) {
-        CyclingButtonWidget.Builder<T> builder = CyclingButtonWidget.builder(valueToText)
+        CyclingButtonWidget<T> widget = CyclingButtonWidget.builder(valueToText)
                 .values(values)
                 .tooltip(tooltipFactory)
-                .initially(initialValue);
+                .initially(initialValue)
+                .build(x, y, width, height, Text.translatable(key), (button, value) -> setter.accept(value));
 
-        return builder.build(x, y, width, height, Text.translatable(key), (button, value) -> setter.accept(value));
+        widget.active = this.active;
+        return widget;
     }
 
     /**

@@ -10,6 +10,20 @@ import net.minecraft.text.Text;
 public class SimpleButton implements WidgetCreator {
     private final Text text;
     private final ButtonWidget.PressAction action;
+    private final boolean active;
+
+    /**
+     * Creates a simple button.
+     *
+     * @param text   The text to be displayed
+     * @param action The action to run when clicked
+     * @param active Whether the button can be clicked
+     */
+    public SimpleButton(Text text, ButtonWidget.PressAction action, boolean active) {
+        this.text = text;
+        this.action = action;
+        this.active = active;
+    }
 
     /**
      * Creates a simple button.
@@ -18,8 +32,7 @@ public class SimpleButton implements WidgetCreator {
      * @param action The action to run when clicked
      */
     public SimpleButton(Text text, ButtonWidget.PressAction action) {
-        this.text = text;
-        this.action = action;
+        this(text, action, true);
     }
 
     /**
@@ -34,8 +47,11 @@ public class SimpleButton implements WidgetCreator {
 
     @Override
     public ClickableWidget createWidget(int x, int y, int width, int height) {
-        return ButtonWidget.builder(text, action)
+        ButtonWidget widget = ButtonWidget.builder(text, action)
                 .dimensions(x, y, width, height)
                 .build();
+
+        widget.active = this.active;
+        return widget;
     }
 }
