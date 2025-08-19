@@ -92,12 +92,13 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
             return Collections.singletonList(button);
         }
 
+        // TODO get actual method params when mappings are good
         @Override
-        public void render(DrawContext drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            button.setY(y);
+        public void render(DrawContext drawContext, int mouseX, int mouseY, boolean bl, float tickDelta) {
+            button.setY(this.method_73382());
             button.render(drawContext, mouseX, mouseY, tickDelta);
 
-            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.method_73382(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }

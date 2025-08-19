@@ -385,8 +385,10 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+
+
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button, boolean doubleClick) {
         if (this.isVisible() && button == 0) {
             this.setFocused(isMouseOver(mouseX, mouseY));
 

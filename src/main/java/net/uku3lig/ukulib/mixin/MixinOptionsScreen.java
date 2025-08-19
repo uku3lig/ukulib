@@ -1,7 +1,5 @@
 package net.uku3lig.ukulib.mixin;
 
-import com.mojang.authlib.yggdrasil.ProfileResult;
-import com.mojang.authlib.yggdrasil.YggdrasilAuthenticationService;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
@@ -87,14 +85,9 @@ public class MixinOptionsScreen extends Screen {
 
     @Unique
     private static CompletableFuture<SkinTextures> fetchSkinTextures(String username) {
-        YggdrasilAuthenticationService service = ((MinecraftClientAccessor) MinecraftClient.getInstance()).getAuthenticationService();
-        ApiServices services = ApiServices.create(service, MinecraftClient.getInstance().runDirectory);
-
-        return CompletableFuture.supplyAsync(() ->
-                        services.profileRepository().findProfileByName(username)
-                                .map(p -> services.sessionService().fetchProfile(p.getId(), true))
-                                .map(ProfileResult::profile))
-                .thenCompose(optProfile -> {
+        ApiServices services = MinecraftClient.getInstance().method_73361();
+        return CompletableFuture.supplyAsync(() -> services.profileResolver().method_73289(username))
+                .thenComposeAsync(optProfile -> {
                     if (optProfile.isEmpty()) {
                         log.error("Could not fetch profile {}", username);
                         return null;

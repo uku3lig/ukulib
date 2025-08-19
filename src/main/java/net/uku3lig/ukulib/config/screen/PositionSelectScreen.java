@@ -59,8 +59,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (!super.mouseClicked(mouseX, mouseY, button)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button, boolean doubleClick) {
+        if (!super.mouseClicked(mouseX, mouseY, button, doubleClick)) {
             this.x = (int) MathHelper.clamp(mouseX, 0, this.width);
             this.y = (int) MathHelper.clamp(mouseY, 0, this.height);
         }
