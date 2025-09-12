@@ -85,8 +85,8 @@ public class MixinOptionsScreen extends Screen {
 
     @Unique
     private static CompletableFuture<SkinTextures> fetchSkinTextures(String username) {
-        ApiServices services = MinecraftClient.getInstance().method_73361();
-        return CompletableFuture.supplyAsync(() -> services.profileResolver().method_73289(username))
+        ApiServices services = MinecraftClient.getInstance().getApiServices();
+        return CompletableFuture.supplyAsync(() -> services.profileResolver().getProfileByName(username))
                 .thenComposeAsync(optProfile -> {
                     if (optProfile.isEmpty()) {
                         log.error("Could not fetch profile {}", username);
