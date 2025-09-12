@@ -141,12 +141,12 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
             return widgets;
         }
 
-        // TODO get actual method params when mappings are good
+
         @Override
-        public void render(DrawContext drawContext, int mouseX, int mouseY, boolean bl, float tickDelta) {
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             widgets.forEach(w -> {
-                w.setY(this.method_73382());
-                w.render(drawContext, mouseX, mouseY, tickDelta);
+                w.setY(this.getContentY());
+                w.render(context, mouseX, mouseY, deltaTicks);
             });
         }
     }

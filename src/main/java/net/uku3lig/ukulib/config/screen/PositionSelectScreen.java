@@ -1,8 +1,10 @@
 package net.uku3lig.ukulib.config.screen;
 
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.math.MathHelper;
@@ -59,21 +61,21 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button, boolean doubleClick) {
-        if (!super.mouseClicked(mouseX, mouseY, button, doubleClick)) {
-            this.x = (int) MathHelper.clamp(mouseX, 0, this.width);
-            this.y = (int) MathHelper.clamp(mouseY, 0, this.height);
+    public boolean mouseClicked(Click click, boolean doubleClick) {
+        if (!super.mouseClicked(click, doubleClick)) {
+            this.x = (int) MathHelper.clamp(click.x(), 0, this.width);
+            this.y = (int) MathHelper.clamp(click.y(), 0, this.height);
         }
 
         return true;
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (!super.keyPressed(keyCode, scanCode, modifiers)) {
-            int amount = modifiers == GLFW.GLFW_MOD_SHIFT ? 10 : 1;
+    public boolean keyPressed(KeyInput input) {
+        if (!super.keyPressed(input)) {
+            int amount = input.modifiers() == GLFW.GLFW_MOD_SHIFT ? 10 : 1;
 
-            switch (keyCode) {
+            switch (input.key()) {
                 case GLFW.GLFW_KEY_RIGHT -> x += amount;
                 case GLFW.GLFW_KEY_LEFT -> x -= amount;
                 case GLFW.GLFW_KEY_DOWN -> y += amount;

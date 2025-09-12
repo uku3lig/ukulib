@@ -4,15 +4,17 @@ import lombok.Getter;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
+import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.Drawable;
 import net.minecraft.client.gui.navigation.GuiNavigation;
 import net.minecraft.client.gui.navigation.GuiNavigationPath;
-import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
@@ -156,8 +158,8 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
-    private void erase(int offset) {
-        if (Screen.hasControlDown()) {
+    private void erase(int offset, boolean ctrlPressed) {
+        if (ctrlPressed) {
             this.eraseWords(offset);
         } else {
             this.eraseCharacters(offset);
@@ -299,41 +301,41 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
     }
 
     @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+    public boolean keyPressed(KeyInput input) {
         if (this.isInactive()) {
             return false;
         } else {
-            this.selecting = Screen.hasShiftDown();
-            if (Screen.isSelectAll(keyCode)) {
+            this.selecting = input.hasShift();
+            if (input.isSelectAll()) {
                 this.setCursorToEnd();
                 this.setSelectionEnd(0);
                 return true;
-            } else if (Screen.isCopy(keyCode)) {
+            } else if (input.isCopy()) {
                 MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
                 return true;
-            } else if (Screen.isPaste(keyCode)) {
+            } else if (input.isPaste()) {
                 this.write(MinecraftClient.getInstance().keyboard.getClipboard());
                 return true;
-            } else if (Screen.isCut(keyCode)) {
+            } else if (input.isCut()) {
                 MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
                 this.write("");
                 return true;
             } else {
-                switch (keyCode) {
+                switch (input.key()) {
                     case GLFW.GLFW_KEY_BACKSPACE -> {
                         this.selecting = false;
-                        this.erase(-1);
-                        this.selecting = Screen.hasShiftDown();
+                        this.erase(-1, input.hasCtrl());
+                        this.selecting = input.hasShift();
                         return true;
                     }
                     case GLFW.GLFW_KEY_DELETE -> {
                         this.selecting = false;
-                        this.erase(1);
-                        this.selecting = Screen.hasShiftDown();
+                        this.erase(1, input.hasCtrl());
+                        this.selecting = input.hasShift();
                         return true;
                     }
                     case GLFW.GLFW_KEY_RIGHT -> {
-                        if (Screen.hasControlDown()) {
+                        if (input.hasCtrl()) {
                             this.setCursor(this.getWordSkipPosition(1));
                         } else {
                             this.moveCursor(1);
@@ -341,7 +343,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
                         return true;
                     }
                     case GLFW.GLFW_KEY_LEFT -> {
-                        if (Screen.hasControlDown()) {
+                        if (input.hasCtrl()) {
                             this.setCursor(this.getWordSkipPosition(-1));
                         } else {
                             this.moveCursor(-1);
@@ -374,11 +376,11 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
     }
 
     @Override
-    public boolean charTyped(char chr, int modifiers) {
+    public boolean charTyped(CharInput input) {
         if (this.isInactive()) {
             return false;
-        } else if (chr >= ' ') {
-            this.write(Character.toString(chr));
+        } else if (input.codepoint() >= ' ') {
+            this.write(input.asString());
             return true;
         } else {
             return false;
@@ -388,12 +390,12 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
 
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button, boolean doubleClick) {
-        if (this.isVisible() && button == 0) {
-            this.setFocused(isMouseOver(mouseX, mouseY));
+    public boolean mouseClicked(Click click, boolean doubleClick) {
+        if (this.isVisible() && click.button() == 0) {
+            this.setFocused(isMouseOver(click.x(), click.y()));
 
             if (this.isFocused()) {
-                int i = MathHelper.floor(mouseX) - this.getX() - 4;
+                int i = MathHelper.floor(click.x()) - this.getX() - 4;
                 String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
                 this.setCursor(this.textRenderer.trimToWidth(string, i).length() + this.firstCharacterIndex);
                 return true;
