@@ -97,7 +97,10 @@ tasks.jar {
 }
 
 tasks.javadoc {
-    exclude("net/uku3lig/ukulib/config/impl/UkulibConfig.java")
+    exclude(
+        "net/uku3lig/ukulib/config/impl/UkulibConfig.java",
+        "net/uku3lig/ukulib/config/option/widget/TextInputWidget.java"
+    )
 }
 
 publishing {

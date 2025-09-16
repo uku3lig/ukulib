@@ -6,43 +6,39 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gl.RenderPipelines;
 import net.minecraft.client.gui.Click;
 import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Drawable;
-import net.minecraft.client.gui.navigation.GuiNavigation;
-import net.minecraft.client.gui.navigation.GuiNavigationPath;
+import net.minecraft.client.gui.cursor.StandardCursors;
+import net.minecraft.client.gui.screen.ButtonTextures;
 import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
 import net.minecraft.client.gui.screen.narration.NarrationPart;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.input.CharInput;
 import net.minecraft.client.input.KeyInput;
+import net.minecraft.client.sound.SoundManager;
 import net.minecraft.text.MutableText;
 import net.minecraft.text.OrderedText;
 import net.minecraft.text.Style;
 import net.minecraft.text.Text;
-import net.minecraft.util.Colors;
-import net.minecraft.util.Util;
+import net.minecraft.util.*;
 import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.option.CheckedOption;
-import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.function.BiFunction;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
  * A widget to input text. Based on {@link net.minecraft.client.gui.widget.TextFieldWidget}.
  */
-public class TextInputWidget extends ClickableWidget implements Drawable, CheckedOption {
-    private static final int VERTICAL_CURSOR_COLOR = 0xffd0d0d0;
+// changes from vanilla: suggestion rendering & implements CheckedOption & renders invalid text
+public class TextInputWidget extends ClickableWidget implements CheckedOption {
+    private static final ButtonTextures TEXTURES = new ButtonTextures(
+            Identifier.ofVanilla("widget/text_field"), Identifier.ofVanilla("widget/text_field_highlighted")
+    );
     private static final String HORIZONTAL_CURSOR = "_";
-    private static final int TEXT_COLOR = 0xffe0e0e0;
-    private static final int BORDER_COLOR = 0xffa0a0a0;
-    private static final int BACKGROUND_COLOR = 0xff000000;
-    private static final int ERROR_COLOR = 0xFFFF0000;
-
-    private final TextRenderer textRenderer = MinecraftClient.getInstance().textRenderer;
-
+    private static final int TEXT_COLOR = 0xFFE0E0E0;
+    private static final int INVALID_COLOR = 0xFFFF0000;
+    private final TextRenderer textRenderer;
     /**
      * The text.
      *
@@ -50,28 +46,20 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
      */
     @Getter
     private String text = "";
-    private boolean selecting;
+    private final int maxLength;
+    private final boolean drawsBackground = true;
     /**
      * The index of the leftmost character that is rendered on a screen.
      */
     private int firstCharacterIndex;
     private int selectionStart;
     private int selectionEnd;
-
-    /**
-     * The maximum length of the text.
-     *
-     * @return the maximum length of the text
-     */
-    @Getter
-    private final int maxLength;
     private final String suggestion;
     private final Consumer<String> changedListener;
     private final Predicate<String> textPredicate;
-
-    private final BiFunction<String, Integer, OrderedText> renderTextProvider = (string, index) -> OrderedText.styledForwardsVisitedString(
-            string, Style.EMPTY
-    );
+    private long lastSwitchFocusTime = Util.getMeasuringTimeMs();
+    private int textX;
+    private int textY;
 
     /**
      * Constructor.
@@ -88,6 +76,7 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
      */
     public TextInputWidget(int x, int y, int width, int height, String initialValue, Consumer<String> changedListener, String suggestion, Predicate<String> textPredicate, int maxLength) {
         super(x, y, width, height, Text.of(suggestion));
+        this.textRenderer = MinecraftClient.getInstance().textRenderer;
         this.changedListener = changedListener;
         this.suggestion = suggestion;
         this.textPredicate = textPredicate;
@@ -95,19 +84,15 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
 
         this.setText(initialValue);
         this.setTooltip(Tooltip.of(Text.of(this.suggestion)));
+        this.updateTextPosition();
     }
 
     @Override
     protected MutableText getNarrationMessage() {
-        Text message = this.getMessage();
-        return Text.translatable("gui.narrate.editBox", message, this.text);
+        Text text = this.getMessage();
+        return Text.translatable("gui.narrate.editBox", text, this.text);
     }
 
-    /**
-     * Sets the text.
-     *
-     * @param text the new text
-     */
     public void setText(String text) {
         if (text.length() > this.maxLength) {
             this.text = text.substring(0, this.maxLength);
@@ -115,117 +100,107 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
             this.text = text;
         }
 
-        this.setCursorToEnd();
+        this.setCursorToEnd(false);
         this.setSelectionEnd(this.selectionStart);
         this.onChanged(text);
     }
 
-    /**
-     * Gets the currently selected text, if any.
-     *
-     * @return the selected text
-     */
     public String getSelectedText() {
         int i = Math.min(this.selectionStart, this.selectionEnd);
         int j = Math.max(this.selectionStart, this.selectionEnd);
         return this.text.substring(i, j);
     }
 
-    /**
-     * Writes the given text to the current cursor position.
-     *
-     * @param text the text to write
-     */
+    @Override
+    public void setX(int x) {
+        super.setX(x);
+        this.updateTextPosition();
+    }
+
+    @Override
+    public void setY(int y) {
+        super.setY(y);
+        this.updateTextPosition();
+    }
+
     public void write(String text) {
         int i = Math.min(this.selectionStart, this.selectionEnd);
         int j = Math.max(this.selectionStart, this.selectionEnd);
         int k = this.maxLength - this.text.length() - (i - j);
-        int l = text.length();
-        if (k < l) {
-            text = text.substring(0, k);
-            l = k;
-        }
+        if (k > 0) {
+            String string = StringHelper.stripInvalidChars(text);
+            int l = string.length();
+            if (k < l) {
+                if (Character.isHighSurrogate(string.charAt(k - 1))) {
+                    k--;
+                }
 
-        this.text = new StringBuilder(this.text).replace(i, j, text).toString();
-        this.setSelectionStart(i + l);
-        this.setSelectionEnd(this.selectionStart);
-        this.onChanged(this.text);
+                string = string.substring(0, k);
+                l = k;
+            }
+
+            this.text = new StringBuilder(this.text).replace(i, j, string).toString();
+            this.setSelectionStart(i + l);
+            this.setSelectionEnd(this.selectionStart);
+            this.onChanged(this.text);
+        }
     }
 
     private void onChanged(String newText) {
-        if (this.textPredicate.test(newText)) {
+        if (this.changedListener != null && this.textPredicate.test(newText)) {
             this.changedListener.accept(newText);
         }
+
+        this.updateTextPosition();
     }
 
-    private void erase(int offset, boolean ctrlPressed) {
-        if (ctrlPressed) {
+    private void erase(int offset, boolean bl) {
+        if (bl) {
             this.eraseWords(offset);
         } else {
             this.eraseCharacters(offset);
         }
     }
 
-    /**
-     * Erases words depending on the {@code wordOffset}.
-     *
-     * @param wordOffset the offset
-     */
     public void eraseWords(int wordOffset) {
         if (!this.text.isEmpty()) {
             if (this.selectionEnd != this.selectionStart) {
                 this.write("");
             } else {
-                this.eraseCharacters(this.getWordSkipPosition(wordOffset) - this.selectionStart);
+                this.eraseCharactersTo(this.getWordSkipPosition(wordOffset));
             }
         }
     }
 
-    /**
-     * Erases characters depending on the {@code characterOffset}.
-     *
-     * @param characterOffset the offset
-     */
     public void eraseCharacters(int characterOffset) {
+        this.eraseCharactersTo(this.getCursorPosWithOffset(characterOffset));
+    }
+
+    public void eraseCharactersTo(int position) {
         if (!this.text.isEmpty()) {
             if (this.selectionEnd != this.selectionStart) {
                 this.write("");
             } else {
-                int i = this.getCursorPosWithOffset(characterOffset);
-                int j = Math.min(i, this.selectionStart);
-                int k = Math.max(i, this.selectionStart);
-                if (j != k) {
-                    this.text = new StringBuilder(this.text).delete(j, k).toString();
-                    this.setCursor(j);
+                int i = Math.min(position, this.selectionStart);
+                int j = Math.max(position, this.selectionStart);
+                if (i != j) {
+                    this.text = new StringBuilder(this.text).delete(i, j).toString();
+                    this.setCursor(i, false);
                 }
             }
         }
     }
 
-    /**
-     * Gets the position of the word to skip to. Used for deleting words.
-     *
-     * @param wordOffset the offset
-     * @return the position of the word to skip to
-     * @see #getWordSkipPosition(int, int)
-     */
     public int getWordSkipPosition(int wordOffset) {
         return this.getWordSkipPosition(wordOffset, this.getCursor());
     }
 
-    /**
-     * Gets the position of the word to skip to. Used for deleting words.
-     *
-     * @param wordOffset     the offset
-     * @param cursorPosition the cursor position
-     * @return the position of the word to skip to
-     */
     private int getWordSkipPosition(int wordOffset, int cursorPosition) {
         int i = cursorPosition;
         boolean bl = wordOffset < 0;
         int j = Math.abs(wordOffset);
 
-        for (int k = 0; k < j; ++k) {
+        for (int k = 0; k < j; k++) {
             if (!bl) {
                 int l = this.text.length();
                 i = this.text.indexOf(32, i);
@@ -233,16 +208,16 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
                     i = l;
                 } else {
                     while (i < l && this.text.charAt(i) == ' ') {
-                        ++i;
+                        i++;
                     }
                 }
             } else {
                 while (i > 0 && this.text.charAt(i - 1) == ' ') {
-                    --i;
+                    i--;
                 }
 
                 while (i > 0 && this.text.charAt(i - 1) != ' ') {
-                    --i;
+                    i--;
                 }
             }
         }
@@ -250,136 +225,110 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         return i;
     }
 
-    /**
-     * Moves the cursor by the specified offset.
-     *
-     * @param offset the offset
-     */
-    public void moveCursor(int offset) {
-        this.setCursor(this.getCursorPosWithOffset(offset));
+    public void moveCursor(int offset, boolean shiftKeyPressed) {
+        this.setCursor(this.getCursorPosWithOffset(offset), shiftKeyPressed);
     }
 
     private int getCursorPosWithOffset(int offset) {
         return Util.moveCursor(this.text, this.selectionStart, offset);
     }
 
-    /**
-     * Sets the cursor position.
-     *
-     * @param cursor the cursor position
-     */
-    public void setCursor(int cursor) {
+    public void setCursor(int cursor, boolean select) {
         this.setSelectionStart(cursor);
-        if (!this.selecting) {
+        if (!select) {
             this.setSelectionEnd(this.selectionStart);
         }
 
         this.onChanged(this.text);
     }
 
-    /**
-     * Sets the start of the selection.
-     *
-     * @param cursor the start of the selection
-     */
     public void setSelectionStart(int cursor) {
         this.selectionStart = MathHelper.clamp(cursor, 0, this.text.length());
+        this.updateFirstCharacterIndex(this.selectionStart);
     }
 
-    /**
-     * Sets the cursor position to the start of the text.
-     */
-    public void setCursorToStart() {
-        this.setCursor(0);
+    public void setCursorToStart(boolean shiftKeyPressed) {
+        this.setCursor(0, shiftKeyPressed);
     }
 
-    /**
-     * Sets the cursor position to the end of the text.
-     */
-    public void setCursorToEnd() {
-        this.setCursor(this.text.length());
+    public void setCursorToEnd(boolean shiftKeyPressed) {
+        this.setCursor(this.text.length(), shiftKeyPressed);
     }
 
     @Override
     public boolean keyPressed(KeyInput input) {
-        if (this.isInactive()) {
-            return false;
-        } else {
-            this.selecting = input.hasShift();
-            if (input.isSelectAll()) {
-                this.setCursorToEnd();
-                this.setSelectionEnd(0);
-                return true;
-            } else if (input.isCopy()) {
-                MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
-                return true;
-            } else if (input.isPaste()) {
-                this.write(MinecraftClient.getInstance().keyboard.getClipboard());
-                return true;
-            } else if (input.isCut()) {
-                MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
-                this.write("");
-                return true;
-            } else {
-                switch (input.key()) {
-                    case GLFW.GLFW_KEY_BACKSPACE -> {
-                        this.selecting = false;
-                        this.erase(-1, input.hasCtrl());
-                        this.selecting = input.hasShift();
-                        return true;
+        if (this.isInteractable() && this.isFocused()) {
+            switch (input.key()) {
+                case GLFW.GLFW_KEY_BACKSPACE -> {
+                    this.erase(-1, input.hasCtrl());
+                    return true;
+                }
+                case GLFW.GLFW_KEY_DELETE -> {
+                    this.erase(1, input.hasCtrl());
+                    return true;
+                }
+                case GLFW.GLFW_KEY_RIGHT -> {
+                    if (input.hasCtrl()) {
+                        this.setCursor(this.getWordSkipPosition(1), input.hasShift());
+                    } else {
+                        this.moveCursor(1, input.hasShift());
                     }
-                    case GLFW.GLFW_KEY_DELETE -> {
-                        this.selecting = false;
-                        this.erase(1, input.hasCtrl());
-                        this.selecting = input.hasShift();
-                        return true;
+
+                    return true;
+                }
+                case GLFW.GLFW_KEY_LEFT -> {
+                    if (input.hasCtrl()) {
+                        this.setCursor(this.getWordSkipPosition(-1), input.hasShift());
+                    } else {
+                        this.moveCursor(-1, input.hasShift());
                     }
-                    case GLFW.GLFW_KEY_RIGHT -> {
-                        if (input.hasCtrl()) {
-                            this.setCursor(this.getWordSkipPosition(1));
-                        } else {
-                            this.moveCursor(1);
+
+                    return true;
+                }
+                case GLFW.GLFW_KEY_HOME -> {
+                    this.setCursorToStart(input.hasShift());
+                    return true;
+                }
+                case GLFW.GLFW_KEY_END -> {
+                    this.setCursorToEnd(input.hasShift());
+                    return true;
+                }
+                default -> {
+                    if (input.isSelectAll()) {
+                        this.setCursorToEnd(false);
+                        this.setSelectionEnd(0);
+                        return true;
+                    } else if (input.isCopy()) {
+                        MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
+                        return true;
+                    } else if (input.isPaste()) {
+                        this.write(MinecraftClient.getInstance().keyboard.getClipboard());
+                        return true;
+                    } else {
+                        if (input.isCut()) {
+                            MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
+                            this.write("");
+                            return true;
                         }
-                        return true;
-                    }
-                    case GLFW.GLFW_KEY_LEFT -> {
-                        if (input.hasCtrl()) {
-                            this.setCursor(this.getWordSkipPosition(-1));
-                        } else {
-                            this.moveCursor(-1);
-                        }
-                        return true;
-                    }
-                    case GLFW.GLFW_KEY_HOME -> {
-                        this.setCursorToStart();
-                        return true;
-                    }
-                    case GLFW.GLFW_KEY_END -> {
-                        this.setCursorToEnd();
-                        return true;
-                    }
-                    default -> {
+
                         return false;
                     }
                 }
             }
+        } else {
+            return false;
         }
     }
 
-    /**
-     * Checks if the text field is inactive.
-     *
-     * @return {@code true} if the text field is inactive, {@code false} otherwise
-     */
-    public boolean isInactive() {
-        return !this.isVisible() || !this.isFocused();
+    public boolean isActive() {
+        return this.isInteractable() && this.isFocused();
     }
 
     @Override
     public boolean charTyped(CharInput input) {
-        if (this.isInactive()) {
+        if (!this.isActive()) {
             return false;
-        } else if (input.codepoint() >= ' ') {
+        } else if (input.isValidChar()) {
             this.write(input.asString());
             return true;
         } else {
@@ -387,180 +336,169 @@ public class TextInputWidget extends ClickableWidget implements Drawable, Checke
         }
     }
 
+    private int getClickPosition(Click click) {
+        int i = Math.min(MathHelper.floor(click.x()) - this.textX, this.getInnerWidth());
+        String string = this.text.substring(this.firstCharacterIndex);
+        return this.firstCharacterIndex + this.textRenderer.trimToWidth(string, i).length();
+    }
 
-
-    @Override
-    public boolean mouseClicked(Click click, boolean doubleClick) {
-        if (this.isVisible() && click.button() == 0) {
-            this.setFocused(isMouseOver(click.x(), click.y()));
-
-            if (this.isFocused()) {
-                int i = MathHelper.floor(click.x()) - this.getX() - 4;
-                String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
-                this.setCursor(this.textRenderer.trimToWidth(string, i).length() + this.firstCharacterIndex);
-                return true;
-            }
-        }
-
-        return false;
+    private void onDoubleClick(Click click) {
+        int i = this.getClickPosition(click);
+        int j = this.getWordSkipPosition(-1, i);
+        int k = this.getWordSkipPosition(1, i);
+        this.setCursor(j, false);
+        this.setCursor(k, true);
     }
 
     @Override
-    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        if (!this.isVisible()) return;
-
-        int borderColor = this.isFocused() ? 0xFFFFFFFF : BORDER_COLOR;
-        drawContext.fill(this.getX() - 1, this.getY() - 1, this.getX() + this.width + 1, this.getY() + this.height + 1, borderColor);
-        drawContext.fill(this.getX(), this.getY(), this.getX() + this.width, this.getY() + this.height, BACKGROUND_COLOR);
-
-        int cursorStart = this.selectionStart - this.firstCharacterIndex;
-        int cursorEnd = this.selectionEnd - this.firstCharacterIndex;
-        String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
-        boolean isSelectionInBounds = cursorStart >= 0 && cursorStart <= string.length();
-        int textX = this.getX() + 4;
-        int textY = this.getY() + (this.height - 8) / 2;
-        int textEnd = textX;
-        if (cursorEnd > string.length()) {
-            cursorEnd = string.length();
+    public void onClick(Click click, boolean doubled) {
+        if (doubled) {
+            this.onDoubleClick(click);
+        } else {
+            this.setCursor(this.getClickPosition(click), click.hasShift());
         }
+    }
 
-        int textColor = this.isValid() ? TEXT_COLOR : ERROR_COLOR;
+    @Override
+    protected void onDrag(Click click, double d, double e) {
+        this.setCursor(this.getClickPosition(click), true);
+    }
 
-        if (!string.isEmpty()) {
-            // render the text before the cursor
-            String beforeCursor = isSelectionInBounds ? string.substring(0, cursorStart) : string;
-            OrderedText orderedText = this.renderTextProvider.apply(beforeCursor, this.firstCharacterIndex);
-            drawContext.drawTextWithShadow(this.textRenderer, orderedText, textX, textY, textColor);
-            textEnd += this.textRenderer.getWidth(orderedText) + 1;
-        }
+    @Override
+    public void playDownSound(SoundManager soundManager) {
+    }
 
-        boolean isCursorInTheMiddle = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxLength();
-        int cursorX = textEnd;
-        if (!isSelectionInBounds) {
-            cursorX = cursorStart > 0 ? textX + this.width : textX;
-        } else if (isCursorInTheMiddle) {
-            cursorX = textEnd - 1;
-            --textEnd;
-        }
+    @Override
+    public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+        if (this.isVisible()) {
+            if (this.drawsBackground()) {
+                Identifier identifier = TEXTURES.get(this.isInteractable(), this.isFocused());
+                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+            }
 
-        if (!string.isEmpty() && isSelectionInBounds && cursorStart < string.length()) {
-            // render the text after the cursor
-            drawContext.drawTextWithShadow(this.textRenderer, this.renderTextProvider.apply(string.substring(cursorStart), this.selectionStart), textEnd, textY, textColor);
-        }
+            int i = this.isValid() ? TEXT_COLOR : INVALID_COLOR;
+            int j = this.selectionStart - this.firstCharacterIndex;
+            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+            boolean bl = j >= 0 && j <= string.length();
+            boolean bl2 = this.isFocused() && (Util.getMeasuringTimeMs() - this.lastSwitchFocusTime) / 300L % 2L == 0L && bl;
+            int k = this.textX;
+            int l = MathHelper.clamp(this.selectionEnd - this.firstCharacterIndex, 0, string.length());
+            boolean textShadow = true;
+            if (!string.isEmpty()) {
+                String string2 = bl ? string.substring(0, j) : string;
+                OrderedText orderedText = this.format(string2);
+                context.drawText(this.textRenderer, orderedText, k, this.textY, i, textShadow);
+                k += this.textRenderer.getWidth(orderedText) + 1;
+            }
 
-        boolean canSuggestionBeRendered = this.textRenderer.getWidth(string + suggestion) < this.getInnerWidth();
-        if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
-            // render the suggestion (if possible)
-            int x = this.getX() + this.getWidth() - 4 - this.textRenderer.getWidth(suggestion);
-            drawContext.drawTextWithShadow(this.textRenderer, this.suggestion, x, textY, 0xff808080);
-        }
+            boolean bl3 = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxLength();
+            int m = k;
+            if (!bl) {
+                m = j > 0 ? this.textX + this.width : this.textX;
+            } else if (bl3) {
+                m = k - 1;
+                k--;
+            }
 
-        if (this.isFocused()) {
-            if (isCursorInTheMiddle) {
-                drawContext.fill(cursorX, textY - 1, cursorX + 1, textY + 1 + 9, VERTICAL_CURSOR_COLOR);
-            } else {
-                drawContext.drawTextWithShadow(this.textRenderer, HORIZONTAL_CURSOR, cursorX, textY, TEXT_COLOR);
+            if (!string.isEmpty() && bl && j < string.length()) {
+                context.drawText(this.textRenderer, this.format(string.substring(j)), k, this.textY, i, textShadow);
+            }
+
+            boolean canSuggestionBeRendered = this.textRenderer.getWidth(string + suggestion) < this.getInnerWidth();
+            if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
+                // render the suggestion (if possible)
+                int x = this.getX() + this.getWidth() - 4 - this.textRenderer.getWidth(suggestion);
+                context.drawText(this.textRenderer, this.suggestion, x, this.textY, Colors.GRAY, textShadow);
+            }
+
+            if (l != j) {
+                int n = this.textX + this.textRenderer.getWidth(string.substring(0, l));
+                context.drawSelection(Math.min(m, this.getX() + this.width), this.textY - 1, Math.min(n - 1, this.getX() + this.width), this.textY + 1 + 9);
+            }
+
+            if (bl2) {
+                if (bl3) {
+                    context.fill(m, this.textY - 1, m + 1, this.textY + 1 + 9, i);
+                } else {
+                    context.drawText(this.textRenderer, HORIZONTAL_CURSOR, m, this.textY, i, textShadow);
+                }
+            }
+
+            if (this.isHovered()) {
+                context.setCursor(StandardCursors.IBEAM);
             }
         }
+    }
 
-        if (cursorEnd != cursorStart) {
-            // render the selection highlight
-            int p = textX + this.textRenderer.getWidth(string.substring(0, cursorEnd));
-            this.drawSelectionHighlight(drawContext, cursorX, textY - 1, p - 1, textY + 1 + 9);
+    private OrderedText format(String string) {
+        return OrderedText.styledForwardsVisitedString(string, Style.EMPTY);
+    }
+
+    private void updateTextPosition() {
+        if (this.textRenderer != null) {
+            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+            this.textX = this.getX() + (this.isCentered() ? (this.getWidth() - this.textRenderer.getWidth(string)) / 2 : (this.drawsBackground ? 4 : 0));
+            this.textY = this.drawsBackground ? this.getY() + (this.height - 8) / 2 : this.getY();
         }
     }
 
-    private void drawSelectionHighlight(DrawContext drawContext, int x1, int y1, int x2, int y2) {
-        if (x1 < x2) {
-            int i = x1;
-            x1 = x2;
-            x2 = i;
-        }
-
-        if (y1 < y2) {
-            int i = y1;
-            y1 = y2;
-            y2 = i;
-        }
-
-        if (x2 > this.getX() + this.width) {
-            x2 = this.getX() + this.width;
-        }
-
-        if (x1 > this.getX() + this.width) {
-            x1 = this.getX() + this.width;
-        }
-
-        drawContext.fill(RenderPipelines.GUI_TEXT_HIGHLIGHT, x1, y1, x2, y2, Colors.BLUE);
+    private int getMaxLength() {
+        return this.maxLength;
     }
 
-    /**
-     * Returns the position of the cursor, or the beginning of the selection.
-     *
-     * @return the cursor position
-     */
     public int getCursor() {
         return this.selectionStart;
     }
 
-    @Nullable
-    @Override
-    public GuiNavigationPath getNavigationPath(GuiNavigation navigation) {
-        return this.visible ? super.getNavigationPath(navigation) : null;
+    public boolean drawsBackground() {
+        return this.drawsBackground;
     }
 
     @Override
-    public boolean isMouseOver(double mouseX, double mouseY) {
-        return this.visible
-                && mouseX >= this.getX()
-                && mouseX < (this.getX() + this.width)
-                && mouseY >= this.getY()
-                && mouseY < (this.getY() + this.height);
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
+        if (focused) {
+            this.lastSwitchFocusTime = Util.getMeasuringTimeMs();
+        }
     }
 
-    /**
-     * Returns width of the text field, without the border.
-     *
-     * @return the inner width
-     */
+    private boolean isCentered() {
+        return false;
+    }
+
     public int getInnerWidth() {
-        return this.width - 8;
+        return this.drawsBackground() ? this.width - 8 : this.width;
     }
 
-    /**
-     * Sets the end of the selection.
-     *
-     * @param index the end of the selection
-     */
     public void setSelectionEnd(int index) {
-        int i = this.text.length();
-        this.selectionEnd = MathHelper.clamp(index, 0, i);
+        this.selectionEnd = MathHelper.clamp(index, 0, this.text.length());
+        this.updateFirstCharacterIndex(this.selectionEnd);
+    }
+
+    private void updateFirstCharacterIndex(int cursor) {
         if (this.textRenderer != null) {
-            if (this.firstCharacterIndex > i) {
-                this.firstCharacterIndex = i;
+            this.firstCharacterIndex = Math.min(this.firstCharacterIndex, this.text.length());
+            int i = this.getInnerWidth();
+            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), i);
+            int j = string.length() + this.firstCharacterIndex;
+            if (cursor == this.firstCharacterIndex) {
+                this.firstCharacterIndex = this.firstCharacterIndex - this.textRenderer.trimToWidth(this.text, i, true).length();
             }
 
-            int j = this.getInnerWidth();
-            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), j);
-            int k = string.length() + this.firstCharacterIndex;
-            if (this.selectionEnd == this.firstCharacterIndex) {
-                this.firstCharacterIndex -= this.textRenderer.trimToWidth(this.text, j, true).length();
+            if (cursor > j) {
+                this.firstCharacterIndex += cursor - j;
+            } else if (cursor <= this.firstCharacterIndex) {
+                this.firstCharacterIndex = this.firstCharacterIndex - (this.firstCharacterIndex - cursor);
             }
 
-            if (this.selectionEnd > k) {
-                this.firstCharacterIndex += this.selectionEnd - k;
-            } else if (this.selectionEnd <= this.firstCharacterIndex) {
-                this.firstCharacterIndex -= this.firstCharacterIndex - this.selectionEnd;
-            }
-
-            this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, i);
+            this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, this.text.length());
         }
     }
 
     /**
-     * Whether the text field is currently visible.
+     * Whether the widget is visible.
      *
-     * @return {@code true} if the text field is visible, {@code false} otherwise
+     * @return true if the widget is visible.
      */
     public boolean isVisible() {
         return this.visible;
