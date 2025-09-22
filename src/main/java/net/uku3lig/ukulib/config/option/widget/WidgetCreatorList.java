@@ -27,9 +27,8 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param top             The top position of the list
      * @param bottom          UNUSED PARAMETER, USE OTHER CONSTRUCTOR
      * @param itemHeight      The height of each widget, usually 20
-     *
-     * @deprecated Mojang (rightfully) removed the bottom in 1.20.3, use {@link WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)} instead
      * @see WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)
+     * @deprecated Mojang (rightfully) removed the bottom in 1.20.3, use {@link WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)} instead
      */
     @Deprecated(since = "1.1.0", forRemoval = true)
     public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, @SuppressWarnings("unused") int bottom, int itemHeight) {
@@ -142,11 +141,12 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
             return widgets;
         }
 
+
         @Override
-        public void render(DrawContext drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             widgets.forEach(w -> {
-                w.setY(y);
-                w.render(drawContext, mouseX, mouseY, tickDelta);
+                w.setY(this.getContentY());
+                w.render(context, mouseX, mouseY, deltaTicks);
             });
         }
     }

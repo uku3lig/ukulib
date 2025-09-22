@@ -93,11 +93,11 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
         }
 
         @Override
-        public void render(DrawContext drawContext, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            button.setY(y);
-            button.render(drawContext, mouseX, mouseY, tickDelta);
+        public void render(DrawContext drawContext, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+            button.setY(this.getContentY());
+            button.render(drawContext, mouseX, mouseY, deltaTicks);
 
-            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, y, 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }
