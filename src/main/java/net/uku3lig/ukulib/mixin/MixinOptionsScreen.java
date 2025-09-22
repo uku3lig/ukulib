@@ -39,7 +39,7 @@ public class MixinOptionsScreen extends Screen {
     private SkinTextures skinTextures = null;
 
     @Unique
-    private ButtonWidget ukulibButton;
+    private ButtonWidget ukulibButton = null;
 
     /**
      * Adds a button to open the config screen.
@@ -73,11 +73,15 @@ public class MixinOptionsScreen extends Screen {
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-        if (this.skinTextures != null) {
-            PlayerSkinDrawer.draw(context, this.skinTextures, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 16);
-        } else {
-            // i have to use the long method because idk mojank stuff, drawGuiTexture doesn't work here
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, DEFAULT_ICON, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 0, 0, 16, 16, 16, 16);
+
+        // if no mod provides an ukulib config screen, the button isn't created and causes a NPE
+        if (this.ukulibButton != null) {
+            if (this.skinTextures != null) {
+                PlayerSkinDrawer.draw(context, this.skinTextures, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 16);
+            } else {
+                // i have to use the long method because idk mojank stuff, drawGuiTexture doesn't work here
+                context.drawTexture(RenderPipelines.GUI_TEXTURED, DEFAULT_ICON, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 0, 0, 16, 16, 16, 16);
+            }
         }
     }
 
