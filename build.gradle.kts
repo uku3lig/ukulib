@@ -9,6 +9,8 @@ plugins {
 version = "${project.property("mod_version")}+${project.property("minecraft_version")}${getVersionMetadata()}"
 group = project.property("maven_group") as String
 
+val archiveName = project.property("archives_base_name") as String
+
 if (System.getenv().containsKey("PUBLISH_RELEASE")) {
     tasks.publish.get().finalizedBy("modrinth")
 }
@@ -30,9 +32,30 @@ dependencies {
 
     include(implementation("com.moandjiezana.toml:toml4j:${project.property("toml4j_version")}")!!)
 
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", project.property("fabric_version") as String))!!)
-    include(modImplementation(fabricApi.module("fabric-command-api-v2", project.property("fabric_version") as String))!!)
-    include(modImplementation(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_version") as String))!!)
+    include(
+        modImplementation(
+            fabricApi.module(
+                "fabric-resource-loader-v0",
+                project.property("fabric_version") as String
+            )
+        )!!
+    )
+    include(
+        modImplementation(
+            fabricApi.module(
+                "fabric-command-api-v2",
+                project.property("fabric_version") as String
+            )
+        )!!
+    )
+    include(
+        modImplementation(
+            fabricApi.module(
+                "fabric-key-binding-api-v1",
+                project.property("fabric_version") as String
+            )
+        )!!
+    )
 
     // optional deps
     modCompileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
@@ -43,7 +66,7 @@ loom {
 }
 
 base {
-    archivesName = project.property("archives_base_name") as String
+    archivesName = archiveName
 }
 
 java {
@@ -55,11 +78,11 @@ java {
 }
 
 tasks.processResources {
-    inputs.property("version", project.version)
+    inputs.property("version", version)
     filteringCharset = "UTF-8"
 
     filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
+        expand("version" to version)
     }
 }
 
@@ -69,7 +92,7 @@ tasks.withType<JavaCompile>().configureEach {
 
 tasks.jar {
     from("LICENSE") {
-        rename { "${it}_${project.base.archivesName.get()}" }
+        rename { "${it}_${archiveName}" }
     }
 }
 
