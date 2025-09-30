@@ -32,30 +32,12 @@ dependencies {
 
     include(implementation("com.moandjiezana.toml:toml4j:${project.property("toml4j_version")}")!!)
 
-    include(
-        modImplementation(
-            fabricApi.module(
-                "fabric-resource-loader-v0",
-                project.property("fabric_version") as String
-            )
-        )!!
-    )
-    include(
-        modImplementation(
-            fabricApi.module(
-                "fabric-command-api-v2",
-                project.property("fabric_version") as String
-            )
-        )!!
-    )
-    include(
-        modImplementation(
-            fabricApi.module(
-                "fabric-key-binding-api-v1",
-                project.property("fabric_version") as String
-            )
-        )!!
-    )
+    // v0 is still needed because it's the one that loads the resources from the jar file
+    // TODO remove v0 when it's deprecated
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", project.property("fabric_version") as String))!!)
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v1", project.property("fabric_version") as String))!!)
+    include(modImplementation(fabricApi.module("fabric-command-api-v2", project.property("fabric_version") as String))!!)
+    include(modImplementation(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_version") as String))!!)
 
     // optional deps
     modCompileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")

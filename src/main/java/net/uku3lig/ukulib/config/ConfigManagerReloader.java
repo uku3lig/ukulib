@@ -1,9 +1,9 @@
 package net.uku3lig.ukulib.config;
 
-import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
-import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
+import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
 import net.minecraft.resource.ResourceManager;
 import net.minecraft.resource.ResourceType;
+import net.minecraft.resource.SynchronousResourceReloader;
 import net.minecraft.util.Identifier;
 
 import java.io.Serializable;
@@ -13,11 +13,12 @@ import java.util.Set;
 /**
  * Reloads all config managers when the resource manager reloads (e.g. on F3+T).
  */
-public class ConfigManagerReloader implements SimpleSynchronousResourceReloadListener {
+public class ConfigManagerReloader implements SynchronousResourceReloader {
     private static final Set<ConfigManager<?>> managers = new HashSet<>();
 
     static {
-        ResourceManagerHelper.get(ResourceType.CLIENT_RESOURCES).registerReloadListener(new ConfigManagerReloader());
+        // TODO move into mod initializer
+        ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(Identifier.of("ukulib", "config_reloader"), new ConfigManagerReloader());
     }
 
     /**
@@ -30,13 +31,13 @@ public class ConfigManagerReloader implements SimpleSynchronousResourceReloadLis
     }
 
     @Override
-    public Identifier getFabricId() {
-        return Identifier.of("ukulib", "config_reloader");
+    public void reload(ResourceManager manager) {
+        managers.forEach(this::reloadConfig);
     }
 
     @Override
-    public void reload(ResourceManager manager) {
-        managers.forEach(this::reloadConfig);
+    public String getName() {
+        return "ukulib_config_reloader";
     }
 
     // I FUCKING LOVE JAVA GENERICS
