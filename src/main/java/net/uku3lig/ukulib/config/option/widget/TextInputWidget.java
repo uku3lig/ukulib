@@ -413,7 +413,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
 
             if (l != j) {
                 int n = this.textX + this.textRenderer.getWidth(string.substring(0, l));
-                context.drawSelection(Math.min(m, this.getX() + this.width), this.textY - 1, Math.min(n - 1, this.getX() + this.width), this.textY + 1 + 9);
+                context.drawSelection(Math.min(m, this.getX() + this.width), this.textY - 1, Math.min(n - 1, this.getX() + this.width), this.textY + 1 + 9, true);
             }
 
             if (bl2) {

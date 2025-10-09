@@ -230,10 +230,9 @@ public class CyclingOption<T> implements WidgetCreator {
 
     @Override
     public ClickableWidget createWidget(int x, int y, int width, int height) {
-        CyclingButtonWidget<T> widget = CyclingButtonWidget.builder(valueToText)
+        CyclingButtonWidget<T> widget = CyclingButtonWidget.builder(valueToText, initialValue)
                 .values(values)
                 .tooltip(tooltipFactory)
-                .initially(initialValue)
                 .build(x, y, width, height, Text.translatable(key), (button, value) -> setter.accept(value));
 
         widget.active = this.active;
