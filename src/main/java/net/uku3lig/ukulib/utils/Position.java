@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.utils;
 
 import lombok.Getter;
-import net.minecraft.util.TranslatableOption;
+import net.minecraft.util.OptionEnum;
 import net.uku3lig.ukulib.config.option.CyclingOption;
 
 import java.util.Arrays;
@@ -13,7 +13,7 @@ import java.util.function.Consumer;
  * The actual position is implementation specific.
  */
 @Getter // lombok generates the methods that have to be implemented
-public enum Position implements TranslatableOption {
+public enum Position implements OptionEnum {
     /**
      * The top left of the screen.
      */
@@ -42,11 +42,11 @@ public enum Position implements TranslatableOption {
     public static final String KEY = "ukulib.position";
 
     private final int id;
-    private final String translationKey;
+    private final String key;
 
-    Position(int id, String translationKey) {
+    Position(int id, String key) {
         this.id = id;
-        this.translationKey = translationKey;
+        this.key = key;
     }
 
     /**
@@ -71,9 +71,9 @@ public enum Position implements TranslatableOption {
      * Creates a {@link CyclingOption} that allows to choose between all of this enum's values.
      *
      * @param initialValue The initial
-     * @param setter The action to be performed when the value changes
+     * @param setter       The action to be performed when the value changes
      * @return The generated option
-     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer) 
+     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer)
      */
     public static CyclingOption<Position> getOption(Position initialValue, Consumer<Position> setter) {
         return CyclingOption.ofTranslatableEnum(KEY, Position.class, initialValue, setter);
@@ -86,7 +86,7 @@ public enum Position implements TranslatableOption {
      * @param initialValue  The initial value
      * @param setter        The action to be performed when the value changes
      * @return The generated option
-     * @see CyclingOption#ofTranslatable(String, Collection, TranslatableOption, Consumer)
+     * @see CyclingOption#ofTranslatable(String, Collection, OptionEnum, Consumer)
      */
     public static CyclingOption<Position> getOption(Collection<Position> allowedValues, Position initialValue, Consumer<Position> setter) {
         return CyclingOption.ofTranslatable(KEY, allowedValues, initialValue, setter);

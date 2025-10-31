@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 
 /**
  * A screen that can be closed, returning to a parent screen.
@@ -18,7 +18,7 @@ public abstract class CloseableScreen extends Screen {
      * @param title  The title of the screen
      * @param parent The parent screen
      */
-    protected CloseableScreen(Text title, Screen parent) {
+    protected CloseableScreen(Component title, Screen parent) {
         super(title);
         this.parent = parent;
     }
@@ -30,11 +30,11 @@ public abstract class CloseableScreen extends Screen {
      * @param parent The parent screen
      */
     protected CloseableScreen(String key, Screen parent) {
-        this(Text.translatable(key), parent);
+        this(Component.translatable(key), parent);
     }
 
     @Override
-    public void close() {
-        if (this.client != null) this.client.setScreen(parent);
+    public void onClose() {
+        if (this.minecraft != null) this.minecraft.setScreen(parent);
     }
 }

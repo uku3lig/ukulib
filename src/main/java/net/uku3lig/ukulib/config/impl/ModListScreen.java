@@ -2,12 +2,12 @@ package net.uku3lig.ukulib.config.impl;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 
@@ -34,7 +34,7 @@ public final class ModListScreen extends CloseableScreen {
     protected void init() {
         super.init();
 
-        entrypointList = new EntrypointList(this.client, this.width, this.height - 64, 32, 36);
+        entrypointList = new EntrypointList(this.minecraft, this.width, this.height - 64, 32, 36);
         Map<ModContainer, UnaryOperator<Screen>> containers = new LinkedHashMap<>();
 
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
@@ -50,21 +50,21 @@ public final class ModListScreen extends CloseableScreen {
                 });
 
         entrypointList.addAll(containers, this);
-        this.addSelectableChild(entrypointList);
+        this.addWidget(entrypointList);
 
-        MinecraftClient mc = MinecraftClient.getInstance();
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> mc.setScreen(this.parent))
-                .dimensions(this.width / 2 - 155, this.height - 27, 150, 20)
+        Minecraft mc = Minecraft.getInstance();
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> mc.setScreen(this.parent))
+                .bounds(this.width / 2 - 155, this.height - 27, 150, 20)
                 .build());
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.config.title"), button -> mc.setScreen(new UkulibConfigScreen(this)))
-                .dimensions(this.width / 2 + 5, this.height - 27, 150, 20)
+        this.addRenderableWidget(Button.builder(Component.translatable("ukulib.config.title"), button -> mc.setScreen(new UkulibConfigScreen(this)))
+                .bounds(this.width / 2 + 5, this.height - 27, 150, 20)
                 .build());
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
-        entrypointList.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawCenteredTextWithShadow(textRenderer, title, width / 2, 20, 0xFFFFFFFF);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
+        entrypointList.render(graphics, mouseX, mouseY, delta);
+        graphics.drawCenteredString(font, title, width / 2, 20, 0xFFFFFFFF);
     }
 }

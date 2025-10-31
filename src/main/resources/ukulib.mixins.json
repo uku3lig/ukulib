@@ -8,6 +8,7 @@
   },
   "client": [
     "MixinMinecraftClient",
-    "MixinOptionsScreen"
+    "MixinOptionsScreen",
+    "TextureManagerAccessor"
   ]
 }

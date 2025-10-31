@@ -4,21 +4,21 @@ import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
 import lombok.Getter;
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.texture.TextureManager;
-import net.minecraft.client.toast.SystemToast;
-import net.minecraft.client.toast.ToastManager;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Text;
-import net.minecraft.util.Formatting;
-import net.minecraft.util.Identifier;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.toasts.SystemToast;
+import net.minecraft.client.gui.components.toasts.ToastManager;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.util.FormattedCharSequence;
+import net.uku3lig.ukulib.mixin.TextureManagerAccessor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
@@ -35,8 +35,8 @@ import java.util.function.Consumer;
  * Simple class for various utilities.
  */
 public class Ukutils {
-    private static final Text ON = Text.literal("ON").formatted(Formatting.BOLD, Formatting.GREEN);
-    private static final Text OFF = Text.literal("OFF").formatted(Formatting.BOLD, Formatting.RED);
+    private static final Component ON = Component.literal("ON").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN);
+    private static final Component OFF = Component.literal("OFF").withStyle(ChatFormatting.BOLD, ChatFormatting.RED);
 
     /**
      * The map of keybindings and their respective actions.
@@ -44,7 +44,7 @@ public class Ukutils {
      * @return The map.
      */
     @Getter
-    private static final Map<KeyBinding, Consumer<MinecraftClient>> keybindings = new HashMap<>();
+    private static final Map<KeyMapping, Consumer<Minecraft>> keybindings = new HashMap<>();
 
     /**
      * Creates a done button.
@@ -54,35 +54,35 @@ public class Ukutils {
      * @param parent The parent screen
      * @return The generated button
      */
-    public static ButtonWidget doneButton(int width, int height, Screen parent) {
-        return ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
-                .dimensions(width / 2 - 100, height - 27, 200, 20)
+    public static Button doneButton(int width, int height, Screen parent) {
+        return Button.builder(CommonComponents.GUI_DONE, button -> Minecraft.getInstance().setScreen(parent))
+                .bounds(width / 2 - 100, height - 27, 200, 20)
                 .build();
     }
 
     /**
      * Makes text coordinates based on the position of an icon.
      *
-     * @param text         The text to be drawn
-     * @param screenWidth  The width of the screen
-     * @param textRenderer The text renderer
-     * @param x            The x coordinate of the icon
-     * @param y            The y coordinate of the icon
-     * @param width        The width of the icon
-     * @param height       The height of the icon
+     * @param text        The text to be drawn
+     * @param screenWidth The width of the screen
+     * @param font        The font
+     * @param x           The x coordinate of the icon
+     * @param y           The y coordinate of the icon
+     * @param width       The width of the icon
+     * @param height      The height of the icon
      * @return The tuple of coordinates
      */
-    public static Vector2ic getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y, int width, int height) {
+    public static Vector2ic getTextCoords(Component text, int screenWidth, Font font, int x, int y, int width, int height) {
         Vector2i vector = new Vector2i(
-                x + (width / 2) - (textRenderer.getWidth(text) / 2), // center
-                y + height + 2 - textRenderer.fontHeight // center
+                x + (width / 2) - (font.width(text) / 2), // center
+                y + height + 2 - font.lineHeight // center
         );
 
         int rx = x - ((screenWidth - width) / 2);
         if (Math.abs(rx) >= 2) {
             vector.set(
-                    rx < 0 ? x + width + 2 /* left */ : x - 2 - textRenderer.getWidth(text) /* right */,
-                    y + (height / 2) - (textRenderer.fontHeight / 2) // left/right
+                    rx < 0 ? x + width + 2 /* left */ : x - 2 - font.width(text) /* right */,
+                    y + (height / 2) - (font.lineHeight / 2) // left/right
             );
         }
 
@@ -98,20 +98,20 @@ public class Ukutils {
      * @param x            The x coordinate of the icon
      * @param y            The y coordinate of the icon
      * @return The tuple of coordinates
-     * @see Ukutils#getTextCoords(Text, int, TextRenderer, int, int, int, int)
+     * @see Ukutils#getTextCoords(Component, int, Font, int, int, int, int)
      */
-    public static Vector2ic getTextCoords(Text text, int screenWidth, TextRenderer textRenderer, int x, int y) {
+    public static Vector2ic getTextCoords(Component text, int screenWidth, Font textRenderer, int x, int y) {
         return getTextCoords(text, screenWidth, textRenderer, x, y, 16, 16);
     }
 
     /**
-     * Retrieves the string text from an ordered text.
+     * Retrieves the string text from a {@link FormattedCharSequence}.
      *
-     * @param text The ordered text
+     * @param text The FormattedCharSequence
      * @return The value of the text
      */
     @SuppressWarnings("unused")
-    public static String getText(OrderedText text) {
+    public static String getText(FormattedCharSequence text) {
         StringBuilder builder = new StringBuilder();
         text.accept((index, style, codePoint) -> {
             builder.append(Character.toChars(codePoint));
@@ -122,16 +122,16 @@ public class Ukutils {
     }
 
     /**
-     * Retrieves the styled text from an ordered text.
+     * Retrieves the styled text from a {@link FormattedCharSequence}.
      *
-     * @param text The ordered text
+     * @param text The FormattedCharSequence
      * @return The styled text
      */
     @SuppressWarnings("unused")
-    public static MutableText getStyledText(OrderedText text) {
-        MutableText builder = Text.empty();
+    public static MutableComponent getStyledText(FormattedCharSequence text) {
+        MutableComponent builder = Component.empty();
         text.accept((index, style, codePoint) -> {
-            builder.append(Text.literal(Character.toString(codePoint)).setStyle(style));
+            builder.append(Component.literal(Character.toString(codePoint)).setStyle(style));
             return true;
         });
 
@@ -154,9 +154,9 @@ public class Ukutils {
      * @param title The title of the message
      * @param body  The body of the message
      */
-    public static void sendToast(Text title, @Nullable Text body) {
-        ToastManager toastManager = MinecraftClient.getInstance().getToastManager();
-        SystemToast.show(toastManager, SystemToast.Type.NARRATOR_TOGGLE, title, body);
+    public static void sendToast(Component title, @Nullable Component body) {
+        ToastManager toastManager = Minecraft.getInstance().getToastManager();
+        SystemToast.addOrUpdate(toastManager, SystemToast.SystemToastId.NARRATOR_TOGGLE, title, body);
     }
 
     /**
@@ -166,11 +166,11 @@ public class Ukutils {
      * @return Whether the texture exists
      */
     @Contract("null -> false")
-    public static boolean textureExists(Identifier texture) {
-        TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
-        ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
+    public static boolean textureExists(ResourceLocation texture) {
+        TextureManagerAccessor textureManager = (TextureManagerAccessor) Minecraft.getInstance().getTextureManager();
+        ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
-        return texture != null && (textureManager.textures.containsKey(texture) || resourceManager.getResource(texture).isPresent());
+        return texture != null && (textureManager.getByPath().containsKey(texture) || resourceManager.getResource(texture).isPresent());
     }
 
     /**
@@ -180,10 +180,10 @@ public class Ukutils {
      * @return The texture of the player's head
      */
     @Nullable
-    public static Identifier getHeadTex(String username) {
-        if (Identifier.isPathValid(username)) {
+    public static ResourceLocation getHeadTex(String username) {
+        if (ResourceLocation.isValidPath(username)) {
             username = username.toLowerCase(Locale.ROOT);
-            return Identifier.of("ukulib", "head_" + username);
+            return ResourceLocation.fromNamespaceAndPath("ukulib", "head_" + username);
         } else {
             return null;
         }
@@ -195,7 +195,7 @@ public class Ukutils {
      * @param keyBinding The keybinding
      * @param action     The action to be performed when the key is pressed
      */
-    public static void registerKeybinding(KeyBinding keyBinding, Consumer<MinecraftClient> action) {
+    public static void registerKeybinding(KeyMapping keyBinding, Consumer<Minecraft> action) {
         KeyBindingHelper.registerKeyBinding(keyBinding);
         keybindings.put(keyBinding, action);
     }
@@ -211,13 +211,13 @@ public class Ukutils {
      * @param message    The message to be displayed to the player when the key is pressed.
      *                   The new state (ON or OFF) will be appended to this message.
      */
-    public static void registerToggleBind(KeyBinding keyBinding, BooleanSupplier getter, BooleanConsumer setter, Text message) {
-        Consumer<MinecraftClient> action = client -> {
+    public static void registerToggleBind(KeyMapping keyBinding, BooleanSupplier getter, BooleanConsumer setter, Component message) {
+        Consumer<Minecraft> action = client -> {
             boolean newValue = !getter.getAsBoolean();
             setter.accept(newValue);
 
             if (client.player != null) {
-                client.player.sendMessage(message.copy().append(" ").append(newValue ? ON : OFF), true);
+                client.player.displayClientMessage(message.copy().append(" ").append(newValue ? ON : OFF), true);
             }
         };
 

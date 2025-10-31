@@ -2,13 +2,13 @@ package net.uku3lig.ukulib.config.impl;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Util;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
 
@@ -36,23 +36,23 @@ public class BrokenConfigScreen extends CloseableScreen {
      * @param parent The parent screen
      */
     public BrokenConfigScreen(Screen parent) {
-        super(Text.of("Broken config screen"), parent);
+        super(Component.literal("Broken config screen"), parent);
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
 
-        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("There was an issue with this config screen.").asOrderedText(), width / 2, 100, 0xFFFFFFFF);
-        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("Please report this issue to the mod author.").asOrderedText(), width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFFFF);
+        graphics.drawCenteredString(font, Component.literal("There was an issue with this config screen."), width / 2, 100, 0xFFFFFFFF);
+        graphics.drawCenteredString(font, Component.literal("Please report this issue to the mod author."), width / 2, 100 + font.lineHeight + 4, 0xFFFFFFFF);
 
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Upload logs to mclo.gs"), button -> uploadLogs())
-                .dimensions(this.width / 2 - 100, this.height - 51, 200, 20).build());
-        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+        this.addRenderableWidget(Button.builder(Component.literal("Upload logs to mclo.gs"), button -> uploadLogs())
+                .bounds(this.width / 2 - 100, this.height - 51, 200, 20).build());
+        this.addRenderableWidget(Ukutils.doneButton(this.width, this.height, this.parent));
     }
 
     private void uploadLogs() {
-        Path logFile = new File(MinecraftClient.getInstance().runDirectory, "logs/latest.log").toPath();
+        Path logFile = new File(Minecraft.getInstance().gameDirectory, "logs/latest.log").toPath();
 
         String content;
         try {
@@ -74,13 +74,13 @@ public class BrokenConfigScreen extends CloseableScreen {
                     if (apiRes.success && apiRes.url != null) {
                         log.info("Uploaded logs to {}", apiRes.url);
 
-                        MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
-                            if (confirmed) Util.getOperatingSystem().open(apiRes.url);
-                            this.close();
+                        Minecraft.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                            if (confirmed) Util.getPlatform().openUri(apiRes.url);
+                            this.onClose();
                         }, apiRes.url, true));
                     } else {
                         log.error("Error while uploading logs to mclo.gs: {}", apiRes.error);
-                        Ukutils.sendToast(Text.of("Error while uploading logs"), Text.of(apiRes.error));
+                        Ukutils.sendToast(Component.literal("Error while uploading logs"), Component.literal(apiRes.error));
                     }
                 });
     }

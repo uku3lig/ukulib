@@ -1,9 +1,9 @@
 package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.screens.Screen;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
@@ -49,26 +49,26 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
     @Override
     protected void init() {
         super.init();
-        buttonList = new WidgetCreatorList(this.client, this.width, this.height - 64, 32, 25);
+        buttonList = new WidgetCreatorList(this.minecraft, this.width, this.height - 64, 32, 25);
         buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
 
-        this.addSelectableChild(buttonList);
+        this.addWidget(buttonList);
     }
 
     @Override
-    protected Collection<ClickableWidget> getInvalidOptions() {
+    protected Collection<AbstractWidget> getInvalidOptions() {
         return buttonList.children().stream()
                 .flatMap(e -> e.children().stream())
-                .filter(ClickableWidget.class::isInstance)
-                .map(e -> (ClickableWidget) e)
+                .filter(AbstractWidget.class::isInstance)
+                .map(e -> (AbstractWidget) e)
                 .filter(w -> w instanceof CheckedOption option && !option.isValid())
                 .toList();
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
-        buttonList.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFFFF);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
+        buttonList.render(graphics, mouseX, mouseY, delta);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
     }
 }

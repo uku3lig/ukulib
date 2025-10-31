@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.components.AbstractWidget;
 
 /**
  * An interface used to create clickable widgets
@@ -16,7 +16,7 @@ public interface WidgetCreator {
      * @param height The widget height
      * @return The created widget
      */
-    ClickableWidget createWidget(int x, int y, int width, int height);
+    AbstractWidget createWidget(int x, int y, int width, int height);
 
     /**
      * Makes a widget wide.

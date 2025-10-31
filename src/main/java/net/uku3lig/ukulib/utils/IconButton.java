@@ -2,11 +2,11 @@ package net.uku3lig.ukulib.utils;
 
 import lombok.Getter;
 import lombok.Setter;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 
 /**
  * A simple button with an icon. Works best when the button is square.
@@ -14,14 +14,14 @@ import net.minecraft.util.Identifier;
 @Getter
 @Setter
 @SuppressWarnings("javadoc")
-public class IconButton extends ButtonWidget {
+public class IconButton extends Button {
     /**
      * The texture of the icon
      *
      * @param texture The new texture
      * @return The texture
      */
-    private Identifier texture;
+    private ResourceLocation texture;
 
     /**
      * The x position of the icon in the texture
@@ -87,8 +87,8 @@ public class IconButton extends ButtonWidget {
      * @param textureHeight The height of the texture
      * @param pressAction   The action to perform when the button is pressed
      */
-    public IconButton(int x, int y, int width, int height, Identifier texture, int u, int v, int iconWidth, int iconHeight, int textureWidth, int textureHeight, PressAction pressAction) {
-        super(x, y, width, height, Text.empty(), pressAction, DEFAULT_NARRATION_SUPPLIER);
+    public IconButton(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int iconWidth, int iconHeight, int textureWidth, int textureHeight, OnPress pressAction) {
+        super(x, y, width, height, Component.empty(), pressAction, DEFAULT_NARRATION);
         this.texture = texture;
         this.u = u;
         this.v = v;
@@ -110,20 +110,20 @@ public class IconButton extends ButtonWidget {
      * @param textureHeight The height of the texture
      * @param pressAction   The action to perform when the button is pressed
      */
-    public IconButton(int x, int y, int width, int height, Identifier texture, int textureWidth, int textureHeight, PressAction pressAction) {
+    public IconButton(int x, int y, int width, int height, ResourceLocation texture, int textureWidth, int textureHeight, OnPress pressAction) {
         this(x, y, width, height, texture, 0, 0, textureWidth, textureHeight, textureWidth, textureHeight, pressAction);
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float delta) {
-        super.renderWidget(context, mouseX, mouseY, delta);
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderWidget(graphics, mouseX, mouseY, delta);
 
         // center the icon
         int rx = this.getX() + (this.width - this.iconWidth) / 2;
         int ry = this.getY() + (this.height - this.iconHeight) / 2;
 
         if (Ukutils.textureExists(this.texture)) {
-            context.drawTexture(RenderPipelines.GUI_TEXTURED, this.texture, rx, ry, this.u, this.v, this.iconWidth, this.iconHeight, this.textureWidth, this.textureHeight);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, this.texture, rx, ry, this.u, this.v, this.iconWidth, this.iconHeight, this.textureWidth, this.textureHeight);
         }
     }
 }

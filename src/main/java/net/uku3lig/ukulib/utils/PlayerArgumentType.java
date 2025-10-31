@@ -8,10 +8,9 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
-import net.minecraft.command.CommandSource;
-import net.minecraft.entity.player.PlayerEntity;
-import net.minecraft.text.Text;
-
+import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
@@ -23,7 +22,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     /**
      * The exception thrown when the selected player is not found.
      */
-    public static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Text.translatable("name.entity.notfound.player"));
+    public static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("argument.entity.notfound.player"));
 
     /**
      * Returns a new instance.
@@ -40,11 +39,11 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
      * @return The player entity
      * @throws CommandSyntaxException if the player is not found
      */
-    public static PlayerEntity getPlayer(String name, CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    public static Player getPlayer(String name, CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         PlayerSelector selector = context.getArgument(name, PlayerSelector.class);
 
-        return context.getSource().getWorld().getPlayers().stream()
-                .filter(p -> p.getNameForScoreboard().equalsIgnoreCase(selector.name) || p.getUuidAsString().equalsIgnoreCase(selector.name))
+        return context.getSource().getWorld().players().stream()
+                .filter(p -> p.getScoreboardName().equalsIgnoreCase(selector.name) || p.getStringUUID().equalsIgnoreCase(selector.name))
                 .findFirst()
                 .orElseThrow(PLAYER_NOT_FOUND_EXCEPTION::create);
     }
@@ -57,9 +56,9 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         if (context.getSource() instanceof FabricClientCommandSource source) {
-            return CommandSource.suggestMatching(source.getWorld().getPlayers().stream().map(PlayerEntity::getNameForScoreboard), builder);
+            return SharedSuggestionProvider.suggest(source.getWorld().players().stream().map(Player::getScoreboardName), builder);
         } else {
-            return CommandSource.suggestMatching(Collections.emptyList(), builder);
+            return SharedSuggestionProvider.suggest(Collections.emptyList(), builder);
         }
     }
 

@@ -27,7 +27,7 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings("net.fabricmc:yarn:${project.property("yarn_mappings")}:v2")
+    mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
 
     include(implementation("com.moandjiezana.toml:toml4j:${project.property("toml4j_version")}")!!)
@@ -41,10 +41,6 @@ dependencies {
 
     // optional deps
     modCompileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
-}
-
-loom {
-    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
 }
 
 base {

@@ -1,13 +1,13 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.lwjgl.glfw.GLFW;
 
@@ -43,14 +43,14 @@ public abstract class PositionSelectScreen extends CloseableScreen {
 
     @Override
     protected void init() {
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, b -> close())
-                .dimensions(this.width - 60, 10, 50, 20)
+        this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, b -> onClose())
+                .bounds(this.width - 60, 10, 50, 20)
                 .build());
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Default"), b -> {
+        this.addRenderableWidget(Button.builder(Component.literal("Default"), b -> {
                     this.x = -1;
                     this.y = -1;
                 })
-                .dimensions(this.width - 60, 35, 50, 20)
+                .bounds(this.width - 60, 35, 50, 20)
                 .build());
     }
 
@@ -61,17 +61,17 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     }
 
     @Override
-    public boolean mouseClicked(Click click, boolean doubleClick) {
+    public boolean mouseClicked(MouseButtonEvent click, boolean doubleClick) {
         if (!super.mouseClicked(click, doubleClick)) {
-            this.x = (int) MathHelper.clamp(click.x(), 0, this.width);
-            this.y = (int) MathHelper.clamp(click.y(), 0, this.height);
+            this.x = (int) Mth.clamp(click.x(), 0, this.width);
+            this.y = (int) Mth.clamp(click.y(), 0, this.height);
         }
 
         return true;
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
+    public boolean keyPressed(KeyEvent input) {
         if (!super.keyPressed(input)) {
             int amount = input.modifiers() == GLFW.GLFW_MOD_SHIFT ? 10 : 1;
 
@@ -86,8 +86,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
             }
 
             // make sure they are within bounds
-            this.x = MathHelper.clamp(x, 0, this.width);
-            this.y = MathHelper.clamp(y, 0, this.height);
+            this.x = Mth.clamp(x, 0, this.width);
+            this.y = Mth.clamp(y, 0, this.height);
         }
 
         return true;
@@ -95,41 +95,41 @@ public abstract class PositionSelectScreen extends CloseableScreen {
 
     /**
      * Draws the screen and all the components in it.
-     * Called in {@link PositionSelectScreen#render(DrawContext, int, int, float)}.
+     * Called in {@link PositionSelectScreen#render(GuiGraphics, int, int, float)}.
      *
-     * @param drawContext The drawable helper
-     * @param mouseX      The x position of the mouse
-     * @param mouseY      The y position of the mouse
-     * @param delta       The delta time
-     * @param x           The x position of the element
-     * @param y           The y position of the element
+     * @param graphics The current GuiGraphics
+     * @param mouseX   The x position of the mouse
+     * @param mouseY   The y position of the mouse
+     * @param delta    The delta time
+     * @param x        The x position of the element
+     * @param y        The y position of the element
      */
-    protected abstract void draw(DrawContext drawContext, int mouseX, int mouseY, float delta, int x, int y);
+    protected abstract void draw(GuiGraphics graphics, int mouseX, int mouseY, float delta, int x, int y);
 
     /**
      * Draws the screen and all the components in it, in their default position.
-     * Called in {@link PositionSelectScreen#render(DrawContext, int, int, float)}.
+     * Called in {@link PositionSelectScreen#render(GuiGraphics, int, int, float)}.
      *
-     * @param drawContext The drawable helper
-     * @param mouseX      The x position of the mouse
-     * @param mouseY      The y position of the mouse
-     * @param delta       The delta time
+     * @param graphics The current GuiGraphics
+     * @param mouseX   The x position of the mouse
+     * @param mouseY   The y position of the mouse
+     * @param delta    The delta time
      */
-    protected void drawDefault(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        draw(drawContext, mouseX, mouseY, delta, 5, 5);
+    protected void drawDefault(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        draw(graphics, mouseX, mouseY, delta, 5, 5);
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFFFF);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFFFF55);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, Text.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFFFF);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
+        graphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.font, Component.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFFFF55);
+        graphics.drawCenteredString(this.font, Component.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFFFF);
 
         if (x == -1 || y == -1) {
-            drawDefault(drawContext, mouseX, mouseY, delta);
+            drawDefault(graphics, mouseX, mouseY, delta);
         } else {
-            draw(drawContext, mouseX, mouseY, delta, x, y);
+            draw(graphics, mouseX, mouseY, delta, x, y);
         }
     }
 }

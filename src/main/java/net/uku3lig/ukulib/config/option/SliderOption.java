@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.text.Text;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.option.widget.DoubleSlider;
 
 import java.util.function.DoubleConsumer;
@@ -17,41 +17,41 @@ public class SliderOption implements WidgetCreator {
     /**
      * Displays a double with 2 decimals of precision.
      */
-    public static final DoubleFunction<Text> DEFAULT_VALUE_TO_TEXT = d -> Text.of(String.format("%.2f", d));
+    public static final DoubleFunction<Component> DEFAULT_VALUE_TO_TEXT = d -> Component.literal(String.format("%.2f", d));
 
     /**
      * Displays a double as a percentage, with no further precision.
      */
-    public static final DoubleFunction<Text> PERCENT_VALUE_TO_TEXT = d -> Text.of(String.format("%.0f%%", d * 100));
+    public static final DoubleFunction<Component> PERCENT_VALUE_TO_TEXT = d -> Component.literal(String.format("%.0f%%", d * 100));
 
     /**
      * Displays a double as a rounded integer.
      */
-    public static final DoubleFunction<Text> INTEGER_VALUE_TO_TEXT = d -> Text.of(String.format("%.0f", d));
+    public static final DoubleFunction<Component> INTEGER_VALUE_TO_TEXT = d -> Component.literal(String.format("%.0f", d));
 
 
     private final String key;
     private final double initialValue;
     private final DoubleConsumer setter;
-    private final DoubleFunction<Text> valueToText;
+    private final DoubleFunction<Component> valueToText;
     private final double min;
     private final double max;
     private final double step;
-    private final SimpleOption.TooltipFactory<Double> tooltipFactory;
+    private final OptionInstance.TooltipSupplier<Double> tooltipSupplier;
 
     /**
      * Creates a slider option.
      *
-     * @param key            The translation key
-     * @param initialValue   The initial value
-     * @param setter         The callback for the modified value
-     * @param valueToText    The function that converts the value to human-readable text
-     * @param min            The minimum value
-     * @param max            The maximum value
-     * @param step           The step between each value
-     * @param tooltipFactory The tooltip factory
+     * @param key             The translation key
+     * @param initialValue    The initial value
+     * @param setter          The callback for the modified value
+     * @param valueToText     The function that converts the value to human-readable text
+     * @param min             The minimum value
+     * @param max             The maximum value
+     * @param step            The step between each value
+     * @param tooltipSupplier The tooltip supplier
      */
-    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Text> valueToText, double min, double max, double step, SimpleOption.TooltipFactory<Double> tooltipFactory) {
+    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Component> valueToText, double min, double max, double step, OptionInstance.TooltipSupplier<Double> tooltipSupplier) {
         this.key = key;
         this.initialValue = initialValue;
         this.setter = setter;
@@ -59,7 +59,7 @@ public class SliderOption implements WidgetCreator {
         this.min = min;
         this.max = max;
         this.step = step;
-        this.tooltipFactory = tooltipFactory;
+        this.tooltipSupplier = tooltipSupplier;
     }
 
     /**
@@ -73,8 +73,8 @@ public class SliderOption implements WidgetCreator {
      * @param max          The maximum value
      * @param step         The step between each value
      */
-    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Text> valueToText, double min, double max, double step) {
-        this(key, initialValue, setter, valueToText, min, max, step, SimpleOption.emptyTooltip());
+    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Component> valueToText, double min, double max, double step) {
+        this(key, initialValue, setter, valueToText, min, max, step, OptionInstance.noTooltip());
     }
 
     /**
@@ -87,7 +87,7 @@ public class SliderOption implements WidgetCreator {
      * @param min          The minimum value
      * @param max          The maximum value
      */
-    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Text> valueToText, double min, double max) {
+    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Component> valueToText, double min, double max) {
         this(key, initialValue, setter, valueToText, min, max, 0.01);
     }
 
@@ -99,12 +99,12 @@ public class SliderOption implements WidgetCreator {
      * @param setter       The callback for the modified value
      * @param valueToText  The function that converts the value to human-readable text
      */
-    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Text> valueToText) {
+    public SliderOption(String key, double initialValue, DoubleConsumer setter, DoubleFunction<Component> valueToText) {
         this(key, initialValue, setter, valueToText, 0, 1);
     }
 
     @Override
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        return new DoubleSlider(Text.translatable(key), valueToText, initialValue, min, max, step, setter, tooltipFactory, x, y, width, height);
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        return new DoubleSlider(Component.translatable(key), valueToText, initialValue, min, max, step, setter, tooltipSupplier, x, y, width, height);
     }
 }

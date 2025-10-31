@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.option.widget.LinedTextWidget;
 
 /**
@@ -45,7 +45,7 @@ public class TextOption implements WidgetCreator {
         this(key, false);
     }
 
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        return new LinedTextWidget(x, y, width, height, Text.translatable(this.key), MinecraftClient.getInstance().textRenderer, this.drawLine, this.padding);
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        return new LinedTextWidget(x, y, width, height, Component.translatable(this.key), Minecraft.getInstance().font, this.drawLine, this.padding);
     }
 }

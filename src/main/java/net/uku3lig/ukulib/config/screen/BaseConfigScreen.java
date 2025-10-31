@@ -1,12 +1,12 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.impl.BrokenConfigScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
@@ -35,7 +35,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
      */
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private ButtonWidget doneButton;
+    private Button doneButton;
 
     /**
      * Constructs the screen
@@ -72,7 +72,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
                 return mapper.apply(manager.getConfig());
             } catch (Exception e2) {
                 log.error("Error while getting options with the default config, this is a bug", e2);
-                MinecraftClient.getInstance().setScreen(new BrokenConfigScreen(parent));
+                Minecraft.getInstance().setScreen(new BrokenConfigScreen(parent));
             }
         }
 
@@ -81,17 +81,17 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
 
     @Override
     protected void init() {
-        doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
-                .dimensions(width / 2 - 155, height - 27, 150, 20)
+        doneButton = this.addRenderableWidget(Button.builder(CommonComponents.GUI_DONE, button -> Minecraft.getInstance().setScreen(parent))
+                .bounds(width / 2 - 155, height - 27, 150, 20)
                 .build());
 
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.option.reset"), button -> {
-                    MinecraftClient.getInstance().setScreen(parent);
+        this.addRenderableWidget(Button.builder(Component.translatable("ukulib.option.reset"), button -> {
+                    Minecraft.getInstance().setScreen(parent);
                     manager.resetConfig();
                     manager.saveConfig();
-                    Ukutils.sendToast(Text.of("Sucessfully reset config!"), null);
+                    Ukutils.sendToast(Component.literal("Sucessfully reset config!"), null);
                 })
-                .dimensions(width / 2 + 5, height - 27, 150, 20)
+                .bounds(width / 2 + 5, height - 27, 150, 20)
                 .build());
     }
 
@@ -99,18 +99,18 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
     public void tick() {
         super.tick();
 
-        Collection<ClickableWidget> invalid = this.getInvalidOptions();
+        Collection<AbstractWidget> invalid = this.getInvalidOptions();
         doneButton.active = invalid.isEmpty();
 
         if (doneButton.active) {
-            doneButton.setTooltip(Tooltip.of(Text.empty()));
+            doneButton.setTooltip(Tooltip.create(Component.empty()));
         } else {
             String invalidNames = invalid.stream()
-                    .map(ClickableWidget::getMessage)
-                    .map(Text::getString)
+                    .map(AbstractWidget::getMessage)
+                    .map(Component::getString)
                     .collect(Collectors.joining(", "));
 
-            doneButton.setTooltip(Tooltip.of(Text.translatable("ukulib.option.invalid", invalidNames)));
+            doneButton.setTooltip(Tooltip.create(Component.translatable("ukulib.option.invalid", invalidNames)));
         }
     }
 
@@ -119,7 +119,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
      *
      * @return The collection of invalid options.
      */
-    protected Collection<ClickableWidget> getInvalidOptions() {
+    protected Collection<AbstractWidget> getInvalidOptions() {
         return Collections.emptyList();
     }
 

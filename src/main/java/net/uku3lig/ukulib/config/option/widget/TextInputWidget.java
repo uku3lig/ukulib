@@ -1,44 +1,48 @@
 package net.uku3lig.ukulib.config.option.widget;
 
 import lombok.Getter;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.font.TextRenderer;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.Click;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.cursor.StandardCursors;
-import net.minecraft.client.gui.screen.ButtonTextures;
-import net.minecraft.client.gui.screen.narration.NarrationMessageBuilder;
-import net.minecraft.client.gui.screen.narration.NarrationPart;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.input.CharInput;
-import net.minecraft.client.input.KeyInput;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.text.MutableText;
-import net.minecraft.text.OrderedText;
-import net.minecraft.text.Style;
-import net.minecraft.text.Text;
-import net.minecraft.util.*;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.Util;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.WidgetSprites;
+import net.minecraft.client.gui.narration.NarratedElementType;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.input.CharacterEvent;
+import net.minecraft.client.input.KeyEvent;
+import net.minecraft.client.input.MouseButtonEvent;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.CommonColors;
+import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
+import net.minecraft.util.StringUtil;
 import net.uku3lig.ukulib.config.option.CheckedOption;
+import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * A widget to input text. Based on {@link net.minecraft.client.gui.widget.TextFieldWidget}.
+ * A widget to input text. Based on {@link net.minecraft.client.gui.components.EditBox}.
  */
 // changes from vanilla: suggestion rendering & implements CheckedOption & renders invalid text
-public class TextInputWidget extends ClickableWidget implements CheckedOption {
-    private static final ButtonTextures TEXTURES = new ButtonTextures(
-            Identifier.ofVanilla("widget/text_field"), Identifier.ofVanilla("widget/text_field_highlighted")
+public class TextInputWidget extends AbstractWidget implements CheckedOption {
+    private static final WidgetSprites TEXTURES = new WidgetSprites(
+            ResourceLocation.withDefaultNamespace("widget/text_field"), ResourceLocation.withDefaultNamespace("widget/text_field_highlighted")
     );
     private static final String HORIZONTAL_CURSOR = "_";
     private static final int TEXT_COLOR = 0xFFE0E0E0;
     private static final int INVALID_COLOR = 0xFFFF0000;
-    private final TextRenderer textRenderer;
+    private final Font font;
     /**
      * The text.
      *
@@ -57,7 +61,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     private final String suggestion;
     private final Consumer<String> changedListener;
     private final Predicate<String> textPredicate;
-    private long lastSwitchFocusTime = Util.getMeasuringTimeMs();
+    private long lastSwitchFocusTime = Util.getMillis();
     private int textX;
     private int textY;
 
@@ -75,22 +79,22 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
      * @param maxLength       the maximum length of the text
      */
     public TextInputWidget(int x, int y, int width, int height, String initialValue, Consumer<String> changedListener, String suggestion, Predicate<String> textPredicate, int maxLength) {
-        super(x, y, width, height, Text.of(suggestion));
-        this.textRenderer = MinecraftClient.getInstance().textRenderer;
+        super(x, y, width, height, Component.literal(suggestion));
+        this.font = Minecraft.getInstance().font;
         this.changedListener = changedListener;
         this.suggestion = suggestion;
         this.textPredicate = textPredicate;
         this.maxLength = maxLength;
 
         this.setText(initialValue);
-        this.setTooltip(Tooltip.of(Text.of(this.suggestion)));
+        this.setTooltip(Tooltip.create(Component.literal(this.suggestion)));
         this.updateTextPosition();
     }
 
     @Override
-    protected MutableText getNarrationMessage() {
-        Text text = this.getMessage();
-        return Text.translatable("gui.narrate.editBox", text, this.text);
+    protected @NotNull MutableComponent createNarrationMessage() {
+        Component text = this.getMessage();
+        return Component.translatable("gui.narrate.editBox", text, this.text);
     }
 
     public void setText(String text) {
@@ -128,7 +132,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
         int j = Math.max(this.selectionStart, this.selectionEnd);
         int k = this.maxLength - this.text.length() - (i - j);
         if (k > 0) {
-            String string = StringHelper.stripInvalidChars(text);
+            String string = StringUtil.filterText(text);
             int l = string.length();
             if (k < l) {
                 if (Character.isHighSurrogate(string.charAt(k - 1))) {
@@ -230,7 +234,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     private int getCursorPosWithOffset(int offset) {
-        return Util.moveCursor(this.text, this.selectionStart, offset);
+        return Util.offsetByCodepoints(this.text, this.selectionStart, offset);
     }
 
     public void setCursor(int cursor, boolean select) {
@@ -243,7 +247,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     public void setSelectionStart(int cursor) {
-        this.selectionStart = MathHelper.clamp(cursor, 0, this.text.length());
+        this.selectionStart = Mth.clamp(cursor, 0, this.text.length());
         this.updateFirstCharacterIndex(this.selectionStart);
     }
 
@@ -256,41 +260,41 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     @Override
-    public boolean keyPressed(KeyInput input) {
-        if (this.isInteractable() && this.isFocused()) {
+    public boolean keyPressed(KeyEvent input) {
+        if (this.isActive() && this.isFocused()) {
             switch (input.key()) {
                 case GLFW.GLFW_KEY_BACKSPACE -> {
-                    this.erase(-1, input.hasCtrl());
+                    this.erase(-1, input.hasControlDown());
                     return true;
                 }
                 case GLFW.GLFW_KEY_DELETE -> {
-                    this.erase(1, input.hasCtrl());
+                    this.erase(1, input.hasControlDown());
                     return true;
                 }
                 case GLFW.GLFW_KEY_RIGHT -> {
-                    if (input.hasCtrl()) {
-                        this.setCursor(this.getWordSkipPosition(1), input.hasShift());
+                    if (input.hasControlDown()) {
+                        this.setCursor(this.getWordSkipPosition(1), input.hasShiftDown());
                     } else {
-                        this.moveCursor(1, input.hasShift());
+                        this.moveCursor(1, input.hasShiftDown());
                     }
 
                     return true;
                 }
                 case GLFW.GLFW_KEY_LEFT -> {
-                    if (input.hasCtrl()) {
-                        this.setCursor(this.getWordSkipPosition(-1), input.hasShift());
+                    if (input.hasControlDown()) {
+                        this.setCursor(this.getWordSkipPosition(-1), input.hasShiftDown());
                     } else {
-                        this.moveCursor(-1, input.hasShift());
+                        this.moveCursor(-1, input.hasShiftDown());
                     }
 
                     return true;
                 }
                 case GLFW.GLFW_KEY_HOME -> {
-                    this.setCursorToStart(input.hasShift());
+                    this.setCursorToStart(input.hasShiftDown());
                     return true;
                 }
                 case GLFW.GLFW_KEY_END -> {
-                    this.setCursorToEnd(input.hasShift());
+                    this.setCursorToEnd(input.hasShiftDown());
                     return true;
                 }
                 default -> {
@@ -299,14 +303,14 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
                         this.setSelectionEnd(0);
                         return true;
                     } else if (input.isCopy()) {
-                        MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
+                        Minecraft.getInstance().keyboardHandler.setClipboard(this.getSelectedText());
                         return true;
                     } else if (input.isPaste()) {
-                        this.write(MinecraftClient.getInstance().keyboard.getClipboard());
+                        this.write(Minecraft.getInstance().keyboardHandler.getClipboard());
                         return true;
                     } else {
                         if (input.isCut()) {
-                            MinecraftClient.getInstance().keyboard.setClipboard(this.getSelectedText());
+                            Minecraft.getInstance().keyboardHandler.setClipboard(this.getSelectedText());
                             this.write("");
                             return true;
                         }
@@ -320,29 +324,29 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
         }
     }
 
-    public boolean isActive() {
-        return this.isInteractable() && this.isFocused();
+    public boolean canConsumeInput() {
+        return this.isActive() && this.isFocused();
     }
 
     @Override
-    public boolean charTyped(CharInput input) {
-        if (!this.isActive()) {
+    public boolean charTyped(CharacterEvent input) {
+        if (!this.canConsumeInput()) {
             return false;
-        } else if (input.isValidChar()) {
-            this.write(input.asString());
+        } else if (input.isAllowedChatCharacter()) {
+            this.write(input.codepointAsString());
             return true;
         } else {
             return false;
         }
     }
 
-    private int getClickPosition(Click click) {
-        int i = Math.min(MathHelper.floor(click.x()) - this.textX, this.getInnerWidth());
+    private int getClickPosition(MouseButtonEvent click) {
+        int i = Math.min(Mth.floor(click.x()) - this.textX, this.getInnerWidth());
         String string = this.text.substring(this.firstCharacterIndex);
-        return this.firstCharacterIndex + this.textRenderer.trimToWidth(string, i).length();
+        return this.firstCharacterIndex + this.font.plainSubstrByWidth(string, i).length();
     }
 
-    private void onDoubleClick(Click click) {
+    private void onDoubleClick(MouseButtonEvent click) {
         int i = this.getClickPosition(click);
         int j = this.getWordSkipPosition(-1, i);
         int k = this.getWordSkipPosition(1, i);
@@ -351,16 +355,16 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     @Override
-    public void onClick(Click click, boolean doubled) {
+    public void onClick(MouseButtonEvent click, boolean doubled) {
         if (doubled) {
             this.onDoubleClick(click);
         } else {
-            this.setCursor(this.getClickPosition(click), click.hasShift());
+            this.setCursor(this.getClickPosition(click), click.hasShiftDown());
         }
     }
 
     @Override
-    protected void onDrag(Click click, double d, double e) {
+    protected void onDrag(MouseButtonEvent click, double d, double e) {
         this.setCursor(this.getClickPosition(click), true);
     }
 
@@ -369,26 +373,26 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     @Override
-    public void renderWidget(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
         if (this.isVisible()) {
             if (this.drawsBackground()) {
-                Identifier identifier = TEXTURES.get(this.isInteractable(), this.isFocused());
-                context.drawGuiTexture(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), this.getWidth(), this.getHeight());
+                ResourceLocation identifier = TEXTURES.get(this.isActive(), this.isFocused());
+                graphics.blitSprite(RenderPipelines.GUI_TEXTURED, identifier, this.getX(), this.getY(), this.getWidth(), this.getHeight());
             }
 
             int i = this.isValid() ? TEXT_COLOR : INVALID_COLOR;
             int j = this.selectionStart - this.firstCharacterIndex;
-            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+            String string = this.font.plainSubstrByWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
             boolean bl = j >= 0 && j <= string.length();
-            boolean bl2 = this.isFocused() && (Util.getMeasuringTimeMs() - this.lastSwitchFocusTime) / 300L % 2L == 0L && bl;
+            boolean bl2 = this.isFocused() && (Util.getMillis() - this.lastSwitchFocusTime) / 300L % 2L == 0L && bl;
             int k = this.textX;
-            int l = MathHelper.clamp(this.selectionEnd - this.firstCharacterIndex, 0, string.length());
+            int l = Mth.clamp(this.selectionEnd - this.firstCharacterIndex, 0, string.length());
             boolean textShadow = true;
             if (!string.isEmpty()) {
                 String string2 = bl ? string.substring(0, j) : string;
-                OrderedText orderedText = this.format(string2);
-                context.drawText(this.textRenderer, orderedText, k, this.textY, i, textShadow);
-                k += this.textRenderer.getWidth(orderedText) + 1;
+                FormattedCharSequence orderedText = this.format(string2);
+                graphics.drawString(this.font, orderedText, k, this.textY, i, textShadow);
+                k += this.font.width(orderedText) + 1;
             }
 
             boolean bl3 = this.selectionStart < this.text.length() || this.text.length() >= this.getMaxLength();
@@ -401,43 +405,43 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
             }
 
             if (!string.isEmpty() && bl && j < string.length()) {
-                context.drawText(this.textRenderer, this.format(string.substring(j)), k, this.textY, i, textShadow);
+                graphics.drawString(this.font, this.format(string.substring(j)), k, this.textY, i, textShadow);
             }
 
-            boolean canSuggestionBeRendered = this.textRenderer.getWidth(string + suggestion) < this.getInnerWidth();
+            boolean canSuggestionBeRendered = this.font.width(string + suggestion) < this.getInnerWidth();
             if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
                 // render the suggestion (if possible)
-                int x = this.getX() + this.getWidth() - 4 - this.textRenderer.getWidth(suggestion);
-                context.drawText(this.textRenderer, this.suggestion, x, this.textY, Colors.GRAY, textShadow);
+                int x = this.getX() + this.getWidth() - 4 - this.font.width(suggestion);
+                graphics.drawString(this.font, this.suggestion, x, this.textY, CommonColors.GRAY, textShadow);
             }
 
             if (l != j) {
-                int n = this.textX + this.textRenderer.getWidth(string.substring(0, l));
-                context.drawSelection(Math.min(m, this.getX() + this.width), this.textY - 1, Math.min(n - 1, this.getX() + this.width), this.textY + 1 + 9);
+                int n = this.textX + this.font.width(string.substring(0, l));
+                graphics.textHighlight(Math.min(m, this.getX() + this.width), this.textY - 1, Math.min(n - 1, this.getX() + this.width), this.textY + 1 + 9);
             }
 
             if (bl2) {
                 if (bl3) {
-                    context.fill(m, this.textY - 1, m + 1, this.textY + 1 + 9, i);
+                    graphics.fill(m, this.textY - 1, m + 1, this.textY + 1 + 9, i);
                 } else {
-                    context.drawText(this.textRenderer, HORIZONTAL_CURSOR, m, this.textY, i, textShadow);
+                    graphics.drawString(this.font, HORIZONTAL_CURSOR, m, this.textY, i, textShadow);
                 }
             }
 
             if (this.isHovered()) {
-                context.setCursor(StandardCursors.IBEAM);
+                graphics.requestCursor(CursorTypes.IBEAM);
             }
         }
     }
 
-    private OrderedText format(String string) {
-        return OrderedText.styledForwardsVisitedString(string, Style.EMPTY);
+    private FormattedCharSequence format(String string) {
+        return FormattedCharSequence.forward(string, Style.EMPTY);
     }
 
     private void updateTextPosition() {
-        if (this.textRenderer != null) {
-            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
-            this.textX = this.getX() + (this.isCentered() ? (this.getWidth() - this.textRenderer.getWidth(string)) / 2 : (this.drawsBackground ? 4 : 0));
+        if (this.font != null) {
+            String string = this.font.plainSubstrByWidth(this.text.substring(this.firstCharacterIndex), this.getInnerWidth());
+            this.textX = this.getX() + (this.isCentered() ? (this.getWidth() - this.font.width(string)) / 2 : (this.drawsBackground ? 4 : 0));
             this.textY = this.drawsBackground ? this.getY() + (this.height - 8) / 2 : this.getY();
         }
     }
@@ -458,7 +462,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     public void setFocused(boolean focused) {
         super.setFocused(focused);
         if (focused) {
-            this.lastSwitchFocusTime = Util.getMeasuringTimeMs();
+            this.lastSwitchFocusTime = Util.getMillis();
         }
     }
 
@@ -471,18 +475,18 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     public void setSelectionEnd(int index) {
-        this.selectionEnd = MathHelper.clamp(index, 0, this.text.length());
+        this.selectionEnd = Mth.clamp(index, 0, this.text.length());
         this.updateFirstCharacterIndex(this.selectionEnd);
     }
 
     private void updateFirstCharacterIndex(int cursor) {
-        if (this.textRenderer != null) {
+        if (this.font != null) {
             this.firstCharacterIndex = Math.min(this.firstCharacterIndex, this.text.length());
             int i = this.getInnerWidth();
-            String string = this.textRenderer.trimToWidth(this.text.substring(this.firstCharacterIndex), i);
+            String string = this.font.plainSubstrByWidth(this.text.substring(this.firstCharacterIndex), i);
             int j = string.length() + this.firstCharacterIndex;
             if (cursor == this.firstCharacterIndex) {
-                this.firstCharacterIndex = this.firstCharacterIndex - this.textRenderer.trimToWidth(this.text, i, true).length();
+                this.firstCharacterIndex = this.firstCharacterIndex - this.font.plainSubstrByWidth(this.text, i, true).length();
             }
 
             if (cursor > j) {
@@ -491,7 +495,7 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
                 this.firstCharacterIndex = this.firstCharacterIndex - (this.firstCharacterIndex - cursor);
             }
 
-            this.firstCharacterIndex = MathHelper.clamp(this.firstCharacterIndex, 0, this.text.length());
+            this.firstCharacterIndex = Mth.clamp(this.firstCharacterIndex, 0, this.text.length());
         }
     }
 
@@ -505,8 +509,8 @@ public class TextInputWidget extends ClickableWidget implements CheckedOption {
     }
 
     @Override
-    public void appendClickableNarrations(NarrationMessageBuilder builder) {
-        builder.put(NarrationPart.TITLE, this.getNarrationMessage());
+    public void updateWidgetNarration(NarrationElementOutput builder) {
+        builder.add(NarratedElementType.TITLE, this.createNarrationMessage());
     }
 
     @Override

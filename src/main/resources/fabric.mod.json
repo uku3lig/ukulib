@@ -31,7 +31,6 @@
   "mixins": [
     "ukulib.mixins.json"
   ],
-  "accessWidener": "ukulib.accesswidener",
   "custom": {
     "modmenu": {
       "badges": [ "library" ],

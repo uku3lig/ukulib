@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.config.option.widget;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -35,8 +35,8 @@ public class ColorInputWidget extends TextInputWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.renderWidget(drawContext, mouseX, mouseY, delta);
+    public void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.renderWidget(graphics, mouseX, mouseY, delta);
         if (!this.isVisible()) return;
 
         convert(this.getText(), this.allowAlpha).ifPresent(color -> {
@@ -46,7 +46,7 @@ public class ColorInputWidget extends TextInputWidget {
 
             if (color <= 0xFFFFFF && !allowAlpha) color |= (0xFF << 24);
 
-            drawContext.fill(x, y, x + size, y + size, color);
+            graphics.fill(x, y, x + size, y + size, color);
         });
     }
 

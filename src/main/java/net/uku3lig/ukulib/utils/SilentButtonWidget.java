@@ -1,37 +1,39 @@
 package net.uku3lig.ukulib.utils;
 
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.sound.SoundManager;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * A button that doesn't make noise.
  */
 @SuppressWarnings("unused")
-public class SilentButtonWidget extends ButtonWidget {
+public class SilentButtonWidget extends Button {
     /**
      * Creates a new silent button
-     * @param x The x position of the button
-     * @param y The y position of the button
-     * @param width The width of the button
-     * @param height The height of the button
-     * @param message The text of the button
-     * @param onPress The action to be done when the button is pressed
+     *
+     * @param x                 The x position of the button
+     * @param y                 The y position of the button
+     * @param width             The width of the button
+     * @param height            The height of the button
+     * @param message           The text of the button
+     * @param onPress           The action to be done when the button is pressed
      * @param narrationSupplier The narration supplier
      */
-    protected SilentButtonWidget(int x, int y, int width, int height, Text message, PressAction onPress, NarrationSupplier narrationSupplier) {
+    protected SilentButtonWidget(int x, int y, int width, int height, Component message, OnPress onPress, CreateNarration narrationSupplier) {
         super(x, y, width, height, message, onPress, narrationSupplier);
     }
 
     /**
      * Creates a builder for a silent button
+     *
      * @param message The text of the button
      * @param onPress The action to be done when the button is pressed
      * @return A new builder
      */
-    public static Builder silentBuilder(Text message, PressAction onPress) {
+    public static Builder silentBuilder(Component message, OnPress onPress) {
         return new Builder(message, onPress);
     }
 
@@ -44,29 +46,31 @@ public class SilentButtonWidget extends ButtonWidget {
      * A silent button builder
      */
     public static class Builder {
-        private final Text message;
-        private final PressAction onPress;
+        private final Component message;
+        private final OnPress onPress;
         @Nullable
         private Tooltip tooltip;
         private int x;
         private int y;
         private int width = 150;
         private int height = 20;
-        private NarrationSupplier narrationSupplier;
+        private CreateNarration narrationSupplier;
 
         /**
          * Creates a builder for a silent button
+         *
          * @param message The text of the button
          * @param onPress The action to be done when the button is pressed
          */
-        public Builder(Text message, PressAction onPress) {
-            this.narrationSupplier = ButtonWidget.DEFAULT_NARRATION_SUPPLIER;
+        public Builder(Component message, OnPress onPress) {
+            this.narrationSupplier = Button.DEFAULT_NARRATION;
             this.message = message;
             this.onPress = onPress;
         }
 
         /**
          * Sets the position
+         *
          * @param x The x position
          * @param y The y position
          * @return The modified builder
@@ -79,6 +83,7 @@ public class SilentButtonWidget extends ButtonWidget {
 
         /**
          * Sets the width
+         *
          * @param width The width
          * @return The modified builder
          */
@@ -89,7 +94,8 @@ public class SilentButtonWidget extends ButtonWidget {
 
         /**
          * Sets the size
-         * @param width The width
+         *
+         * @param width  The width
          * @param height The height
          * @return The modified builder
          */
@@ -101,9 +107,10 @@ public class SilentButtonWidget extends ButtonWidget {
 
         /**
          * Sets the dimensions
-         * @param x The x position
-         * @param y The y position
-         * @param width The width
+         *
+         * @param x      The x position
+         * @param y      The y position
+         * @param width  The width
          * @param height The height
          * @return The modified builder
          */
@@ -113,6 +120,7 @@ public class SilentButtonWidget extends ButtonWidget {
 
         /**
          * Sets the tooltip
+         *
          * @param tooltip The tooltip
          * @return The modified builder
          */
@@ -123,16 +131,18 @@ public class SilentButtonWidget extends ButtonWidget {
 
         /**
          * Sets the narration supplier
+         *
          * @param narrationSupplier The narration supplier
          * @return The modified builder
          */
-        public Builder narrationSupplier(NarrationSupplier narrationSupplier) {
+        public Builder narrationSupplier(CreateNarration narrationSupplier) {
             this.narrationSupplier = narrationSupplier;
             return this;
         }
 
         /**
          * Build the button
+         *
          * @return The button
          */
         public SilentButtonWidget build() {
