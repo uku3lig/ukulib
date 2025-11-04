@@ -6,6 +6,10 @@ plugins {
 group = "net.uku3lig"
 version = BuildConfig.createVersionString(project)
 
+base {
+    archivesName = rootProject.name + "-" + project.name
+}
+
 java.toolchain.languageVersion = JavaLanguageVersion.of(21)
 
 tasks.withType<JavaCompile> {

@@ -30,3 +30,7 @@ dependencies {
     addEmbeddedFabricModule("fabric-command-api-v2")
     addEmbeddedFabricModule("fabric-key-binding-api-v1")
 }
+
+tasks.remapJar {
+    destinationDirectory.set(file(rootProject.layout.buildDirectory).resolve("libs"))
+}
