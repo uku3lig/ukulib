@@ -1,6 +1,8 @@
 plugins {
     id("multiloader-base")
     id("maven-publish")
+
+    id("com.modrinth.minotaur")
 }
 
 val commonJava: Configuration = configurations.create("commonJava") {
@@ -71,4 +73,18 @@ publishing {
             }
         }
     }
+}
+
+var releaseType = "release"
+if (version.toString().contains("alpha")) releaseType = "alpha"
+else if (version.toString().contains("beta")) releaseType = "beta"
+
+modrinth {
+    token = System.getenv("MODRINTH_TOKEN")
+    projectId = "Y8uFrUil"
+    versionNumber = version.toString()
+    versionType = releaseType
+    gameVersions.add(BuildConfig.MINECRAFT_VERSION) // Must be an array, even with only one version
+    loaders.add(project.name) // either fabric or neoforge, which are valid values
+    changelog = "See https://github.com/uku3lig/ukulib/releases/tag/${version}"
 }

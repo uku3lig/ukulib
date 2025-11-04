@@ -35,3 +35,9 @@ dependencies {
 tasks.remapJar {
     destinationDirectory.set(file(rootProject.layout.buildDirectory).resolve("libs"))
 }
+
+modrinth {
+    // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    uploadFile.set(tasks.remapJar)
+    loaders.add("quilt")
+}
