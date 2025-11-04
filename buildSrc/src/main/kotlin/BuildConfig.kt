@@ -9,7 +9,7 @@ object BuildConfig {
     const val TOML4J_VERSION: String = "0.7.2"
     const val MODMENU_VERSION: String = "16.0.0-rc.1"
 
-    const val MOD_VERSION: String = "1.9.0"
+    const val MOD_VERSION: String = "2.0.0-alpha.1"
 
     fun createVersionString(project: Project): String {
         val builder = StringBuilder()
