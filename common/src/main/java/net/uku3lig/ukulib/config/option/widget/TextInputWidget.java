@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.config.option.widget;
 
+import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import lombok.Getter;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -26,7 +27,6 @@ import net.minecraft.util.StringUtil;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import org.jetbrains.annotations.NotNull;
 import org.lwjgl.glfw.GLFW;
-import com.mojang.blaze3d.platform.cursor.CursorTypes;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;

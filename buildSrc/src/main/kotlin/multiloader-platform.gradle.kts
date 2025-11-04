@@ -52,4 +52,23 @@ publishing {
             from(components["java"])
         }
     }
+
+    repositories {
+        maven {
+            name = "UkuReleases"
+            url = uri("https://maven.uku3lig.net/releases")
+            credentials {
+                username = "uku"
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+        maven {
+            name = "UkuSnapshots"
+            url = uri("https://maven.uku3lig.net/snapshots")
+            credentials {
+                username = "uku"
+                password = System.getenv("MAVEN_PASSWORD")
+            }
+        }
+    }
 }
