@@ -17,8 +17,7 @@ jobs:
       - name: Checkout sources
         uses: actions/checkout@v4
       - name: Publish to the maven repo
-        run: ./gradlew publish
+        run: ./gradlew publish -Pbuild.release=true
         env:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          PUBLISH_RELEASE: owo
