@@ -1,4 +1,4 @@
-package net.uku3lig.fabric;
+package net.uku3lig.ukulib.fabric;
 
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
@@ -9,10 +9,10 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
-import net.uku3lig.fabric.utils.UkutilsFabric;
 import net.uku3lig.ukulib.Ukulib;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.ConfigManagerReloader;
+import net.uku3lig.ukulib.fabric.utils.UkutilsFabric;
 import net.uku3lig.ukulib.utils.ModMeta;
 
 import java.nio.file.Path;

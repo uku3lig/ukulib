@@ -1,4 +1,4 @@
-package net.uku3lig.fabric.utils;
+package net.uku3lig.ukulib.fabric.utils;
 
 import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import com.terraformersmc.modmenu.api.ModMenuApi;

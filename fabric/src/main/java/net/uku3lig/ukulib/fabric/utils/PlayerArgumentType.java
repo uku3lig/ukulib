@@ -1,4 +1,4 @@
-package net.uku3lig.fabric.utils;
+package net.uku3lig.ukulib.fabric.utils;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;

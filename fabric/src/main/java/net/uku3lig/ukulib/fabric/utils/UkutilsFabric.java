@@ -1,4 +1,4 @@
-package net.uku3lig.fabric.utils;
+package net.uku3lig.ukulib.fabric.utils;
 
 import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
 import net.fabricmc.loader.api.FabricLoader;

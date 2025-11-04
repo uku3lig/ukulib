@@ -17,13 +17,13 @@
   "environment": "client",
   "entrypoints": {
     "preLaunch": [
-      "net.uku3lig.fabric.UkulibFabric"
+      "net.uku3lig.ukulib.fabric.UkulibFabric"
     ],
     "main": [
-      "net.uku3lig.fabric.UkulibFabric"
+      "net.uku3lig.ukulib.fabric.UkulibFabric"
     ],
     "modmenu": [
-      "net.uku3lig.fabric.utils.ModMenuRegistrar"
+      "net.uku3lig.ukulib.fabric.utils.ModMenuRegistrar"
     ]
   },
   "depends": {
