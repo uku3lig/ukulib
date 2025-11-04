@@ -1,0 +1,31 @@
+modLoader = "javafml"
+loaderVersion = "[4,)"
+license = "MPL-2.0"
+
+[[mods]]
+modId = "ukulib"
+displayName = "ukulib"
+version = "${version}"
+
+logoFile = "assets/ukulib/icon.png"
+authors = "uku"
+description = '''
+small utility library used in my mods
+'''
+
+[[dependencies.ukulib]]
+modId = "minecraft"
+type = "required"
+versionRange = "[1.21.9,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[dependencies.ukulib]]
+modId = "neoforge"
+type = "required"
+versionRange = "[21.10.47-beta,)"
+ordering = "NONE"
+side = "CLIENT"
+
+[[mixins]]
+config = "ukulib.mixins.json"
