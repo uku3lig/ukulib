@@ -14,8 +14,9 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")
 
-    // FIXME
-    include(implementation("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")!!)
+    implementation("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
+    include("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
+
     modCompileOnly("com.terraformersmc:modmenu:${BuildConfig.MODMENU_VERSION}")
 
     fun addEmbeddedFabricModule(name: String) {

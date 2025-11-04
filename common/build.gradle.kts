@@ -10,7 +10,7 @@ dependencies {
     minecraft("com.mojang:minecraft:${BuildConfig.MINECRAFT_VERSION}")
     mappings(loom.officialMojangMappings())
 
-    implementation("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
+    compileOnly("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
 
     // provided both by fabric and neoforge
     compileOnly("net.fabricmc:sponge-mixin:0.13.2+mixin.0.8.5")

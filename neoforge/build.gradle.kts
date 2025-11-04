@@ -21,7 +21,8 @@ neoForge {
 }
 
 dependencies {
-    jarJar(implementation("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")!!)
+    implementation("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
+    jarJar("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
 }
 
 tasks.jar {
