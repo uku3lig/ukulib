@@ -14,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.event.lifecycle.FMLLoadCompleteEvent;
 import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
@@ -35,12 +36,8 @@ import java.util.function.UnaryOperator;
 public class UkulibNeoForge {
     public UkulibNeoForge(IEventBus modEventBus, ModContainer container) {
         Ukulib.onPreLaunch(new UkutilsNeoForge());
-
         modEventBus.register(this);
-
         container.registerExtensionPoint(IConfigScreenFactory.class, (c, screen) -> new UkulibConfigScreen(screen));
-
-        Ukulib.onInitialize(this::getConfigMods);
     }
 
     @SubscribeEvent
@@ -53,8 +50,8 @@ public class UkulibNeoForge {
         event.addListener(ResourceLocation.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
     }
 
-    // TODO figure out a way to remove the supplier
-    private Map<ModMeta, UnaryOperator<Screen>> getConfigMods() {
+    @SubscribeEvent
+    public void onFinishedLoading(FMLLoadCompleteEvent event) {
         Map<ModMeta, UnaryOperator<Screen>> mods = new LinkedHashMap<>();
         ModList.get().getSortedMods().forEach(c -> {
             Optional<UkulibNFProvider> opt = c.getCustomExtension(UkulibNFProvider.class);
@@ -68,7 +65,7 @@ public class UkulibNeoForge {
             });
         });
 
-        return mods;
+        Ukulib.onInitialize(mods);
     }
 
     private ModMeta fromNeoForge(ModContainer container) {

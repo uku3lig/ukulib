@@ -33,10 +33,6 @@ public class UkulibFabric implements PreLaunchEntrypoint, ModInitializer {
         ResourceLoader.get(PackType.CLIENT_RESOURCES)
                 .registerReloader(ResourceLocation.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
 
-        Ukulib.onInitialize(this::getConfigMods);
-    }
-
-    private Map<ModMeta, UnaryOperator<Screen>> getConfigMods() {
         Map<ModMeta, UnaryOperator<Screen>> mods = new LinkedHashMap<>();
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
                 .forEach(entry -> {
@@ -51,7 +47,7 @@ public class UkulibFabric implements PreLaunchEntrypoint, ModInitializer {
                     });
                 });
 
-        return mods;
+        Ukulib.onInitialize(mods);
     }
 
     private ModMeta fromFabric(ModContainer mod) {
