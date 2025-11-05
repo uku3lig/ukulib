@@ -9,9 +9,7 @@ version = "${version}"
 
 logoFile = "assets/ukulib/icon.png"
 authors = "uku"
-description = '''
-small utility library used in my mods
-'''
+description = "small utility library used in my mods"
 
 [[dependencies.ukulib]]
 modId = "minecraft"

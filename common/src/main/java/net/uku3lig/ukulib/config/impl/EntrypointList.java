@@ -18,8 +18,6 @@ import net.uku3lig.ukulib.utils.ModMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.file.Files;
 import java.util.*;
 import java.util.function.UnaryOperator;
 
@@ -63,13 +61,13 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.M
 
             ResourceLocation identifier = ResourceLocation.fromNamespaceAndPath("ukulib", mod.id() + "_icon");
 
-            this.iconPath = mod.iconPath()
-                    .flatMap(path -> {
-                        try (InputStream inputStream = Files.newInputStream(path)) {
-                            NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
+            this.iconPath = mod.icon()
+                    .flatMap(icon -> {
+                        try {
+                            NativeImage image = NativeImage.read(Objects.requireNonNull(icon.get()));
                             return Optional.of(new DynamicTexture(identifier::toString, image));
                         } catch (IOException e) {
-                            log.warn("Failed to load icon from mod jar: {}", path, e);
+                            log.warn("Failed to load icon from mod jar", e);
                             return Optional.empty();
                         }
                     })

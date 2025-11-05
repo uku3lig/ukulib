@@ -9,13 +9,14 @@ import net.fabricmc.loader.api.metadata.ModMetadata;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.IoSupplier;
 import net.uku3lig.ukulib.Ukulib;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.ConfigManagerReloader;
 import net.uku3lig.ukulib.fabric.utils.UkutilsFabric;
 import net.uku3lig.ukulib.utils.ModMeta;
 
-import java.nio.file.Path;
+import java.io.InputStream;
 import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Optional;
@@ -32,6 +33,10 @@ public class UkulibFabric implements PreLaunchEntrypoint, ModInitializer {
         ResourceLoader.get(PackType.CLIENT_RESOURCES)
                 .registerReloader(ResourceLocation.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
 
+        Ukulib.onInitialize(this::getConfigMods);
+    }
+
+    private Map<ModMeta, UnaryOperator<Screen>> getConfigMods() {
         Map<ModMeta, UnaryOperator<Screen>> mods = new LinkedHashMap<>();
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
                 .forEach(entry -> {
@@ -46,13 +51,13 @@ public class UkulibFabric implements PreLaunchEntrypoint, ModInitializer {
                     });
                 });
 
-        Ukulib.onInitialize(mods);
+        return mods;
     }
 
     private ModMeta fromFabric(ModContainer mod) {
         ModMetadata metadata = mod.getMetadata();
-        Optional<Path> path = metadata.getIconPath(32).flatMap(mod::findPath);
+        Optional<IoSupplier<InputStream>> logo = metadata.getIconPath(32).flatMap(mod::findPath).map(IoSupplier::create);
 
-        return new ModMeta(metadata.getId(), metadata.getName(), metadata.getDescription(), path);
+        return new ModMeta(metadata.getId(), metadata.getName(), metadata.getDescription(), logo);
     }
 }
