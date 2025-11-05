@@ -2,6 +2,7 @@ package net.uku3lig.ukulib.neoforge;
 
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.PackLocationInfo;
 import net.minecraft.server.packs.PackResources;
 import net.minecraft.server.packs.repository.Pack;
@@ -13,11 +14,13 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.AddClientReloadListenersEvent;
 import net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent;
 import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
 import net.neoforged.neoforge.resource.ResourcePackLoader;
 import net.neoforged.neoforgespi.language.IModInfo;
 import net.uku3lig.ukulib.Ukulib;
+import net.uku3lig.ukulib.config.ConfigManagerReloader;
 import net.uku3lig.ukulib.config.impl.UkulibConfigScreen;
 import net.uku3lig.ukulib.neoforge.utils.UkutilsNeoForge;
 import net.uku3lig.ukulib.utils.ModMeta;
@@ -45,6 +48,12 @@ public class UkulibNeoForge {
         Ukulib.getUtils().getKeybindings().keySet().forEach(event::register);
     }
 
+    @SubscribeEvent
+    public void addClientReloadListeners(AddClientReloadListenersEvent event) {
+        event.addListener(ResourceLocation.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
+    }
+
+    // TODO figure out a way to remove the supplier
     private Map<ModMeta, UnaryOperator<Screen>> getConfigMods() {
         Map<ModMeta, UnaryOperator<Screen>> mods = new LinkedHashMap<>();
         ModList.get().getSortedMods().forEach(c -> {
