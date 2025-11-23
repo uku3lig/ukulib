@@ -1,8 +1,9 @@
 package net.uku3lig.ukulib.utils;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import net.minecraft.util.TranslatableOption;
 import net.uku3lig.ukulib.config.option.CyclingOption;
+import net.uku3lig.ukulib.config.option.StringTranslatable;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -12,28 +13,29 @@ import java.util.function.Consumer;
  * An enum used to represent various positions.
  * The actual position is implementation specific.
  */
-@Getter // lombok generates the methods that have to be implemented
-public enum Position implements TranslatableOption {
+@Getter
+@AllArgsConstructor
+public enum Position implements StringTranslatable {
     /**
      * The top left of the screen.
      */
-    TOP_LEFT(0, "ukulib.position.topLeft"),
+    TOP_LEFT("top_left", "ukulib.position.topLeft"),
     /**
      * The top right of the screen.
      */
-    TOP_RIGHT(1, "ukulib.position.topRight"),
+    TOP_RIGHT("top_right", "ukulib.position.topRight"),
     /**
      * The bottom left of the screen.
      */
-    BOTTOM_LEFT(2, "ukulib.position.bottomLeft"),
+    BOTTOM_LEFT("bottom_left", "ukulib.position.bottomLeft"),
     /**
      * The bottom right of the screen.
      */
-    BOTTOM_RIGHT(3, "ukulib.position.bottomRight"),
+    BOTTOM_RIGHT("bottom_right", "ukulib.position.bottomRight"),
     /**
      * Above the experience bar, usually between the health and hunger bars.
      */
-    MIDDLE(4, "ukulib.position.middle"),
+    MIDDLE("middle", "ukulib.position.middle"),
     ;
 
     /**
@@ -41,13 +43,8 @@ public enum Position implements TranslatableOption {
      */
     public static final String KEY = "ukulib.position";
 
-    private final int id;
+    private final String name;
     private final String translationKey;
-
-    Position(int id, String translationKey) {
-        this.id = id;
-        this.translationKey = translationKey;
-    }
 
     /**
      * Checks if the position is on the right of the screen.
@@ -86,7 +83,7 @@ public enum Position implements TranslatableOption {
      * @param initialValue  The initial value
      * @param setter        The action to be performed when the value changes
      * @return The generated option
-     * @see CyclingOption#ofTranslatable(String, Collection, TranslatableOption, Consumer)
+     * @see CyclingOption#ofTranslatable(String, Collection, StringTranslatable, Consumer)
      */
     public static CyclingOption<Position> getOption(Collection<Position> allowedValues, Position initialValue, Consumer<Position> setter) {
         return CyclingOption.ofTranslatable(KEY, allowedValues, initialValue, setter);

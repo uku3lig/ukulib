@@ -5,7 +5,6 @@ import net.minecraft.client.gui.widget.CyclingButtonWidget;
 import net.minecraft.client.option.SimpleOption;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
-import net.minecraft.util.TranslatableOption;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -108,7 +107,7 @@ public class CyclingOption<T> implements WidgetCreator {
     }
 
     /**
-     * Creates a new option from a {@link TranslatableOption}.
+     * Creates a new option from a {@link StringTranslatable}.
      *
      * @param key            The translation key
      * @param values         The values to be displayed
@@ -118,15 +117,15 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param <T>            The type of the option
      * @return The newly constructed option
      */
-    public static <T extends TranslatableOption> CyclingOption<T> ofTranslatable(
+    public static <T extends StringTranslatable> CyclingOption<T> ofTranslatable(
             String key, Collection<T> values, T initialValue,
             Consumer<T> setter, SimpleOption.TooltipFactory<T> tooltipFactory
     ) {
-        return new CyclingOption<>(key, values, initialValue, setter, TranslatableOption::getText, tooltipFactory);
+        return new CyclingOption<>(key, values, initialValue, setter, StringTranslatable::getText, tooltipFactory);
     }
 
     /**
-     * Creates a new option from a {@link TranslatableOption}, with an empty tooltip.
+     * Creates a new option from a {@link StringTranslatable}, with an empty tooltip.
      *
      * @param key          The translation key
      * @param values       The values to be displayed
@@ -135,7 +134,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param <T>          The type of the option
      * @return The newly constructed option
      */
-    public static <T extends TranslatableOption> CyclingOption<T> ofTranslatable(String key, Collection<T> values, T initialValue, Consumer<T> setter) {
+    public static <T extends StringTranslatable> CyclingOption<T> ofTranslatable(String key, Collection<T> values, T initialValue, Consumer<T> setter) {
         return ofTranslatable(key, values, initialValue, setter, SimpleOption.emptyTooltip());
     }
 
@@ -196,7 +195,7 @@ public class CyclingOption<T> implements WidgetCreator {
     }
 
     /**
-     * Creates a new option based on a {@link TranslatableOption translatable} enum's values.
+     * Creates a new option based on a {@link StringTranslatable translatable} enum's values.
      *
      * @param key            The translation key
      * @param klass          The class type of the enum
@@ -206,15 +205,15 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param <T>            The type of the enum
      * @return The newly created option
      */
-    public static <T extends Enum<T> & TranslatableOption> CyclingOption<T> ofTranslatableEnum(
+    public static <T extends Enum<T> & StringTranslatable> CyclingOption<T> ofTranslatableEnum(
             String key, Class<T> klass, T initialValue,
             Consumer<T> setter, SimpleOption.TooltipFactory<T> tooltipFactory
     ) {
-        return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, TranslatableOption::getText, tooltipFactory);
+        return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, StringTranslatable::getText, tooltipFactory);
     }
 
     /**
-     * Creates a new option based on a {@link TranslatableOption translatable} enum's values, with an empty tooltip.
+     * Creates a new option based on a {@link StringTranslatable translatable} enum's values, with an empty tooltip.
      *
      * @param key          The translation key
      * @param klass        The class type of the enum
@@ -224,8 +223,8 @@ public class CyclingOption<T> implements WidgetCreator {
      * @return The newly created option
      * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer, SimpleOption.TooltipFactory)
      */
-    public static <T extends Enum<T> & TranslatableOption> CyclingOption<T> ofTranslatableEnum(String key, Class<T> klass, T initialValue, Consumer<T> setter) {
-        return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, TranslatableOption::getText);
+    public static <T extends Enum<T> & StringTranslatable> CyclingOption<T> ofTranslatableEnum(String key, Class<T> klass, T initialValue, Consumer<T> setter) {
+        return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, StringTranslatable::getText);
     }
 
     @Override
