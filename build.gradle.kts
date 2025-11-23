@@ -1,6 +1,6 @@
 plugins {
-    id("fabric-loom") version "1.11-SNAPSHOT"
-    id("io.freefair.lombok") version "9.0.0"
+    id("fabric-loom") version "1.13-SNAPSHOT"
+    id("io.freefair.lombok") version "9.1.0"
 
     id("maven-publish")
     id("com.modrinth.minotaur") version "2.8.10"
