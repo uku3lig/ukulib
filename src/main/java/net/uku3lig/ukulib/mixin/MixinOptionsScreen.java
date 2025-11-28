@@ -9,7 +9,6 @@ import net.minecraft.client.gui.PlayerSkinDrawer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.screen.option.OptionsScreen;
 import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.TexturedButtonWidget;
 import net.minecraft.entity.player.SkinTextures;
 import net.minecraft.text.Text;
 import net.minecraft.util.ApiServices;
@@ -40,12 +39,15 @@ public class MixinOptionsScreen extends Screen {
     @Unique
     private ButtonWidget ukulibButton = null;
 
+    @Unique
+    private ButtonWidget creditsButton = null;
+
     /**
      * Adds a button to open the config screen.
      *
      * @param ci callback info
      */
-    @Inject(method = "init", at = @At("RETURN"))
+    @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/OptionsScreen;refreshWidgetPositions()V"))
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
         if (!UkulibConfig.get().isButtonInOptions()) return;
@@ -53,27 +55,31 @@ public class MixinOptionsScreen extends Screen {
         String username = UkulibConfig.get().getHeadName();
         fetchSkinTextures(username).thenAccept(t -> this.skinTextures = t);
 
-        // ugly
-        ButtonWidget credits = this.children().stream()
+        this.creditsButton = this.children().stream()
                 .filter(c -> c instanceof ButtonWidget b && b.getMessage().equals(Text.translatable("options.credits_and_attribution")))
                 .map(ButtonWidget.class::cast)
                 .findFirst()
-                .orElseGet(() -> ButtonWidget.builder(Text.empty(), b -> {
-                }).build()); // should never happen
+                .orElse(null);
+
+        if (this.creditsButton == null) {
+            log.error("Could not find the credits button to align the uku button!");
+        }
 
         this.ukulibButton = this.addDrawableChild(
                 new ButtonWidget.Builder(Text.empty(), button -> MinecraftClient.getInstance().setScreen(new ModListScreen(this)))
                         .size(20, 20)
-                        .position(credits.getRight() + 2, credits.getY())
                         .build()
         );
+    }
+
+    @Inject(method = "refreshWidgetPositions", at = @At("RETURN"))
+    public void refreshWidgetPositions(CallbackInfo ci) {
+        this.ukulibButton.setPosition(this.creditsButton.getRight() + 2, this.creditsButton.getY());
     }
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
         super.render(context, mouseX, mouseY, deltaTicks);
-
-
 
         // if no mod provides an ukulib config screen, the button isn't created and causes a NPE
         if (this.ukulibButton != null) {
