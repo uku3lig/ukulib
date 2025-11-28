@@ -9,7 +9,6 @@ import net.minecraft.client.font.TextRenderer;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.option.KeyBinding;
-import net.minecraft.client.texture.TextureManager;
 import net.minecraft.client.toast.SystemToast;
 import net.minecraft.client.toast.ToastManager;
 import net.minecraft.resource.ResourceManager;
@@ -19,6 +18,7 @@ import net.minecraft.text.OrderedText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
+import net.uku3lig.ukulib.mixin.TextureManagerAccessor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
@@ -167,10 +167,10 @@ public class Ukutils {
      */
     @Contract("null -> false")
     public static boolean textureExists(Identifier texture) {
-        TextureManager textureManager = MinecraftClient.getInstance().getTextureManager();
+        TextureManagerAccessor textureManager = (TextureManagerAccessor) MinecraftClient.getInstance().getTextureManager();
         ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
 
-        return texture != null && (textureManager.textures.containsKey(texture) || resourceManager.getResource(texture).isPresent());
+        return texture != null && (textureManager.getTextures().containsKey(texture) || resourceManager.getResource(texture).isPresent());
     }
 
     /**

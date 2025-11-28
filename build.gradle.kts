@@ -40,10 +40,6 @@ dependencies {
     modCompileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
 }
 
-loom {
-    accessWidenerPath = file("src/main/resources/ukulib.accesswidener")
-}
-
 base {
     archivesName = archiveName
 }

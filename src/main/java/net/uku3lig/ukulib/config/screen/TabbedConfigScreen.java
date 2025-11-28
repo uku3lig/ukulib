@@ -73,7 +73,7 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     protected Collection<ClickableWidget> getInvalidOptions() {
         Set<ClickableWidget> invalid = new HashSet<>();
 
-        for (Tab tab : this.tabWidget.tabs) {
+        for (Tab tab : this.tabWidget.getTabs()) {
             tab.forEachChild(c -> {
                 if (c instanceof CheckedOption option && !option.isValid()) {
                     invalid.add(c);
