@@ -19,6 +19,17 @@ public interface WidgetCreator {
     ClickableWidget createWidget(int x, int y, int width, int height);
 
     /**
+     * Creates the widget, with no position information by default.
+     *
+     * @param width  The widget width
+     * @param height The widget height
+     * @return The created widget
+     */
+    default ClickableWidget createWidget(int width, int height) {
+        return this.createWidget(0, 0, width, height);
+    }
+
+    /**
      * Makes a widget wide.
      *
      * @return The wide widget

@@ -7,7 +7,9 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tab.Tab;
 import net.minecraft.client.gui.tab.TabManager;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
 import net.minecraft.client.gui.widget.TabNavigationWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.minecraft.util.math.MathHelper;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
@@ -26,6 +28,7 @@ import java.util.Set;
 public abstract class TabbedConfigScreen<T extends Serializable> extends BaseConfigScreen<T> {
     private TabNavigationWidget tabWidget;
     private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
+    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
 
     /**
      * Creates a tabbed config screen.
@@ -55,6 +58,16 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
                 .build();
         this.addDrawableChild(this.tabWidget);
         this.tabWidget.selectTab(0, false);
+
+        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
+        footer.add(this.resetButton);
+        footer.add(this.doneButton);
+
+        this.layout.forEachChild(widget -> {
+            widget.setNavigationOrder(1);
+            this.addDrawableChild(widget);
+        });
+
         this.refreshWidgetPositions();
     }
 
@@ -66,6 +79,8 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
             int i = this.tabWidget.getNavigationFocus().getBottom();
             ScreenRect screenRect = new ScreenRect(0, i, this.width, this.height - 36 - i);
             this.tabManager.setTabArea(screenRect);
+            this.layout.setHeaderHeight(i);
+            this.layout.refreshPositions();
         }
     }
 

@@ -3,10 +3,13 @@ package net.uku3lig.ukulib.config.impl;
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.ButtonWidget;
+import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
+import net.minecraft.client.gui.widget.TextWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
+import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.minecraft.util.Util;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
@@ -30,6 +33,8 @@ public class BrokenConfigScreen extends CloseableScreen {
     private static final Gson GSON = new Gson();
     private static final URI API_URL = URI.create("https://api.mclo.gs/1/log");
 
+    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+
     /**
      * Creates the screen.
      *
@@ -40,15 +45,26 @@ public class BrokenConfigScreen extends CloseableScreen {
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
+    protected void init() {
+        super.init();
 
-        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("There was an issue with this config screen.").asOrderedText(), width / 2, 100, 0xFFFFFFFF);
-        drawContext.drawCenteredTextWithShadow(textRenderer, Text.of("Please report this issue to the mod author.").asOrderedText(), width / 2, 100 + textRenderer.fontHeight + 4, 0xFFFFFFFF);
+        this.layout.addHeader(this.title, this.textRenderer);
 
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Upload logs to mclo.gs"), button -> uploadLogs())
-                .dimensions(this.width / 2 - 100, this.height - 51, 200, 20).build());
-        this.addDrawableChild(Ukutils.doneButton(this.width, this.height, this.parent));
+        DirectionalLayoutWidget body = this.layout.addBody(DirectionalLayoutWidget.vertical().spacing(14));
+        body.add(new TextWidget(Text.of("There was an issue with this config screen."), this.textRenderer));
+        body.add(new TextWidget(Text.of("Please report this issue to the mod author."), this.textRenderer));
+
+        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
+        footer.add(ButtonWidget.builder(Text.of("Upload logs to mclo.gs"), button -> this.uploadLogs()).build());
+        footer.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).build());
+
+        this.layout.forEachChild(this::addDrawableChild);
+        this.refreshWidgetPositions();
+    }
+
+    @Override
+    protected void refreshWidgetPositions() {
+        this.layout.refreshPositions();
     }
 
     private void uploadLogs() {

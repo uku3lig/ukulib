@@ -24,9 +24,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.concurrent.CompletableFuture;
 
-/**
- * Mixin for {@link OptionsScreen}.
- */
 @Slf4j
 @Mixin(OptionsScreen.class)
 public class MixinOptionsScreen extends Screen {
@@ -42,11 +39,6 @@ public class MixinOptionsScreen extends Screen {
     @Unique
     private ButtonWidget creditsButton = null;
 
-    /**
-     * Adds a button to open the config screen.
-     *
-     * @param ci callback info
-     */
     @Inject(method = "init", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screen/option/OptionsScreen;refreshWidgetPositions()V"))
     public void addUkulibButton(CallbackInfo ci) {
         if (FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class).isEmpty()) return;
@@ -74,7 +66,9 @@ public class MixinOptionsScreen extends Screen {
 
     @Inject(method = "refreshWidgetPositions", at = @At("RETURN"))
     public void refreshWidgetPositions(CallbackInfo ci) {
-        this.ukulibButton.setPosition(this.creditsButton.getRight() + 2, this.creditsButton.getY());
+        if (this.ukulibButton != null && this.creditsButton != null) {
+            this.ukulibButton.setPosition(this.creditsButton.getRight() + 2, this.creditsButton.getY());
+        }
     }
 
     @Override
@@ -107,11 +101,6 @@ public class MixinOptionsScreen extends Screen {
                 });
     }
 
-    /**
-     * constructor :D
-     *
-     * @param title the title of the screen
-     */
     protected MixinOptionsScreen(Text title) {
         super(title);
     }

@@ -12,6 +12,7 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.minecraft.client.texture.NativeImage;
 import net.minecraft.client.texture.NativeImageBackedTexture;
 import net.minecraft.text.Text;
@@ -28,8 +29,14 @@ import java.util.function.UnaryOperator;
  */
 @Slf4j
 final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
+    @Deprecated(forRemoval = true, since = "1.10.0")
     public EntrypointList(MinecraftClient minecraftClient, int width, int height, int top, int itemHeight) {
         super(minecraftClient, width, height, top, itemHeight);
+    }
+
+    public EntrypointList(MinecraftClient client, int width, ThreePartsLayoutWidget layout) {
+        super(client, width, layout.getContentHeight(), layout.getHeaderHeight(), 36);
+        this.centerListVertically = false;
     }
 
     public void addAll(Map<ModContainer, UnaryOperator<Screen>> containers, Screen parent) {
@@ -94,7 +101,8 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
 
         @Override
         public void render(DrawContext drawContext, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-            button.setY(this.getContentY());
+            int x = (EntrypointList.this.getWidth() - this.button.getWidth()) / 2;
+            button.setPosition(x, this.getContentY());
             button.render(drawContext, mouseX, mouseY, deltaTicks);
 
             drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
