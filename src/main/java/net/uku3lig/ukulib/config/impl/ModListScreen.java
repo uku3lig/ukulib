@@ -53,10 +53,10 @@ public final class ModListScreen extends CloseableScreen {
         this.addSelectableChild(entrypointList);
 
         MinecraftClient mc = MinecraftClient.getInstance();
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> mc.setScreen(this.parent))
+        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.config.title"), button -> mc.setScreen(new UkulibConfigScreen(this)))
                 .dimensions(this.width / 2 - 155, this.height - 27, 150, 20)
                 .build());
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.config.title"), button -> mc.setScreen(new UkulibConfigScreen(this)))
+        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> mc.setScreen(this.parent))
                 .dimensions(this.width / 2 + 5, this.height - 27, 150, 20)
                 .build());
     }

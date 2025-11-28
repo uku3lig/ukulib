@@ -81,16 +81,16 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
 
     @Override
     protected void init() {
-        doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
-                .dimensions(width / 2 - 155, height - 27, 150, 20)
-                .build());
-
         this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.option.reset"), button -> {
                     MinecraftClient.getInstance().setScreen(parent);
                     manager.resetConfig();
                     manager.saveConfig();
                     Ukutils.sendToast(Text.of("Sucessfully reset config!"), null);
                 })
+                .dimensions(width / 2 - 155, height - 27, 150, 20)
+                .build());
+
+        doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
                 .dimensions(width / 2 + 5, height - 27, 150, 20)
                 .build());
     }
