@@ -1,13 +1,18 @@
 package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
+import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 import net.uku3lig.ukulib.config.option.widget.WidgetCreatorList;
+import net.uku3lig.ukulib.utils.Ukutils;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -26,6 +31,8 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
      * @see AbstractConfigScreen#getWidgets(Serializable)
      */
     protected WidgetCreatorList buttonList;
+
+    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
 
     /**
      * Creates a config screen.
@@ -49,10 +56,24 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
     @Override
     protected void init() {
         super.init();
-        buttonList = new WidgetCreatorList(this.client, this.width, this.height - 64, 32, 25);
-        buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
 
-        this.addSelectableChild(buttonList);
+        this.layout.addHeader(this.title, this.textRenderer);
+
+        this.buttonList = this.layout.addBody(new WidgetCreatorList(this.client, this.width, this.layout));
+        this.buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
+
+        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
+        footer.add(this.resetButton);
+        footer.add(this.doneButton);
+
+        this.layout.forEachChild(this::addDrawableChild);
+        this.refreshWidgetPositions();
+    }
+
+    @Override
+    protected void refreshWidgetPositions() {
+        this.layout.refreshPositions();
+        this.buttonList.position(this.width, this.layout);
     }
 
     @Override
@@ -63,12 +84,5 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
                 .map(e -> (ClickableWidget) e)
                 .filter(w -> w instanceof CheckedOption option && !option.isValid())
                 .toList();
-    }
-
-    @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
-        buttonList.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawCenteredTextWithShadow(this.textRenderer, this.title, this.width / 2, 20, 0xFFFFFFFF);
     }
 }

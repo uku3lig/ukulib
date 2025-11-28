@@ -22,6 +22,9 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     private final ConfigManager<?> manager;
     private final BiConsumer<Integer, Integer> callback;
 
+    private ButtonWidget doneButton;
+    private ButtonWidget defaultButton;
+
     /**
      * Creates a position select screen. If any of <code>x</code> or <code>y</code> is passed as <code>-1</code>,
      * the screen will use the default values.
@@ -43,15 +46,22 @@ public abstract class PositionSelectScreen extends CloseableScreen {
 
     @Override
     protected void init() {
-        this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, b -> close())
-                .dimensions(this.width - 60, 10, 50, 20)
+        this.doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, b -> close())
+                .size(50, 20)
                 .build());
-        this.addDrawableChild(ButtonWidget.builder(Text.of("Default"), b -> {
+
+        this.defaultButton = this.addDrawableChild(ButtonWidget.builder(Text.of("Default"), b -> {
                     this.x = -1;
                     this.y = -1;
                 })
-                .dimensions(this.width - 60, 35, 50, 20)
+                .size(50, 20)
                 .build());
+    }
+
+    @Override
+    protected void refreshWidgetPositions() {
+        this.doneButton.setPosition(this.width - 60, 10);
+        this.defaultButton.setPosition(this.width - 60, 35);
     }
 
     @Override

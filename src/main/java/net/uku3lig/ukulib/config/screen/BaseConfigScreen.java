@@ -5,6 +5,8 @@ import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.tooltip.Tooltip;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.client.gui.widget.ClickableWidget;
+import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.minecraft.screen.ScreenTexts;
 import net.minecraft.text.Text;
 import net.uku3lig.ukulib.config.ConfigManager;
@@ -35,7 +37,15 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
      */
     protected final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    private ButtonWidget doneButton;
+    /**
+     * Done button, closes the screen
+     */
+    protected ButtonWidget doneButton;
+
+    /**
+     * Reset button, resets the config to its default state
+     */
+    protected ButtonWidget resetButton;
 
     /**
      * Constructs the screen
@@ -81,18 +91,13 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
 
     @Override
     protected void init() {
-        this.addDrawableChild(ButtonWidget.builder(Text.translatable("ukulib.option.reset"), button -> {
-                    MinecraftClient.getInstance().setScreen(parent);
-                    manager.resetConfig();
-                    manager.saveConfig();
-                    Ukutils.sendToast(Text.of("Sucessfully reset config!"), null);
-                })
-                .dimensions(width / 2 - 155, height - 27, 150, 20)
-                .build());
-
-        doneButton = this.addDrawableChild(ButtonWidget.builder(ScreenTexts.DONE, button -> MinecraftClient.getInstance().setScreen(parent))
-                .dimensions(width / 2 + 5, height - 27, 150, 20)
-                .build());
+        this.doneButton = ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).build();
+        this.resetButton = ButtonWidget.builder(Text.translatable("ukulib.option.reset"), button -> {
+            MinecraftClient.getInstance().setScreen(parent);
+            manager.resetConfig();
+            manager.saveConfig();
+            Ukutils.sendToast(Text.of("Sucessfully reset config!"), null);
+        }).build();
     }
 
     @Override

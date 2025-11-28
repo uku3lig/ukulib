@@ -6,6 +6,7 @@ import net.minecraft.client.gui.Element;
 import net.minecraft.client.gui.Selectable;
 import net.minecraft.client.gui.widget.ClickableWidget;
 import net.minecraft.client.gui.widget.ElementListWidget;
+import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
 import net.uku3lig.ukulib.config.option.WideWidgetCreator;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 import org.jetbrains.annotations.Nullable;
@@ -43,10 +44,24 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param height          The height of the list
      * @param top             The top position of the list
      * @param itemHeight      The height of each widget, usually 20
+     * @see WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, ThreePartsLayoutWidget)
+     * @deprecated You should be wrapping the widget in the body of a {@link ThreePartsLayoutWidget}
      */
+    @Deprecated(since = "1.10.0", forRemoval = true)
     public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, int itemHeight) {
         super(minecraftClient, width, height, top, itemHeight);
         this.centerListVertically = false;
+    }
+
+    /**
+     * Creates an empty widget list
+     *
+     * @param minecraftClient The Minecraft client instance
+     * @param width           The width of the list
+     * @param layout          The containing {@link ThreePartsLayoutWidget}, used to compute the size
+     */
+    public WidgetCreatorList(MinecraftClient minecraftClient, int width, ThreePartsLayoutWidget layout) {
+        super(minecraftClient, width, layout.getContentHeight(), layout.getHeaderHeight(), 25);
     }
 
     /**
@@ -56,7 +71,7 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param other The second widget creator; nullable
      */
     public void addEntries(WidgetCreator first, @Nullable WidgetCreator other) {
-        this.addEntry(new ButtonEntry(this.width, first, other));
+        this.addEntry(new ButtonEntry(first, other));
     }
 
     /**
@@ -65,7 +80,7 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param creator The widget creator
      */
     public void addWideEntry(WidgetCreator creator) {
-        this.addEntry(new ButtonEntry(this.width, creator));
+        this.addEntry(new ButtonEntry(creator));
     }
 
     /**
@@ -95,19 +110,34 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
 
     @Override
     public int getRowWidth() {
-        return 400;
-    }
-
-    @Override
-    protected int getScrollbarX() {
-        return super.getScrollbarX() + 32;
+        return 310;
     }
 
     /**
      * A widget entry, made of one or two creators.
      */
-    public static class ButtonEntry extends ElementListWidget.Entry<ButtonEntry> {
+    public class ButtonEntry extends ElementListWidget.Entry<ButtonEntry> {
         private final List<ClickableWidget> widgets;
+
+        /**
+         * Creates an entry.
+         *
+         * @param first The first entry
+         * @param other The second entry; nullable
+         */
+        public ButtonEntry(WidgetCreator first, @Nullable WidgetCreator other) {
+            ClickableWidget firstWidget = first.createWidget(150, 20);
+            this.widgets = other == null ? List.of(firstWidget) : List.of(firstWidget, other.createWidget(150, 20));
+        }
+
+        /**
+         * Creates a single, wide entry.
+         *
+         * @param creator The entry
+         */
+        public ButtonEntry(WidgetCreator creator) {
+            this.widgets = List.of(creator.createWidget(310, 20));
+        }
 
         /**
          * Creates an entry.
@@ -115,10 +145,12 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
          * @param width The width of the entry
          * @param first The first entry
          * @param other The second entry; nullable
+         * @see ButtonEntry#ButtonEntry(WidgetCreator, WidgetCreator)
+         * @deprecated The width is now computed automatically
          */
-        public ButtonEntry(int width, WidgetCreator first, @Nullable WidgetCreator other) {
-            ClickableWidget firstWidget = first.createWidget(width / 2 - 155, 0, 150, 20);
-            this.widgets = other == null ? List.of(firstWidget) : List.of(firstWidget, other.createWidget(width / 2 + 5, 0, 150, 20));
+        @Deprecated(since = "1.10.0", forRemoval = true)
+        public ButtonEntry(@SuppressWarnings("unused") int width, WidgetCreator first, @Nullable WidgetCreator other) {
+            this(first, other);
         }
 
         /**
@@ -126,9 +158,12 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
          *
          * @param width   The width of the entry
          * @param creator The entry
+         * @see ButtonEntry#ButtonEntry(WidgetCreator)
+         * @deprecated The width is now computed automatically
          */
-        public ButtonEntry(int width, WidgetCreator creator) {
-            this.widgets = List.of(creator.createWidget(width / 2 - 155, 0, 310, 20));
+        @Deprecated(since = "1.10.0", forRemoval = true)
+        public ButtonEntry(@SuppressWarnings("unused") int width, WidgetCreator creator) {
+            this(creator);
         }
 
         @Override
@@ -144,10 +179,14 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
 
         @Override
         public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
-            widgets.forEach(w -> {
-                w.setY(this.getContentY());
-                w.render(context, mouseX, mouseY, deltaTicks);
-            });
+            int leftOffset = 0;
+            int left = WidgetCreatorList.this.getWidth() / 2 - 155;
+
+            for (var widget : this.widgets) {
+                widget.setPosition(left + leftOffset, this.getContentY());
+                widget.render(context, mouseX, mouseY, deltaTicks);
+                leftOffset += 160;
+            }
         }
     }
 }
