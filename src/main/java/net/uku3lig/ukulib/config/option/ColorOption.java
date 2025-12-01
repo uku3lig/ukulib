@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.option.widget.ColorInputWidget;
 
 import java.util.function.IntConsumer;
@@ -42,8 +42,8 @@ public class ColorOption implements WidgetCreator {
     }
 
     @Override
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        String suggestion = Text.translatable(suggestionKey).getString();
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        String suggestion = Component.translatable(suggestionKey).getString();
 
         return new ColorInputWidget(x, y, width, height, initialValue, setter, suggestion, allowAlpha);
     }

@@ -1,16 +1,16 @@
 package net.uku3lig.ukulib.utils;
 
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.sound.SoundManager;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.sounds.SoundManager;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * A button that doesn't make noise.
  */
 @SuppressWarnings("unused")
-public class SilentButtonWidget extends ButtonWidget {
+public class SilentButtonWidget extends Button {
     /**
      * Creates a new silent button
      *
@@ -22,7 +22,7 @@ public class SilentButtonWidget extends ButtonWidget {
      * @param onPress           The action to be done when the button is pressed
      * @param narrationSupplier The narration supplier
      */
-    protected SilentButtonWidget(int x, int y, int width, int height, net.minecraft.text.Text message, PressAction onPress, NarrationSupplier narrationSupplier) {
+    protected SilentButtonWidget(int x, int y, int width, int height, net.minecraft.network.chat.Component message, OnPress onPress, CreateNarration narrationSupplier) {
         super(x, y, width, height, message, onPress, narrationSupplier);
     }
 
@@ -33,7 +33,7 @@ public class SilentButtonWidget extends ButtonWidget {
      * @param onPress The action to be done when the button is pressed
      * @return A new builder
      */
-    public static Builder silentBuilder(net.minecraft.text.Text message, PressAction onPress) {
+    public static Builder silentBuilder(net.minecraft.network.chat.Component message, OnPress onPress) {
         return new Builder(message, onPress);
     }
 
@@ -43,22 +43,22 @@ public class SilentButtonWidget extends ButtonWidget {
     }
 
     @Override
-    protected void drawIcon(DrawContext context, int mouseX, int mouseY, float deltaTicks) {
+    protected void renderContents(GuiGraphics context, int mouseX, int mouseY, float deltaTicks) {
     }
 
     /**
      * A silent button builder
      */
     public static class Builder {
-        private final net.minecraft.text.Text message;
-        private final PressAction onPress;
+        private final net.minecraft.network.chat.Component message;
+        private final OnPress onPress;
         @Nullable
         private Tooltip tooltip;
         private int x;
         private int y;
         private int width = 150;
         private int height = 20;
-        private NarrationSupplier narrationSupplier;
+        private CreateNarration narrationSupplier;
 
         /**
          * Creates a builder for a silent button
@@ -66,8 +66,8 @@ public class SilentButtonWidget extends ButtonWidget {
          * @param message The text of the button
          * @param onPress The action to be done when the button is pressed
          */
-        public Builder(net.minecraft.text.Text message, PressAction onPress) {
-            this.narrationSupplier = ButtonWidget.DEFAULT_NARRATION_SUPPLIER;
+        public Builder(net.minecraft.network.chat.Component message, OnPress onPress) {
+            this.narrationSupplier = Button.DEFAULT_NARRATION;
             this.message = message;
             this.onPress = onPress;
         }
@@ -139,7 +139,7 @@ public class SilentButtonWidget extends ButtonWidget {
          * @param narrationSupplier The narration supplier
          * @return The modified builder
          */
-        public Builder narrationSupplier(NarrationSupplier narrationSupplier) {
+        public Builder narrationSupplier(CreateNarration narrationSupplier) {
             this.narrationSupplier = narrationSupplier;
             return this;
         }

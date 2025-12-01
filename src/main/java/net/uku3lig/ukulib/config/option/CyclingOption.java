@@ -1,10 +1,10 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.CyclingButtonWidget;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 
 import java.util.Collection;
 import java.util.EnumSet;
@@ -21,14 +21,14 @@ public class CyclingOption<T> implements WidgetCreator {
     /**
      * Boolean to text converter.
      */
-    public static final Function<Boolean, Text> BOOL_TO_TEXT = b -> Boolean.TRUE.equals(b) ? ScreenTexts.ON : ScreenTexts.OFF;
+    public static final Function<Boolean, Component> BOOL_TO_TEXT = b -> Boolean.TRUE.equals(b) ? CommonComponents.OPTION_ON : CommonComponents.OPTION_OFF;
 
     private final String key;
     private final Collection<T> values;
     private final T initialValue;
     private final Consumer<T> setter;
-    private final Function<T, Text> valueToText;
-    private final SimpleOption.TooltipFactory<T> tooltipFactory;
+    private final Function<T, Component> valueToText;
+    private final OptionInstance.TooltipSupplier<T> tooltipFactory;
     private final boolean active;
 
     /**
@@ -42,7 +42,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param tooltipFactory The tooltip factory
      * @param active         Whether the button can be clicked
      */
-    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Text> valueToText, SimpleOption.TooltipFactory<T> tooltipFactory, boolean active) {
+    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Component> valueToText, OptionInstance.TooltipSupplier<T> tooltipFactory, boolean active) {
         this.key = key;
         this.values = values;
         this.initialValue = initialValue;
@@ -62,7 +62,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param valueToText    The function that converts the value to human-readable text
      * @param tooltipFactory The tooltip factory
      */
-    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Text> valueToText, SimpleOption.TooltipFactory<T> tooltipFactory) {
+    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Component> valueToText, OptionInstance.TooltipSupplier<T> tooltipFactory) {
         this(key, values, initialValue, setter, valueToText, tooltipFactory, true);
     }
 
@@ -74,10 +74,10 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param initialValue The initial displayed value
      * @param setter       The callback for the modified value
      * @param valueToText  The function that converts the value to human-readable text
-     * @see CyclingOption#CyclingOption(String, Collection, Object, Consumer, Function, SimpleOption.TooltipFactory)
+     * @see CyclingOption#CyclingOption(String, Collection, Object, Consumer, Function, OptionInstance.TooltipSupplier)
      */
-    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Text> valueToText) {
-        this(key, values, initialValue, setter, valueToText, SimpleOption.emptyTooltip());
+    public CyclingOption(String key, Collection<T> values, T initialValue, Consumer<T> setter, Function<T, Component> valueToText) {
+        this(key, values, initialValue, setter, valueToText, OptionInstance.noTooltip());
     }
 
     /**
@@ -89,7 +89,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param tooltipFactory The tooltip factory
      * @return The newly constructed option
      */
-    public static CyclingOption<Boolean> ofBoolean(String key, boolean initialValue, Consumer<Boolean> setter, SimpleOption.TooltipFactory<Boolean> tooltipFactory) {
+    public static CyclingOption<Boolean> ofBoolean(String key, boolean initialValue, Consumer<Boolean> setter, OptionInstance.TooltipSupplier<Boolean> tooltipFactory) {
         return new CyclingOption<>(key, List.of(Boolean.TRUE, Boolean.FALSE), initialValue, setter, BOOL_TO_TEXT, tooltipFactory);
     }
 
@@ -100,10 +100,10 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param initialValue The initial boolean value
      * @param setter       The callback for the modified value
      * @return The newly constructed option
-     * @see CyclingOption#ofBoolean(String, boolean, Consumer, SimpleOption.TooltipFactory)
+     * @see CyclingOption#ofBoolean(String, boolean, Consumer, OptionInstance.TooltipSupplier)
      */
     public static CyclingOption<Boolean> ofBoolean(String key, boolean initialValue, Consumer<Boolean> setter) {
-        return ofBoolean(key, initialValue, setter, SimpleOption.emptyTooltip());
+        return ofBoolean(key, initialValue, setter, OptionInstance.noTooltip());
     }
 
     /**
@@ -119,7 +119,7 @@ public class CyclingOption<T> implements WidgetCreator {
      */
     public static <T extends StringTranslatable> CyclingOption<T> ofTranslatable(
             String key, Collection<T> values, T initialValue,
-            Consumer<T> setter, SimpleOption.TooltipFactory<T> tooltipFactory
+            Consumer<T> setter, OptionInstance.TooltipSupplier<T> tooltipFactory
     ) {
         return new CyclingOption<>(key, values, initialValue, setter, StringTranslatable::getText, tooltipFactory);
     }
@@ -135,7 +135,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @return The newly constructed option
      */
     public static <T extends StringTranslatable> CyclingOption<T> ofTranslatable(String key, Collection<T> values, T initialValue, Consumer<T> setter) {
-        return ofTranslatable(key, values, initialValue, setter, SimpleOption.emptyTooltip());
+        return ofTranslatable(key, values, initialValue, setter, OptionInstance.noTooltip());
     }
 
     /**
@@ -152,8 +152,8 @@ public class CyclingOption<T> implements WidgetCreator {
      */
     public static <T extends Enum<T>> CyclingOption<T> ofEnum(
             String key, Class<T> klass, T initialValue,
-            Consumer<T> setter, Function<T, Text> valueToText,
-            SimpleOption.TooltipFactory<T> tooltipFactory
+            Consumer<T> setter, Function<T, Component> valueToText,
+            OptionInstance.TooltipSupplier<T> tooltipFactory
     ) {
         return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, valueToText, tooltipFactory);
     }
@@ -168,11 +168,11 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param valueToText  The function that converts the value to human-readable text
      * @param <T>          The type of the enum
      * @return The newly created option
-     * @see CyclingOption#ofEnum(String, Class, Enum, Consumer, Function, SimpleOption.TooltipFactory)
+     * @see CyclingOption#ofEnum(String, Class, Enum, Consumer, Function, OptionInstance.TooltipSupplier)
      */
     public static <T extends Enum<T>> CyclingOption<T> ofEnum(
             String key, Class<T> klass, T initialValue,
-            Consumer<T> setter, Function<T, Text> valueToText
+            Consumer<T> setter, Function<T, Component> valueToText
     ) {
         return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, valueToText);
     }
@@ -187,7 +187,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param setter       The callback for the modified value
      * @param <T>          The type of the enum
      * @return The newly created option
-     * @see CyclingOption#ofEnum(String, Class, Enum, Consumer, Function, SimpleOption.TooltipFactory)
+     * @see CyclingOption#ofEnum(String, Class, Enum, Consumer, Function, OptionInstance.TooltipSupplier)
      * @see CyclingOption#enumNameToText(Enum)
      */
     public static <T extends Enum<T>> CyclingOption<T> ofEnum(String key, Class<T> klass, T initialValue, Consumer<T> setter) {
@@ -207,7 +207,7 @@ public class CyclingOption<T> implements WidgetCreator {
      */
     public static <T extends Enum<T> & StringTranslatable> CyclingOption<T> ofTranslatableEnum(
             String key, Class<T> klass, T initialValue,
-            Consumer<T> setter, SimpleOption.TooltipFactory<T> tooltipFactory
+            Consumer<T> setter, OptionInstance.TooltipSupplier<T> tooltipFactory
     ) {
         return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, StringTranslatable::getText, tooltipFactory);
     }
@@ -221,18 +221,18 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param setter       The callback for the modified value
      * @param <T>          The type of the enum
      * @return The newly created option
-     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer, SimpleOption.TooltipFactory)
+     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer, OptionInstance.TooltipSupplier)
      */
     public static <T extends Enum<T> & StringTranslatable> CyclingOption<T> ofTranslatableEnum(String key, Class<T> klass, T initialValue, Consumer<T> setter) {
         return new CyclingOption<>(key, EnumSet.allOf(klass), initialValue, setter, StringTranslatable::getText);
     }
 
     @Override
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        CyclingButtonWidget<T> widget = CyclingButtonWidget.builder(valueToText, initialValue)
-                .values(values)
-                .tooltip(tooltipFactory)
-                .build(x, y, width, height, Text.translatable(key), (button, value) -> setter.accept(value));
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        CycleButton<T> widget = CycleButton.builder(valueToText, initialValue)
+                .withValues(values)
+                .withTooltip(tooltipFactory)
+                .create(x, y, width, height, Component.translatable(key), (button, value) -> setter.accept(value));
 
         widget.active = this.active;
         return widget;
@@ -245,7 +245,7 @@ public class CyclingOption<T> implements WidgetCreator {
      * @param <T>   The type of the enum
      * @return The text
      */
-    public static <T extends Enum<T>> Text enumNameToText(T value) {
-        return Text.of(value.name());
+    public static <T extends Enum<T>> Component enumNameToText(T value) {
+        return Component.nullToEmpty(value.name());
     }
 }

@@ -1,15 +1,15 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.Component;
 
 /**
  * A simple button that does something when pressed.
  */
 public class SimpleButton implements WidgetCreator {
-    private final Text text;
-    private final ButtonWidget.PressAction action;
+    private final Component text;
+    private final Button.OnPress action;
     private final boolean active;
 
     /**
@@ -19,7 +19,7 @@ public class SimpleButton implements WidgetCreator {
      * @param action The action to run when clicked
      * @param active Whether the button can be clicked
      */
-    public SimpleButton(Text text, ButtonWidget.PressAction action, boolean active) {
+    public SimpleButton(Component text, Button.OnPress action, boolean active) {
         this.text = text;
         this.action = action;
         this.active = active;
@@ -31,7 +31,7 @@ public class SimpleButton implements WidgetCreator {
      * @param text   The text to be displayed
      * @param action The action to run when clicked
      */
-    public SimpleButton(Text text, ButtonWidget.PressAction action) {
+    public SimpleButton(Component text, Button.OnPress action) {
         this(text, action, true);
     }
 
@@ -41,14 +41,14 @@ public class SimpleButton implements WidgetCreator {
      * @param key    The translation key of the text
      * @param action The action to run when clicked
      */
-    public SimpleButton(String key, ButtonWidget.PressAction action) {
-        this(Text.translatable(key), action);
+    public SimpleButton(String key, Button.OnPress action) {
+        this(Component.translatable(key), action);
     }
 
     @Override
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        ButtonWidget widget = ButtonWidget.builder(text, action)
-                .dimensions(x, y, width, height)
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        Button widget = Button.builder(text, action)
+                .bounds(x, y, width, height)
                 .build();
 
         widget.active = this.active;

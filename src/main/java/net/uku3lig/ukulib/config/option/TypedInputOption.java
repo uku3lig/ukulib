@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.option.widget.TextInputWidget;
 
 import java.util.Objects;
@@ -68,8 +68,8 @@ public class TypedInputOption<T> implements WidgetCreator {
     }
 
     @Override
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        String suggestion = Text.translatable(suggestionKey).getString();
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        String suggestion = Component.translatable(suggestionKey).getString();
 
         return new TextInputWidget(x, y, width, height, initialValue, s -> converter.apply(s).ifPresent(setter),
                 suggestion, s -> converter.apply(s).map(validator::test).orElse(false), maxLength);

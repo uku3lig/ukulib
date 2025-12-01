@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.config.impl;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screens.Screen;
 import net.uku3lig.ukulib.config.option.CyclingOption;
 import net.uku3lig.ukulib.config.option.InputOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;

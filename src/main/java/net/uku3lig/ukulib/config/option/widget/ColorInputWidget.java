@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.config.option.widget;
 
-import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.GuiGraphics;
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.Optional;
@@ -35,7 +35,7 @@ public class ColorInputWidget extends TextInputWidget {
     }
 
     @Override
-    public void renderWidget(DrawContext drawContext, int mouseX, int mouseY, float delta) {
+    public void renderWidget(GuiGraphics drawContext, int mouseX, int mouseY, float delta) {
         super.renderWidget(drawContext, mouseX, mouseY, delta);
         if (!this.isVisible()) return;
 

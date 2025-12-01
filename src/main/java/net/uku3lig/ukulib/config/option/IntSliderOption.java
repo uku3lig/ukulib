@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.option.SimpleOption;
-import net.minecraft.text.Text;
+import net.minecraft.client.OptionInstance;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.option.widget.DoubleSlider;
 
 import java.util.function.IntConsumer;
@@ -17,16 +17,16 @@ public class IntSliderOption implements WidgetCreator {
     /**
      * Converts an int to Text using its String representation.
      */
-    public static final IntFunction<Text> DEFAULT_INT_TO_TEXT = i -> Text.of(String.valueOf(i));
+    public static final IntFunction<Component> DEFAULT_INT_TO_TEXT = i -> Component.nullToEmpty(String.valueOf(i));
 
     private final String key;
     private final int initialValue;
     private final IntConsumer setter;
-    private final IntFunction<Text> valueToText;
+    private final IntFunction<Component> valueToText;
     private final int min;
     private final int max;
     private final int step;
-    private final SimpleOption.TooltipFactory<Integer> tooltipFactory;
+    private final OptionInstance.TooltipSupplier<Integer> tooltipFactory;
 
     /**
      * Creates a slider option.
@@ -40,7 +40,7 @@ public class IntSliderOption implements WidgetCreator {
      * @param step           The step between each value
      * @param tooltipFactory The tooltip factory
      */
-    public IntSliderOption(String key, int initialValue, IntConsumer setter, IntFunction<Text> valueToText, int min, int max, int step, SimpleOption.TooltipFactory<Integer> tooltipFactory) {
+    public IntSliderOption(String key, int initialValue, IntConsumer setter, IntFunction<Component> valueToText, int min, int max, int step, OptionInstance.TooltipSupplier<Integer> tooltipFactory) {
         this.key = key;
         this.initialValue = initialValue;
         this.setter = setter;
@@ -62,8 +62,8 @@ public class IntSliderOption implements WidgetCreator {
      * @param max          The maximum value
      * @param step         The step between each value
      */
-    public IntSliderOption(String key, int initialValue, IntConsumer setter, IntFunction<Text> valueToText, int min, int max, int step) {
-        this(key, initialValue, setter, valueToText, min, max, step, SimpleOption.emptyTooltip());
+    public IntSliderOption(String key, int initialValue, IntConsumer setter, IntFunction<Component> valueToText, int min, int max, int step) {
+        this(key, initialValue, setter, valueToText, min, max, step, OptionInstance.noTooltip());
     }
 
     /**
@@ -76,13 +76,13 @@ public class IntSliderOption implements WidgetCreator {
      * @param min          The minimum value
      * @param max          The maximum value
      */
-    public IntSliderOption(String key, int initialValue, IntConsumer setter, IntFunction<Text> valueToText, int min, int max) {
+    public IntSliderOption(String key, int initialValue, IntConsumer setter, IntFunction<Component> valueToText, int min, int max) {
         this(key, initialValue, setter, valueToText, min, max, 1);
     }
     
     @Override
-    public ClickableWidget createWidget(int x, int y, int width, int height) {
-        return new DoubleSlider(Text.translatable(key), d -> valueToText.apply((int) d), initialValue,
+    public AbstractWidget createWidget(int x, int y, int width, int height) {
+        return new DoubleSlider(Component.translatable(key), d -> valueToText.apply((int) d), initialValue,
                 min, max, step, d -> setter.accept((int) d), d -> tooltipFactory.apply(d.intValue()),
                 x, y, width, height);
     }
