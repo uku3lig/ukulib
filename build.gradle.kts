@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom") version "1.13-SNAPSHOT"
+    id("net.fabricmc.fabric-loom-no-remap") version "1.14.0-alpha.30"
     id("io.freefair.lombok") version "9.1.0"
 
     id("maven-publish")
@@ -27,17 +27,16 @@ repositories {
 dependencies {
     // To change the versions see the gradle.properties file
     minecraft("com.mojang:minecraft:${project.property("minecraft_version")}")
-    mappings(loom.officialMojangMappings())
-    modImplementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
+    implementation("net.fabricmc:fabric-loader:${project.property("loader_version")}")
 
     include(implementation("com.moandjiezana.toml:toml4j:${project.property("toml4j_version")}")!!)
 
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v1", project.property("fabric_version") as String))!!)
-    include(modImplementation(fabricApi.module("fabric-command-api-v2", project.property("fabric_version") as String))!!)
-    include(modImplementation(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_version") as String))!!)
+    include(implementation(fabricApi.module("fabric-resource-loader-v1", project.property("fabric_version") as String))!!)
+    include(implementation(fabricApi.module("fabric-command-api-v2", project.property("fabric_version") as String))!!)
+    include(implementation(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_version") as String))!!)
 
     // optional deps
-    modCompileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    // compileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
 }
 
 base {
@@ -115,7 +114,7 @@ modrinth {
     projectId = "Y8uFrUil"
     versionNumber = project.version.toString()
     versionType = releaseType
-    uploadFile.set(tasks.remapJar) // With Loom, this MUST be set to `remapJar` instead of `jar`!
+    uploadFile.set(tasks.jar) // With Loom, this MUST be set to `remapJar` instead of `jar`!
     gameVersions.add(project.property("minecraft_version") as String) // Must be an array, even with only one version
     loaders.addAll("fabric", "quilt")
     changelog = "See https://github.com/uku3lig/ukulib/releases/tag/${project.version}"
