@@ -57,6 +57,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
                 })
                 .size(50, 20)
                 .build());
+
+        this.repositionElements();
     }
 
     @Override
