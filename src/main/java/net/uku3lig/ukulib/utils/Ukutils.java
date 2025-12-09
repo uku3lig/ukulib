@@ -178,8 +178,10 @@ public class Ukutils {
      *
      * @param username The username of the player
      * @return The texture of the player's head
+     * @deprecated Originally meant for internal use, you should look at {@link net.minecraft.client.gui.components.PlayerFaceRenderer} instead which is more robust and actually tested by mojang
      */
     @Nullable
+    @Deprecated(since = "1.10.0", forRemoval = true)
     public static Identifier getHeadTex(String username) {
         if (Identifier.isValidPath(username)) {
             username = username.toLowerCase(Locale.ROOT);

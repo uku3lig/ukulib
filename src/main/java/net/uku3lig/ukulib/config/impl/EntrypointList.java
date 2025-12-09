@@ -30,11 +30,6 @@ import java.util.function.UnaryOperator;
  */
 @Slf4j
 final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@NotNull ModEntry> {
-    @Deprecated(forRemoval = true, since = "1.10.0")
-    public EntrypointList(Minecraft minecraftClient, int width, int height, int top, int itemHeight) {
-        super(minecraftClient, width, height, top, itemHeight);
-    }
-
     public EntrypointList(Minecraft client, int width, HeaderAndFooterLayout layout) {
         super(client, width, layout.getContentHeight(), layout.getHeaderHeight(), 36);
         this.centerListVertically = false;

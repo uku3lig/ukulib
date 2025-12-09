@@ -15,7 +15,7 @@ import org.jetbrains.annotations.NotNull;
  */
 @Getter
 @Setter
-@Deprecated(forRemoval = true, since = "1.10.0")
+@Deprecated(since = "1.10.0", forRemoval = true)
 @SuppressWarnings("javadoc")
 public class IconButton extends Button {
     /**
