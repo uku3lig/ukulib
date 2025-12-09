@@ -1,18 +1,20 @@
 package net.uku3lig.ukulib.config.option;
 
-import net.minecraft.text.Text;
-import net.minecraft.util.StringIdentifiable;
+import net.minecraft.network.chat.Component;
+import net.minecraft.util.StringRepresentable;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * Replacement for Minecraft's former <code>TranslatableOption</code>, using {@link StringIdentifiable} as a "backend".
+ * Replacement for Minecraft's former <code>TranslatableOption</code>, using {@link StringRepresentable} as a "backend".
  * This exists because <code>StringIdentifiable</code> doesn't provide any translation capability.
  */
-public interface StringTranslatable extends StringIdentifiable {
+// TODO figure out how to serialize to #getName
+public interface StringTranslatable extends StringRepresentable {
     /**
-     * Name of the option, also used as its unique identifier for {@link StringIdentifiable}.
+     * Name of the option, also used as its unique identifier for {@link StringRepresentable}.
      *
      * @return The name of the option
-     * @see StringIdentifiable#asString()
+     * @see StringRepresentable#getSerializedName()
      */
     String getName();
 
@@ -24,17 +26,17 @@ public interface StringTranslatable extends StringIdentifiable {
     String getTranslationKey();
 
     @Override
-    default String asString() {
+    default @NotNull String getSerializedName() {
         return getName();
     }
 
     /**
-     * Constructs a default {@link Text} object containing the translated value.
+     * Constructs a default {@link Component} object containing the translated value.
      *
      * @return The text object
      * @see StringTranslatable#getTranslationKey()
      */
-    default Text getText() {
-        return Text.translatable(getTranslationKey());
+    default Component getText() {
+        return Component.translatable(getTranslationKey());
     }
 }

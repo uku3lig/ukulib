@@ -1,18 +1,19 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.ScreenRect;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tab.Tab;
-import net.minecraft.client.gui.tab.TabManager;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.TabNavigationWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.tabs.Tab;
+import net.minecraft.client.gui.components.tabs.TabManager;
+import net.minecraft.client.gui.components.tabs.TabNavigationBar;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -26,9 +27,9 @@ import java.util.Set;
  * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
  */
 public abstract class TabbedConfigScreen<T extends Serializable> extends BaseConfigScreen<T> {
-    private TabNavigationWidget tabWidget;
-    private final TabManager tabManager = new TabManager(this::addDrawableChild, this::remove);
-    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private TabNavigationBar tabWidget;
+    private final TabManager tabManager = new TabManager(this::addRenderableWidget, this::removeWidget);
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
 
     /**
      * Creates a tabbed config screen.
@@ -53,43 +54,43 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     protected void init() {
         super.init();
-        this.tabWidget = TabNavigationWidget.builder(this.tabManager, this.width)
-                .tabs(applyConfigChecked(this::getTabs, new Tab[0]))
+        this.tabWidget = TabNavigationBar.builder(this.tabManager, this.width)
+                .addTabs(applyConfigChecked(this::getTabs, new Tab[0]))
                 .build();
-        this.addDrawableChild(this.tabWidget);
+        this.addRenderableWidget(this.tabWidget);
         this.tabWidget.selectTab(0, false);
 
-        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        footer.add(this.resetButton);
-        footer.add(this.doneButton);
+        LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        footer.addChild(this.resetButton);
+        footer.addChild(this.doneButton);
 
-        this.layout.forEachChild(widget -> {
-            widget.setNavigationOrder(1);
-            this.addDrawableChild(widget);
+        this.layout.visitWidgets(widget -> {
+            widget.setTabOrderGroup(1);
+            this.addRenderableWidget(widget);
         });
 
-        this.refreshWidgetPositions();
+        this.repositionElements();
     }
 
     @Override
-    protected void refreshWidgetPositions() {
+    protected void repositionElements() {
         if (this.tabWidget != null) {
             this.tabWidget.setWidth(this.width);
-            this.tabWidget.init();
-            int i = this.tabWidget.getNavigationFocus().getBottom();
-            ScreenRect screenRect = new ScreenRect(0, i, this.width, this.height - 36 - i);
+            this.tabWidget.arrangeElements();
+            int i = this.tabWidget.getRectangle().bottom();
+            ScreenRectangle screenRect = new ScreenRectangle(0, i, this.width, this.height - 36 - i);
             this.tabManager.setTabArea(screenRect);
             this.layout.setHeaderHeight(i);
-            this.layout.refreshPositions();
+            this.layout.arrangeElements();
         }
     }
 
     @Override
-    protected Collection<ClickableWidget> getInvalidOptions() {
-        Set<ClickableWidget> invalid = new HashSet<>();
+    protected Collection<AbstractWidget> getInvalidOptions() {
+        Set<AbstractWidget> invalid = new HashSet<>();
 
         for (Tab tab : this.tabWidget.getTabs()) {
-            tab.forEachChild(c -> {
+            tab.visitChildren(c -> {
                 if (c instanceof CheckedOption option && !option.isValid()) {
                     invalid.add(c);
                 }
@@ -100,8 +101,8 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     }
 
     @Override
-    public void render(DrawContext drawContext, int mouseX, int mouseY, float delta) {
-        super.render(drawContext, mouseX, mouseY, delta);
-        drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, FOOTER_SEPARATOR_TEXTURE, 0, MathHelper.roundUpToMultiple(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
+    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        super.render(graphics, mouseX, mouseY, delta);
+        graphics.blit(RenderPipelines.GUI_TEXTURED, FOOTER_SEPARATOR, 0, Mth.roundToward(this.height - 36 - 2, 2), 0.0F, 0.0F, this.width, 2, 32, 2);
     }
 }

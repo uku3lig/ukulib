@@ -1,22 +1,23 @@
 package net.uku3lig.ukulib.config.impl;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import lombok.extern.slf4j.Slf4j;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gl.RenderPipelines;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.tooltip.Tooltip;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.client.texture.NativeImage;
-import net.minecraft.client.texture.NativeImageBackedTexture;
-import net.minecraft.text.Text;
-import net.minecraft.util.Identifier;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.narration.NarratableEntry;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.Identifier;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -28,13 +29,13 @@ import java.util.function.UnaryOperator;
  * A widget to display the list of mods that have integrated with ukulib.
  */
 @Slf4j
-final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
+final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@NotNull ModEntry> {
     @Deprecated(forRemoval = true, since = "1.10.0")
-    public EntrypointList(MinecraftClient minecraftClient, int width, int height, int top, int itemHeight) {
+    public EntrypointList(Minecraft minecraftClient, int width, int height, int top, int itemHeight) {
         super(minecraftClient, width, height, top, itemHeight);
     }
 
-    public EntrypointList(MinecraftClient client, int width, ThreePartsLayoutWidget layout) {
+    public EntrypointList(Minecraft client, int width, HeaderAndFooterLayout layout) {
         super(client, width, layout.getContentHeight(), layout.getHeaderHeight(), 36);
         this.centerListVertically = false;
     }
@@ -51,61 +52,61 @@ final class EntrypointList extends ElementListWidget<EntrypointList.ModEntry> {
     }
 
     @Override
-    protected int getScrollbarX() {
-        return super.getScrollbarX() + 32;
+    protected int scrollBarX() {
+        return super.scrollBarX() + 32;
     }
 
-    public final class ModEntry extends ElementListWidget.Entry<ModEntry> {
-        private static final Identifier UNKNOWN_ICON = Identifier.of("ukulib", "unknown.png");
+    public final class ModEntry extends ContainerObjectSelectionList.Entry<@NotNull ModEntry> {
+        private static final Identifier UNKNOWN_ICON = Identifier.fromNamespaceAndPath("ukulib", "unknown.png");
         private static final int ICON_SIZE = 32;
 
-        private final ButtonWidget button;
+        private final Button button;
         private final Identifier iconPath;
 
         public ModEntry(ModContainer mod, UnaryOperator<Screen> operator, int width, Screen parent) {
-            button = ButtonWidget.builder(Text.of(mod.getMetadata().getName()), b -> client.setScreen(operator.apply(parent)))
-                    .dimensions(width / 2 - 100, 0, 200, ICON_SIZE)
-                    .tooltip(Tooltip.of(Text.of(mod.getMetadata().getDescription())))
+            button = Button.builder(Component.literal(mod.getMetadata().getName()), b -> minecraft.setScreen(operator.apply(parent)))
+                    .bounds(width / 2 - 100, 0, 200, ICON_SIZE)
+                    .tooltip(Tooltip.create(Component.literal(mod.getMetadata().getDescription())))
                     .build();
 
             ModMetadata metadata = mod.getMetadata();
-            Identifier identifier = Identifier.of("ukulib", metadata.getId() + "_icon");
+            Identifier identifier = Identifier.fromNamespaceAndPath("ukulib", metadata.getId() + "_icon");
 
             this.iconPath = metadata.getIconPath(ICON_SIZE)
                     .flatMap(mod::findPath)
                     .flatMap(path -> {
                         try (InputStream inputStream = Files.newInputStream(path)) {
                             NativeImage image = NativeImage.read(Objects.requireNonNull(inputStream));
-                            return Optional.of(new NativeImageBackedTexture(identifier::toString, image));
+                            return Optional.of(new DynamicTexture(identifier::toString, image));
                         } catch (IOException e) {
                             log.warn("Failed to load icon from mod jar: {}", path, e);
                             return Optional.empty();
                         }
                     })
                     .map(tex -> {
-                        MinecraftClient.getInstance().getTextureManager().registerTexture(identifier, tex);
+                        Minecraft.getInstance().getTextureManager().register(identifier, tex);
                         return identifier;
                     })
                     .orElse(UNKNOWN_ICON);
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public @NotNull List<? extends NarratableEntry> narratables() {
             return Collections.singletonList(button);
         }
 
         @Override
-        public List<? extends Element> children() {
+        public @NotNull List<? extends GuiEventListener> children() {
             return Collections.singletonList(button);
         }
 
         @Override
-        public void render(DrawContext drawContext, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void renderContent(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             int x = (EntrypointList.this.getWidth() - this.button.getWidth()) / 2;
             button.setPosition(x, this.getContentY());
-            button.render(drawContext, mouseX, mouseY, deltaTicks);
+            button.render(graphics, mouseX, mouseY, deltaTicks);
 
-            drawContext.drawTexture(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            graphics.blit(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }

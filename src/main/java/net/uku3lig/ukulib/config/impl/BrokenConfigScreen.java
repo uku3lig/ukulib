@@ -2,15 +2,15 @@ package net.uku3lig.ukulib.config.impl;
 
 import com.google.gson.Gson;
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.screen.ConfirmLinkScreen;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.TextWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.ConfirmLinkScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Util;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
@@ -33,7 +33,7 @@ public class BrokenConfigScreen extends CloseableScreen {
     private static final Gson GSON = new Gson();
     private static final URI API_URL = URI.create("https://api.mclo.gs/1/log");
 
-    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
 
     /**
      * Creates the screen.
@@ -41,34 +41,34 @@ public class BrokenConfigScreen extends CloseableScreen {
      * @param parent The parent screen
      */
     public BrokenConfigScreen(Screen parent) {
-        super(Text.of("Broken config screen"), parent);
+        super(Component.literal("Broken config screen"), parent);
     }
 
     @Override
     protected void init() {
         super.init();
 
-        this.layout.addHeader(this.title, this.textRenderer);
+        this.layout.addTitleHeader(this.title, this.font);
 
-        DirectionalLayoutWidget body = this.layout.addBody(DirectionalLayoutWidget.vertical().spacing(14));
-        body.add(new TextWidget(Text.of("There was an issue with this config screen."), this.textRenderer));
-        body.add(new TextWidget(Text.of("Please report this issue to the mod author."), this.textRenderer));
+        LinearLayout body = this.layout.addToContents(LinearLayout.vertical().spacing(14));
+        body.addChild(new StringWidget(Component.literal("There was an issue with this config screen."), this.font));
+        body.addChild(new StringWidget(Component.literal("Please report this issue to the mod author."), this.font));
 
-        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        footer.add(ButtonWidget.builder(Text.of("Upload logs to mclo.gs"), button -> this.uploadLogs()).build());
-        footer.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).build());
+        LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        footer.addChild(Button.builder(Component.literal("Upload logs to mclo.gs"), button -> this.uploadLogs()).build());
+        footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose()).build());
 
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
+    protected void repositionElements() {
+        this.layout.arrangeElements();
     }
 
     private void uploadLogs() {
-        Path logFile = new File(MinecraftClient.getInstance().runDirectory, "logs/latest.log").toPath();
+        Path logFile = new File(Minecraft.getInstance().gameDirectory, "logs/latest.log").toPath();
 
         String content;
         try {
@@ -90,13 +90,13 @@ public class BrokenConfigScreen extends CloseableScreen {
                     if (apiRes.success && apiRes.url != null) {
                         log.info("Uploaded logs to {}", apiRes.url);
 
-                        MinecraftClient.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
-                            if (confirmed) Util.getOperatingSystem().open(apiRes.url);
-                            this.close();
+                        Minecraft.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                            if (confirmed) Util.getPlatform().openUri(apiRes.url);
+                            this.onClose();
                         }, apiRes.url, true));
                     } else {
                         log.error("Error while uploading logs to mclo.gs: {}", apiRes.error);
-                        Ukutils.sendToast(Text.of("Error while uploading logs"), Text.of(apiRes.error));
+                        Ukutils.sendToast(Component.literal("Error while uploading logs"), Component.literal(apiRes.error));
                     }
                 });
     }

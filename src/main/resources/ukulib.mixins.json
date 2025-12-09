@@ -7,7 +7,7 @@
     "defaultRequire": 1
   },
   "client": [
-    "MixinMinecraftClient",
+    "MixinMinecraft",
     "MixinOptionsScreen",
     "TextureManagerAccessor"
   ]

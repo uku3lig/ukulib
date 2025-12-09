@@ -1,8 +1,8 @@
 package net.uku3lig.ukulib.config.option.widget;
 
-import net.minecraft.client.gui.tab.GridScreenTab;
-import net.minecraft.client.gui.widget.GridWidget;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.tabs.GridLayoutTab;
+import net.minecraft.client.gui.layouts.GridLayout;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 
@@ -10,9 +10,10 @@ import java.io.Serializable;
 
 /**
  * A tab made with {@link WidgetCreator} for ease of use.
+ *
  * @param <T> The type of the config
  */
-public abstract class ButtonTab<T extends Serializable> extends GridScreenTab {
+public abstract class ButtonTab<T extends Serializable> extends GridLayoutTab {
     /**
      * The config manager
      */
@@ -20,31 +21,34 @@ public abstract class ButtonTab<T extends Serializable> extends GridScreenTab {
 
     /**
      * Creates a widget tab and adds all the {@link ButtonTab#getWidgets(Serializable) given widgets} to it
-     * @param title The title of the tab
+     *
+     * @param title   The title of the tab
      * @param manager The config manager
      */
-    protected ButtonTab(Text title, ConfigManager<T> manager) {
+    protected ButtonTab(Component title, ConfigManager<T> manager) {
         super(title);
         this.manager = manager;
 
-        GridWidget.Adder adder = this.grid.setRowSpacing(4).createAdder(1);
+        GridLayout.RowHelper helper = this.layout.rowSpacing(4).createRowHelper(1);
 
         for (WidgetCreator option : getWidgets(manager.getConfig())) {
-            adder.add(option.createWidget(0, 0, 210, 20));
+            helper.addChild(option.createWidget(0, 0, 210, 20));
         }
     }
 
     /**
      * Creates a widget tab and adds all the {@link ButtonTab#getWidgets(Serializable) given widgets} to it. The title is created from the given translation key.
-     * @param key The translation key of the title
+     *
+     * @param key     The translation key of the title
      * @param manager The config manager
      */
     protected ButtonTab(String key, ConfigManager<T> manager) {
-        this(Text.translatable(key), manager);
+        this(Component.translatable(key), manager);
     }
 
     /**
      * The widgets to be shown in this tab
+     *
      * @param config The config
      * @return The array of widgets to be displayed
      */

@@ -68,9 +68,9 @@ public enum Position implements StringTranslatable {
      * Creates a {@link CyclingOption} that allows to choose between all of this enum's values.
      *
      * @param initialValue The initial
-     * @param setter The action to be performed when the value changes
+     * @param setter       The action to be performed when the value changes
      * @return The generated option
-     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer) 
+     * @see CyclingOption#ofTranslatableEnum(String, Class, Enum, Consumer)
      */
     public static CyclingOption<Position> getOption(Position initialValue, Consumer<Position> setter) {
         return CyclingOption.ofTranslatableEnum(KEY, Position.class, initialValue, setter);

@@ -1,14 +1,15 @@
 package net.uku3lig.ukulib.config.option.widget;
 
-import net.minecraft.client.MinecraftClient;
-import net.minecraft.client.gui.DrawContext;
-import net.minecraft.client.gui.Element;
-import net.minecraft.client.gui.Selectable;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.ElementListWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.ContainerObjectSelectionList;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.narration.NarratableEntry;
 import net.uku3lig.ukulib.config.option.WideWidgetCreator;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
@@ -18,7 +19,7 @@ import java.util.List;
 /**
  * A list of {@link WidgetCreator}, used to construct a vertical list of widgets
  */
-public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.ButtonEntry> {
+public class WidgetCreatorList extends ContainerObjectSelectionList<WidgetCreatorList.@NotNull ButtonEntry> {
     /**
      * Creates an empty widget list
      *
@@ -28,11 +29,11 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param top             The top position of the list
      * @param bottom          UNUSED PARAMETER, USE OTHER CONSTRUCTOR
      * @param itemHeight      The height of each widget, usually 20
-     * @see WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)
-     * @deprecated Mojang (rightfully) removed the bottom in 1.20.3, use {@link WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, int, int, int)} instead
+     * @see WidgetCreatorList#WidgetCreatorList(Minecraft, int, int, int, int)
+     * @deprecated Mojang (rightfully) removed the bottom in 1.20.3, use {@link WidgetCreatorList#WidgetCreatorList(Minecraft, int, int, int, int)} instead
      */
     @Deprecated(since = "1.1.0", forRemoval = true)
-    public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, @SuppressWarnings("unused") int bottom, int itemHeight) {
+    public WidgetCreatorList(Minecraft minecraftClient, int width, int height, int top, @SuppressWarnings("unused") int bottom, int itemHeight) {
         this(minecraftClient, width, height, top, itemHeight);
     }
 
@@ -44,11 +45,11 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      * @param height          The height of the list
      * @param top             The top position of the list
      * @param itemHeight      The height of each widget, usually 20
-     * @see WidgetCreatorList#WidgetCreatorList(MinecraftClient, int, ThreePartsLayoutWidget)
-     * @deprecated You should be wrapping the widget in the body of a {@link ThreePartsLayoutWidget}
+     * @see WidgetCreatorList#WidgetCreatorList(Minecraft, int, HeaderAndFooterLayout)
+     * @deprecated You should be wrapping the widget in the body of a {@link HeaderAndFooterLayout}
      */
     @Deprecated(since = "1.10.0", forRemoval = true)
-    public WidgetCreatorList(MinecraftClient minecraftClient, int width, int height, int top, int itemHeight) {
+    public WidgetCreatorList(Minecraft minecraftClient, int width, int height, int top, int itemHeight) {
         super(minecraftClient, width, height, top, itemHeight);
         this.centerListVertically = false;
     }
@@ -58,9 +59,9 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
      *
      * @param minecraftClient The Minecraft client instance
      * @param width           The width of the list
-     * @param layout          The containing {@link ThreePartsLayoutWidget}, used to compute the size
+     * @param layout          The containing {@link HeaderAndFooterLayout}, used to compute the size
      */
-    public WidgetCreatorList(MinecraftClient minecraftClient, int width, ThreePartsLayoutWidget layout) {
+    public WidgetCreatorList(Minecraft minecraftClient, int width, HeaderAndFooterLayout layout) {
         super(minecraftClient, width, layout.getContentHeight(), layout.getHeaderHeight(), 25);
     }
 
@@ -116,8 +117,8 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
     /**
      * A widget entry, made of one or two creators.
      */
-    public class ButtonEntry extends ElementListWidget.Entry<ButtonEntry> {
-        private final List<ClickableWidget> widgets;
+    public class ButtonEntry extends ContainerObjectSelectionList.Entry<@NotNull ButtonEntry> {
+        private final List<AbstractWidget> widgets;
 
         /**
          * Creates an entry.
@@ -126,7 +127,7 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
          * @param other The second entry; nullable
          */
         public ButtonEntry(WidgetCreator first, @Nullable WidgetCreator other) {
-            ClickableWidget firstWidget = first.createWidget(150, 20);
+            AbstractWidget firstWidget = first.createWidget(150, 20);
             this.widgets = other == null ? List.of(firstWidget) : List.of(firstWidget, other.createWidget(150, 20));
         }
 
@@ -167,24 +168,24 @@ public class WidgetCreatorList extends ElementListWidget<WidgetCreatorList.Butto
         }
 
         @Override
-        public List<? extends Selectable> selectableChildren() {
+        public @NotNull List<? extends NarratableEntry> narratables() {
             return widgets;
         }
 
         @Override
-        public List<? extends Element> children() {
+        public @NotNull List<? extends GuiEventListener> children() {
             return widgets;
         }
 
 
         @Override
-        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void renderContent(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             int leftOffset = 0;
             int left = WidgetCreatorList.this.getWidth() / 2 - 155;
 
             for (var widget : this.widgets) {
                 widget.setPosition(left + leftOffset, this.getContentY());
-                widget.render(context, mouseX, mouseY, deltaTicks);
+                widget.render(graphics, mouseX, mouseY, deltaTicks);
                 leftOffset += 160;
             }
         }

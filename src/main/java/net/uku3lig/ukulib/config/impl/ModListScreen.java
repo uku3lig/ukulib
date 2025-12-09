@@ -2,12 +2,12 @@ package net.uku3lig.ukulib.config.impl;
 
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ButtonWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
-import net.minecraft.screen.ScreenTexts;
-import net.minecraft.text.Text;
+import net.minecraft.client.gui.components.Button;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.CommonComponents;
+import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 
@@ -20,7 +20,7 @@ import java.util.function.UnaryOperator;
  */
 public final class ModListScreen extends CloseableScreen {
     private EntrypointList entrypointList;
-    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
 
     /**
      * Creates a config screen.
@@ -35,9 +35,9 @@ public final class ModListScreen extends CloseableScreen {
     protected void init() {
         super.init();
 
-        this.layout.addHeader(this.title, this.textRenderer);
+        this.layout.addTitleHeader(this.title, this.font);
 
-        entrypointList = this.layout.addBody(new EntrypointList(this.client, this.width, this.layout));
+        entrypointList = this.layout.addToContents(new EntrypointList(this.minecraft, this.width, this.layout));
         Map<ModContainer, UnaryOperator<Screen>> containers = new LinkedHashMap<>();
 
         FabricLoader.getInstance().getEntrypointContainers("ukulib", UkulibAPI.class)
@@ -54,17 +54,17 @@ public final class ModListScreen extends CloseableScreen {
 
         entrypointList.addAll(containers, this);
 
-        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        footer.add(ButtonWidget.builder(Text.translatable("ukulib.config.title"), button -> this.client.setScreen(new UkulibConfigScreen(this))).build());
-        footer.add(ButtonWidget.builder(ScreenTexts.DONE, button -> this.close()).build());
+        LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        footer.addChild(Button.builder(Component.translatable("ukulib.config.title"), button -> this.minecraft.setScreen(new UkulibConfigScreen(this))).build());
+        footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose()).build());
 
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
-        this.entrypointList.position(this.width, this.layout);
+    protected void repositionElements() {
+        this.layout.arrangeElements();
+        this.entrypointList.updateSize(this.width, this.layout);
     }
 }

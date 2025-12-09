@@ -32,7 +32,9 @@
   ],
   "custom": {
     "modmenu": {
-      "badges": [ "library" ],
+      "badges": [
+        "library"
+      ],
       "links": {
         "modmenu.discord": "https://uku3lig.net/discord"
       }

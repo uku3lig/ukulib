@@ -1,10 +1,11 @@
 package net.uku3lig.ukulib.config;
 
 import net.fabricmc.fabric.api.resource.v1.ResourceLoader;
-import net.minecraft.resource.ResourceManager;
-import net.minecraft.resource.ResourceType;
-import net.minecraft.resource.SynchronousResourceReloader;
-import net.minecraft.util.Identifier;
+import net.minecraft.resources.Identifier;
+import net.minecraft.server.packs.PackType;
+import net.minecraft.server.packs.resources.ResourceManager;
+import net.minecraft.server.packs.resources.ResourceManagerReloadListener;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.Serializable;
 import java.util.HashSet;
@@ -13,12 +14,12 @@ import java.util.Set;
 /**
  * Reloads all config managers when the resource manager reloads (e.g. on F3+T).
  */
-public class ConfigManagerReloader implements SynchronousResourceReloader {
+public class ConfigManagerReloader implements ResourceManagerReloadListener {
     private static final Set<ConfigManager<?>> managers = new HashSet<>();
 
     static {
         // TODO move into mod initializer
-        ResourceLoader.get(ResourceType.CLIENT_RESOURCES).registerReloader(Identifier.of("ukulib", "config_reloader"), new ConfigManagerReloader());
+        ResourceLoader.get(PackType.CLIENT_RESOURCES).registerReloader(Identifier.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
     }
 
     /**
@@ -31,12 +32,12 @@ public class ConfigManagerReloader implements SynchronousResourceReloader {
     }
 
     @Override
-    public void reload(ResourceManager manager) {
+    public void onResourceManagerReload(@NotNull ResourceManager manager) {
         managers.forEach(this::reloadConfig);
     }
 
     @Override
-    public String getName() {
+    public @NotNull String getName() {
         return "ukulib_config_reloader";
     }
 
@@ -45,5 +46,6 @@ public class ConfigManagerReloader implements SynchronousResourceReloader {
         manager.replaceConfig(manager.getSerializer().deserialize());
     }
 
-    private ConfigManagerReloader() {}
+    private ConfigManagerReloader() {
+    }
 }

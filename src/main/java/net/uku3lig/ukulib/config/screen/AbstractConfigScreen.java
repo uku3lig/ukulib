@@ -1,10 +1,10 @@
 package net.uku3lig.ukulib.config.screen;
 
 import lombok.extern.slf4j.Slf4j;
-import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.ClickableWidget;
-import net.minecraft.client.gui.widget.DirectionalLayoutWidget;
-import net.minecraft.client.gui.widget.ThreePartsLayoutWidget;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
+import net.minecraft.client.gui.layouts.LinearLayout;
+import net.minecraft.client.gui.screens.Screen;
 import net.uku3lig.ukulib.config.ConfigManager;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
@@ -28,7 +28,7 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
      */
     protected WidgetCreatorList buttonList;
 
-    private final ThreePartsLayoutWidget layout = new ThreePartsLayoutWidget(this);
+    private final HeaderAndFooterLayout layout = new HeaderAndFooterLayout(this);
 
     /**
      * Creates a config screen.
@@ -53,31 +53,31 @@ public abstract class AbstractConfigScreen<T extends Serializable> extends BaseC
     protected void init() {
         super.init();
 
-        this.layout.addHeader(this.title, this.textRenderer);
+        this.layout.addTitleHeader(this.title, this.font);
 
-        this.buttonList = this.layout.addBody(new WidgetCreatorList(this.client, this.width, this.layout));
-        this.buttonList.addAll(applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
+        this.buttonList = this.layout.addToContents(new WidgetCreatorList(this.minecraft, this.width, this.layout));
+        this.buttonList.addAll(super.applyConfigChecked(this::getWidgets, new WidgetCreator[0]));
 
-        DirectionalLayoutWidget footer = this.layout.addFooter(DirectionalLayoutWidget.horizontal().spacing(8));
-        footer.add(this.resetButton);
-        footer.add(this.doneButton);
+        LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
+        footer.addChild(this.resetButton);
+        footer.addChild(this.doneButton);
 
-        this.layout.forEachChild(this::addDrawableChild);
-        this.refreshWidgetPositions();
+        this.layout.visitWidgets(this::addRenderableWidget);
+        this.repositionElements();
     }
 
     @Override
-    protected void refreshWidgetPositions() {
-        this.layout.refreshPositions();
-        this.buttonList.position(this.width, this.layout);
+    protected void repositionElements() {
+        this.layout.arrangeElements();
+        this.buttonList.updateSize(this.width, this.layout);
     }
 
     @Override
-    protected Collection<ClickableWidget> getInvalidOptions() {
+    protected Collection<AbstractWidget> getInvalidOptions() {
         return buttonList.children().stream()
                 .flatMap(e -> e.children().stream())
-                .filter(ClickableWidget.class::isInstance)
-                .map(e -> (ClickableWidget) e)
+                .filter(AbstractWidget.class::isInstance)
+                .map(e -> (AbstractWidget) e)
                 .filter(w -> w instanceof CheckedOption option && !option.isValid())
                 .toList();
     }
