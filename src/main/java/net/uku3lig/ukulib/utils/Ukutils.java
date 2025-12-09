@@ -35,8 +35,8 @@ import java.util.function.Consumer;
  * Simple class for various utilities.
  */
 public class Ukutils {
-    private static final Component ON = Component.literal("ON").withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN);
-    private static final Component OFF = Component.literal("OFF").withStyle(ChatFormatting.BOLD, ChatFormatting.RED);
+    private static final Component ON = CommonComponents.OPTION_ON.copy().withStyle(ChatFormatting.BOLD, ChatFormatting.GREEN);
+    private static final Component OFF = CommonComponents.OPTION_OFF.copy().withStyle(ChatFormatting.BOLD, ChatFormatting.RED);
 
     /**
      * The map of keybindings and their respective actions.

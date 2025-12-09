@@ -23,7 +23,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     /**
      * The exception thrown when the selected player is not found.
      */
-    public static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("name.entity.notfound.player"));
+    public static final SimpleCommandExceptionType PLAYER_NOT_FOUND_EXCEPTION = new SimpleCommandExceptionType(Component.translatable("argument.entity.notfound.player"));
 
     /**
      * Returns a new instance.

@@ -41,7 +41,7 @@ public class BrokenConfigScreen extends CloseableScreen {
      * @param parent The parent screen
      */
     public BrokenConfigScreen(Screen parent) {
-        super(Component.literal("Broken config screen"), parent);
+        super(Component.translatable("ukulib.brokenConfig.title"), parent);
     }
 
     @Override
@@ -51,11 +51,11 @@ public class BrokenConfigScreen extends CloseableScreen {
         this.layout.addTitleHeader(this.title, this.font);
 
         LinearLayout body = this.layout.addToContents(LinearLayout.vertical().spacing(14));
-        body.addChild(new StringWidget(Component.literal("There was an issue with this config screen."), this.font));
-        body.addChild(new StringWidget(Component.literal("Please report this issue to the mod author."), this.font));
+        body.addChild(new StringWidget(Component.translatable("ukulib.brokenConfig.line1"), this.font));
+        body.addChild(new StringWidget(Component.translatable("ukulib.brokenConfig.line2"), this.font));
 
         LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-        footer.addChild(Button.builder(Component.literal("Upload logs to mclo.gs"), button -> this.uploadLogs()).build());
+        footer.addChild(Button.builder(Component.translatable("ukulib.brokenConfig.upload"), button -> this.uploadLogs()).build());
         footer.addChild(Button.builder(CommonComponents.GUI_DONE, button -> this.onClose()).build());
 
         this.layout.visitWidgets(this::addRenderableWidget);
@@ -96,7 +96,7 @@ public class BrokenConfigScreen extends CloseableScreen {
                         }, apiRes.url, true));
                     } else {
                         log.error("Error while uploading logs to mclo.gs: {}", apiRes.error);
-                        Ukutils.sendToast(Component.literal("Error while uploading logs"), Component.literal(apiRes.error));
+                        Ukutils.sendToast(Component.translatable("ukulib.brokenConfig.uploadError"), Component.literal(apiRes.error));
                     }
                 });
     }

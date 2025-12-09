@@ -94,7 +94,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
             Minecraft.getInstance().setScreen(parent);
             manager.resetConfig();
             manager.saveConfig();
-            Ukutils.sendToast(Component.literal("Sucessfully reset config!"), null);
+            Ukutils.sendToast(Component.translatable("ukulib.option.reset.success"), null);
         }).build();
     }
 

@@ -51,7 +51,7 @@ public abstract class PositionSelectScreen extends CloseableScreen {
                 .size(50, 20)
                 .build());
 
-        this.defaultButton = this.addRenderableWidget(Button.builder(Component.literal("Default"), b -> {
+        this.defaultButton = this.addRenderableWidget(Button.builder(Component.translatable("ukulib.option.default"), b -> {
                     this.x = -1;
                     this.y = -1;
                 })
