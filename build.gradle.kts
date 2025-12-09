@@ -1,5 +1,5 @@
 plugins {
-    id("fabric-loom") version "1.13-SNAPSHOT"
+    id("net.fabricmc.fabric-loom-remap") version "1.14-SNAPSHOT"
     id("io.freefair.lombok") version "9.1.0"
 
     id("maven-publish")
