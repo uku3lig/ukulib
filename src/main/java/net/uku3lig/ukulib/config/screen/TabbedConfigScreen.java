@@ -75,8 +75,7 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     protected void repositionElements() {
         if (this.tabWidget != null) {
-            this.tabWidget.setWidth(this.width);
-            this.tabWidget.arrangeElements();
+            this.tabWidget.updateWidth(this.width);
             int i = this.tabWidget.getRectangle().bottom();
             ScreenRectangle screenRect = new ScreenRectangle(0, i, this.width, this.height - 36 - i);
             this.tabManager.setTabArea(screenRect);
