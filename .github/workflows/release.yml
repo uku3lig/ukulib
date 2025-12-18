@@ -1,4 +1,4 @@
-name: release
+name: Release new version
 
 on:
   release:
@@ -9,14 +9,16 @@ jobs:
   build:
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout sources
+        uses: actions/checkout@v6
+
       - name: Setup Temurin 21
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           java-version: 21
           distribution: temurin
-      - name: Checkout sources
-        uses: actions/checkout@v4
-      - name: Publish to the maven repo
+
+      - name: Publish to the maven repo and modrinth
         run: ./gradlew publish
         env:
           MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
