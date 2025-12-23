@@ -25,40 +25,6 @@ public class WidgetCreatorList extends ContainerObjectSelectionList<WidgetCreato
      *
      * @param minecraftClient The Minecraft client instance
      * @param width           The width of the list
-     * @param height          The height of the list
-     * @param top             The top position of the list
-     * @param bottom          UNUSED PARAMETER, USE OTHER CONSTRUCTOR
-     * @param itemHeight      The height of each widget, usually 20
-     * @see WidgetCreatorList#WidgetCreatorList(Minecraft, int, int, int, int)
-     * @deprecated Mojang (rightfully) removed the bottom in 1.20.3, use {@link WidgetCreatorList#WidgetCreatorList(Minecraft, int, int, int, int)} instead
-     */
-    @Deprecated(since = "1.1.0", forRemoval = true)
-    public WidgetCreatorList(Minecraft minecraftClient, int width, int height, int top, @SuppressWarnings("unused") int bottom, int itemHeight) {
-        this(minecraftClient, width, height, top, itemHeight);
-    }
-
-    /**
-     * Creates an empty widget list
-     *
-     * @param minecraftClient The Minecraft client instance
-     * @param width           The width of the list
-     * @param height          The height of the list
-     * @param top             The top position of the list
-     * @param itemHeight      The height of each widget, usually 20
-     * @see WidgetCreatorList#WidgetCreatorList(Minecraft, int, HeaderAndFooterLayout)
-     * @deprecated You should be wrapping the widget in the body of a {@link HeaderAndFooterLayout}
-     */
-    @Deprecated(since = "1.10.0", forRemoval = true)
-    public WidgetCreatorList(Minecraft minecraftClient, int width, int height, int top, int itemHeight) {
-        super(minecraftClient, width, height, top, itemHeight);
-        this.centerListVertically = false;
-    }
-
-    /**
-     * Creates an empty widget list
-     *
-     * @param minecraftClient The Minecraft client instance
-     * @param width           The width of the list
      * @param layout          The containing {@link HeaderAndFooterLayout}, used to compute the size
      */
     public WidgetCreatorList(Minecraft minecraftClient, int width, HeaderAndFooterLayout layout) {
@@ -138,33 +104,6 @@ public class WidgetCreatorList extends ContainerObjectSelectionList<WidgetCreato
          */
         public ButtonEntry(WidgetCreator creator) {
             this.widgets = List.of(creator.createWidget(310, 20));
-        }
-
-        /**
-         * Creates an entry.
-         *
-         * @param width The width of the entry
-         * @param first The first entry
-         * @param other The second entry; nullable
-         * @see ButtonEntry#ButtonEntry(WidgetCreator, WidgetCreator)
-         * @deprecated The width is now computed automatically
-         */
-        @Deprecated(since = "1.10.0", forRemoval = true)
-        public ButtonEntry(@SuppressWarnings("unused") int width, WidgetCreator first, @Nullable WidgetCreator other) {
-            this(first, other);
-        }
-
-        /**
-         * Creates a single, wide entry.
-         *
-         * @param width   The width of the entry
-         * @param creator The entry
-         * @see ButtonEntry#ButtonEntry(WidgetCreator)
-         * @deprecated The width is now computed automatically
-         */
-        @Deprecated(since = "1.10.0", forRemoval = true)
-        public ButtonEntry(@SuppressWarnings("unused") int width, WidgetCreator creator) {
-            this(creator);
         }
 
         @Override
