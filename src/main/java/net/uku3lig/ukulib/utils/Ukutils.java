@@ -26,7 +26,6 @@ import org.joml.Vector2ic;
 
 import java.nio.file.Path;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 import java.util.function.Consumer;
@@ -55,7 +54,7 @@ public class Ukutils {
      * @return The generated button
      */
     public static Button doneButton(int width, int height, Screen parent) {
-        return Button.builder(CommonComponents.GUI_DONE, button -> Minecraft.getInstance().setScreen(parent))
+        return Button.builder(CommonComponents.GUI_DONE, _ -> Minecraft.getInstance().setScreen(parent))
                 .bounds(width / 2 - 100, height - 27, 200, 20)
                 .build();
     }
@@ -171,24 +170,6 @@ public class Ukutils {
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
         return texture != null && (textureManager.getByPath().containsKey(texture) || resourceManager.getResource(texture).isPresent());
-    }
-
-    /**
-     * Gets the texture of a player's head.
-     *
-     * @param username The username of the player
-     * @return The texture of the player's head
-     * @deprecated Originally meant for internal use, you should look at {@link net.minecraft.client.gui.components.PlayerFaceRenderer} instead which is more robust and actually tested by mojang
-     */
-    @Nullable
-    @Deprecated(since = "1.10.0", forRemoval = true)
-    public static Identifier getHeadTex(String username) {
-        if (Identifier.isValidPath(username)) {
-            username = username.toLowerCase(Locale.ROOT);
-            return Identifier.fromNamespaceAndPath("ukulib", "head_" + username);
-        } else {
-            return null;
-        }
     }
 
     /**
