@@ -1,0 +1,14 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "net.uku3lig.ukulib.mixin",
+  "compatibilityLevel": "JAVA_25",
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "MixinMinecraft",
+    "MixinOptionsScreen",
+    "TextureManagerAccessor"
+  ]
+}
