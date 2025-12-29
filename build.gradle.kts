@@ -36,7 +36,7 @@ dependencies {
     include(implementation(fabricApi.module("fabric-key-binding-api-v1", project.property("fabric_version") as String))!!)
 
     // optional deps
-    // compileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
+    compileOnly("com.terraformersmc:modmenu:${project.property("modmenu_version")}")
 }
 
 base {
