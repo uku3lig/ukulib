@@ -49,8 +49,6 @@ fun exportSourceSetResources() {
 exportSourceSetJava()
 exportSourceSetResources()
 
-tasks.jar { enabled = false }
-
 tasks.javadoc {
     exclude(
         "net/uku3lig/ukulib/config/impl/UkulibConfig.java",
