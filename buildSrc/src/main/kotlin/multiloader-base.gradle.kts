@@ -38,20 +38,19 @@ publishing {
     }
 
     repositories {
+        val isReleaseBuild = project.hasProperty("build.release")
+        val mavenUsername: String? by project // reads from ORG_GRADLE_PROJECT_mavenUsername
+        val mavenPassword: String? by project // reads from ORG_GRADLE_PROJECT_mavenPassword
+
         maven {
-            name = "UkuReleases"
-            url = uri("https://maven.uku3lig.net/releases")
+            name = "Uku"
+            url = uri("https://maven.uku3lig.net".let {
+                if (isReleaseBuild) "$it/releases" else "$it/snapshots"
+            })
+
             credentials {
-                username = "uku"
-                password = System.getenv("MAVEN_PASSWORD")
-            }
-        }
-        maven {
-            name = "UkuSnapshots"
-            url = uri("https://maven.uku3lig.net/snapshots")
-            credentials {
-                username = "uku"
-                password = System.getenv("MAVEN_PASSWORD")
+                username = mavenUsername
+                password = mavenPassword
             }
         }
     }

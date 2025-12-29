@@ -18,9 +18,13 @@ jobs:
           java-version: 21
           distribution: temurin
 
-      - name: Publish to the maven repo and modrinth
-        run: ./gradlew publish
+      - name: Publish to the maven repo
+        run: ./gradlew publishAllPublicationsToUkuRepository -Pbuild.release=true
         env:
-          MAVEN_PASSWORD: ${{ secrets.MAVEN_PASSWORD }}
+          ORG_GRADLE_PROJECT_mavenUsername: ${{ secrets.MAVEN_USERNAME }}
+          ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
+
+      - name: Publish to modrinth
+        run: ./gradlew modrinth
+        env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
-          PUBLISH_RELEASE: owo
