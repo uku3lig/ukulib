@@ -1,11 +1,9 @@
 plugins {
-    id("net.fabricmc.fabric-loom") version "1.14-SNAPSHOT"
-    id("io.freefair.lombok") version "9.1.0"
-
-    id("maven-publish")
-    id("com.modrinth.minotaur") version "2.8.10"
+    id("net.fabricmc.fabric-loom") version "1.14-SNAPSHOT" apply false
+    // id("net.neoforged.moddev") version "2.0.116" apply false
 }
 
+/*
 version = "${project.property("mod_version")}+${project.property("minecraft_version")}${getVersionMetadata()}"
 group = project.property("maven_group") as String
 
@@ -132,3 +130,4 @@ fun getVersionMetadata(): String {
         "-local"
     }
 }
+*/
