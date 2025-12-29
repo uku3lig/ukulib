@@ -17,6 +17,7 @@
   "environment": "client",
   "entrypoints": {
     "modmenu": [
+      "net.uku3lig.ukulib.utils.ModMenuRegistrar"
     ]
   },
   "depends": {
