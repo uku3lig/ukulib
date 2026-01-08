@@ -17,7 +17,6 @@ dependencies {
     include("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
 
     compileOnly("com.terraformersmc:modmenu:${BuildConfig.MODMENU_VERSION}")
-    runtimeOnly("com.terraformersmc:modmenu:${BuildConfig.MODMENU_VERSION}")
 
     fun addEmbeddedFabricModule(name: String) {
         val module = fabricApi.module(name, BuildConfig.FABRIC_API_VERSION)
