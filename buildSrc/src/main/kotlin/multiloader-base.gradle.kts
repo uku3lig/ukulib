@@ -11,7 +11,12 @@ base {
     archivesName = rootProject.name + "-" + project.name
 }
 
-java.toolchain.languageVersion = JavaLanguageVersion.of(25)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(25)
+
+    withSourcesJar()
+    withJavadocJar()
+}
 
 tasks.withType<JavaCompile> {
     options.encoding = "UTF-8"
