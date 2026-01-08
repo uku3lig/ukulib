@@ -27,7 +27,7 @@ dependencies {
 
     addEmbeddedFabricModule("fabric-resource-loader-v1")
     addEmbeddedFabricModule("fabric-command-api-v2")
-    addEmbeddedFabricModule("fabric-key-binding-api-v1")
+    addEmbeddedFabricModule("fabric-key-mapping-api-v1")
 }
 
 tasks.jar {

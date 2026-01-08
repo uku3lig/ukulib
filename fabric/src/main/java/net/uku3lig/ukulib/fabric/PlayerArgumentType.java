@@ -45,7 +45,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     public static Player getPlayer(String name, CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
         PlayerSelector selector = context.getArgument(name, PlayerSelector.class);
 
-        return context.getSource().getWorld().players().stream()
+        return context.getSource().getLevel().players().stream()
                 .filter(p -> p.getScoreboardName().equalsIgnoreCase(selector.name) || p.getStringUUID().equalsIgnoreCase(selector.name))
                 .findFirst()
                 .orElseThrow(PLAYER_NOT_FOUND_EXCEPTION::create);
@@ -59,7 +59,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
         if (context.getSource() instanceof FabricClientCommandSource source) {
-            return SharedSuggestionProvider.suggest(source.getWorld().players().stream().map(Player::getScoreboardName), builder);
+            return SharedSuggestionProvider.suggest(source.getLevel().players().stream().map(Player::getScoreboardName), builder);
         } else {
             return SharedSuggestionProvider.suggest(Collections.emptyList(), builder);
         }

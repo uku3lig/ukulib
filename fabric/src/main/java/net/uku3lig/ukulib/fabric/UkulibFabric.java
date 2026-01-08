@@ -10,6 +10,6 @@ public class UkulibFabric implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         ResourceLoader.get(PackType.CLIENT_RESOURCES)
-                .registerReloader(Identifier.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
+                .registerReloadListener(Identifier.fromNamespaceAndPath("ukulib", "config_reloader"), new ConfigManagerReloader());
     }
 }
