@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.fabric;
 
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
+import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
 import net.fabricmc.loader.api.metadata.ModMetadata;
@@ -24,7 +24,7 @@ public class FabricPlatformUkutils implements PlatformUkutils {
 
     @Override
     public void registerKeyBindingInternal(KeyMapping keyMapping) {
-        KeyBindingHelper.registerKeyBinding(keyMapping);
+        KeyMappingHelper.registerKeyMapping(keyMapping);
     }
 
     @Override
