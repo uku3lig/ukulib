@@ -17,7 +17,7 @@ object BuildConfig {
         val isReleaseBuild = project.hasProperty("build.release")
         val buildId = System.getenv("GITHUB_RUN_NUMBER")
 
-        builder.append(MOD_VERSION).append("+mc").append(MINECRAFT_VERSION)
+        builder.append(MOD_VERSION).append("+").append(MINECRAFT_VERSION)
 
         if (!isReleaseBuild) {
             if (buildId != null) {
