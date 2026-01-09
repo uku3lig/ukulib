@@ -11,6 +11,8 @@ object BuildConfig {
 
     const val MOD_VERSION: String = "2.0.0-alpha.1"
 
+    const val MODRINTH_PROJECT_ID: String = "Y8uFrUil"
+
     fun createVersionString(project: Project): String {
         val builder = StringBuilder()
 

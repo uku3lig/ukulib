@@ -48,7 +48,7 @@ else if (version.toString().contains("beta")) releaseType = "beta"
 
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
-    projectId = "Y8uFrUil"
+    projectId = BuildConfig.MODRINTH_PROJECT_ID
     versionNumber = version.toString()
     versionType = releaseType
     uploadFile.set(tasks.jar)
