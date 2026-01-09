@@ -25,6 +25,6 @@ jobs:
           ORG_GRADLE_PROJECT_mavenPassword: ${{ secrets.MAVEN_PASSWORD }}
 
       - name: Publish to modrinth
-        run: ./gradlew modrinth
+        run: ./gradlew modrinth -Pbuild.release=true
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
