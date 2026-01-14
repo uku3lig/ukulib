@@ -8,6 +8,8 @@ import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
@@ -15,6 +17,7 @@ import net.minecraft.world.entity.player.Player;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Stream;
 
 /**
  * An argument type which represents players. Can only be used in client commands.
@@ -58,8 +61,10 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
 
     @Override
     public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-        if (context.getSource() instanceof FabricClientCommandSource source) {
-            return SharedSuggestionProvider.suggest(source.getWorld().players().stream().map(Player::getScoreboardName), builder);
+        ClientPacketListener listener = Minecraft.getInstance().getConnection();
+        if (listener != null) {
+            Stream<String> names = listener.getOnlinePlayers().stream().map(p -> p.getProfile().name());
+            return SharedSuggestionProvider.suggest(names, builder);
         } else {
             return SharedSuggestionProvider.suggest(Collections.emptyList(), builder);
         }
