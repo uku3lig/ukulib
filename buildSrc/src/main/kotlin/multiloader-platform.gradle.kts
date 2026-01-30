@@ -49,7 +49,7 @@ else if (version.toString().contains("beta")) releaseType = "beta"
 modrinth {
     token = System.getenv("MODRINTH_TOKEN")
     projectId = BuildConfig.MODRINTH_PROJECT_ID
-    versionNumber = version.toString()
+    versionNumber = "$version-${project.name}"
     versionType = releaseType
     uploadFile.set(tasks.jar)
     gameVersions.add(BuildConfig.MINECRAFT_VERSION)
