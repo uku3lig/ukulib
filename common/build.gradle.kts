@@ -3,7 +3,7 @@ plugins {
     id("java-library")
 
     id("net.fabricmc.fabric-loom")
-    id("io.freefair.lombok") version "9.1.0"
+    id("io.freefair.lombok") version "9.2.0"
 }
 
 dependencies {
