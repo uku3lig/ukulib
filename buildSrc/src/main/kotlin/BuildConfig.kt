@@ -1,13 +1,13 @@
 import org.gradle.api.Project
 
 object BuildConfig {
-    const val MINECRAFT_VERSION: String = "26.1-snapshot-2"
+    const val MINECRAFT_VERSION: String = "26.1-snapshot-5"
     const val FABRIC_LOADER_VERSION: String = "0.18.4"
-    const val FABRIC_API_VERSION: String = "0.141.2+26.1"
-    const val NEOFORGE_VERSION: String = "26.1.0.0-alpha.5+snapshot-2"
+    const val FABRIC_API_VERSION: String = "0.143.0+26.1"
+    const val NEOFORGE_VERSION: String = "26.1.0.0-alpha.8+snapshot-4"
 
     const val TOML4J_VERSION: String = "0.7.2"
-    const val MODMENU_VERSION: String = "18.0.0-alpha.3"
+    const val MODMENU_VERSION: String = "18.0.0-alpha.5"
 
     const val MOD_VERSION: String = "2.0.0-alpha.1"
 
