@@ -1,0 +1,22 @@
+site_name: ukulib docs
+repo_url: https://github.com/uku3lig/ukulib
+repo_name: uku3lig/ukulib
+theme:
+  name: material
+  language: en
+  logo: assets/icon.png
+  favicon: assets/icon.png
+  font:
+    text: IBM Plex Sans
+    code: Iosevka
+  palette:
+    # allow automatic color switch
+    - media: "(prefers-color-scheme)"
+    # light and dark mode settings
+    # TODO: custom color
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: deep purple
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: deep purple

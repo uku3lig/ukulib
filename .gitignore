@@ -120,3 +120,6 @@ run/
 # nix
 .direnv/
 result
+
+# mkdocs
+site/
