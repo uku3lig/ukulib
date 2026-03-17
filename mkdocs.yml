@@ -1,8 +1,17 @@
 site_name: ukulib docs
 repo_url: https://github.com/uku3lig/ukulib
 repo_name: uku3lig/ukulib
+nav:
+  - Home: index.md
+  - Setup: setup.md
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
 theme:
   name: material
+  features:
+    - navigation.tabs
   language: en
   logo: assets/icon.png
   favicon: assets/icon.png
