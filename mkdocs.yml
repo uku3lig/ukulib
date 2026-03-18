@@ -22,7 +22,6 @@ theme:
     # allow automatic color switch
     - media: "(prefers-color-scheme)"
     # light and dark mode settings
-    # TODO: custom color
     - media: "(prefers-color-scheme: light)"
       scheme: default
       primary: deep purple
