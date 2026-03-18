@@ -4,10 +4,15 @@ repo_name: uku3lig/ukulib
 nav:
   - Home: index.md
   - Setup: setup.md
+  - Config:
+      - Introduction: config/index.md
+      - Configuration screens: config/config-screen.md
 markdown_extensions:
   - admonition
   - pymdownx.details
   - pymdownx.superfences
+  - pymdownx.highlight
+  - pymdownx.inlinehilite
 theme:
   name: material
   features:
