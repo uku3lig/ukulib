@@ -10,9 +10,40 @@ ukulib provides multiple ways of easily creating screens to manage your mod's co
 
 Essentially, a config screen is composed of a list of [`WidgetCreator`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/option/WidgetCreator.html)'s. Each one (usually) represents and "wraps" a single value in your configuration, and will display a widget that allows editing the value in the most appropriate manner. ukulib provides a bunch of them already, which should cover the vast majority of cases.
 
-Each `WidgetCreator` will have a different constructor signature but they all have 3 parameters in common:
+Each `WidgetCreator` will have a different constructor signature but they all have a few parameters in common:
 
-- a translation key, which should translate to something that describes in a fairly concise manner what the option does (eg. `#!java "betterhurtcam.config.enabled"` which translated to `Hurtcam enabled`)
+- a translation key, which should translate to something that describes in a fairly concise manner what the option does (eg. `#!java "betterhurtcam.config.enabled"` which translates to `Hurtcam enabled`)
 - a value, which will serve as the initial value for the widget when the screen is shown (eg. `#!java config.enabled` or `#!java config.isEnabled()`)
 - a setter, usually a lambda for convenience (eg. `#!java (v) -> config.enabled = v` or `#!java config::setEnabled`),
-- (optional) a tooltip, if you have a complicated option and want to display more information.
+- (optional) a tooltip, if you have a complicated option and want to display more information. This parameter uses Mojang's `OptionInstance.TooltipFactory`, which has a few static methods for most common cases, like `noTooltip()` and `cachedConstantTooltip(Component)`.
+
+As an example, creating a simple on/off button:
+
+```java
+CyclingOption.ofBoolean(
+    // this can be anything you want, as long as it's in your translations file
+    "mymod.option.enableMeowing",
+    // we don't need a lambda here due to how ukulib works
+    config.meowingEnabled,
+    // this is called every time the value is changed
+    (v) -> config.meowingEnabled = v,
+    // this parameter can be omitted if you don't need it
+    OptionInstance.cachedConstantTooltip(Component.translatable("mymod.explanation.meowing"))
+);
+```
+
+## Config screen types
+
+### Normal config screen
+
+### Tabbed config screen
+
+## Displaying the screen
+
+=== "Fabric"
+
+    wow
+
+=== "NeoForge"
+
+    wow 2

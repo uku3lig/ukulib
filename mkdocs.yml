@@ -13,6 +13,8 @@ markdown_extensions:
   - pymdownx.superfences
   - pymdownx.highlight
   - pymdownx.inlinehilite
+  - pymdownx.tabbed:
+      alternate_style: true
 theme:
   name: material
   features:
