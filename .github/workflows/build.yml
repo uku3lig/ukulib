@@ -2,6 +2,9 @@ name: Build snapshot
 
 on:
   push:
+    paths-ignore:
+      - "mkdocs.yml"
+      - "docs/**"
 
 jobs:
   build:
