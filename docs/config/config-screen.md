@@ -2,10 +2,6 @@
 
 ukulib provides multiple ways of easily creating screens to manage your mod's configuration. These screens try to stay as inline as possible with what you can find in the vanilla game, while trying to provide a better API.
 
-!!! todo
-
-    add screenshots
-
 ## Common concepts
 
 Essentially, a config screen is composed of a list of [`WidgetCreator`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/option/WidgetCreator.html)'s. Each one (usually) represents and "wraps" a single value in your configuration, and will display a widget that allows editing the value in the most appropriate manner. ukulib provides a bunch of them already, which should cover the vast majority of cases.
@@ -34,16 +30,70 @@ CyclingOption.ofBoolean(
 
 ## Config screen types
 
-### Normal config screen
+### Vanilla-like config screen
+
+![AbstractConfigScreen example](../assets/normal-screen.png){ width=520 style="margin-inline:auto;display:block" }
+
+[`AbstractConfigScreen`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/screen/AbstractConfigScreen.html) implements a vanilla-like config screen, similar do what you would find in most option screens in-game.
 
 ### Tabbed config screen
 
+![TabbedConfigScreen example](../assets/tabbed-screen.png){ width=520 style="margin-inline:auto;display:block" }
+
 ## Displaying the screen
 
-=== "Fabric"
+Every ukulib config screen class extends Minecraft's `Screen`, so you can just add a button somewhere into the screen of your choice and call `#!java Minecraft.getMinecraft().setScreen(new ModConfigScreen(parent))`.
 
-    wow
+However, for convenience's sake, ukulib provides methods to access the config screens easily, either via the "uku button" or your platform's native[^1] configuration implementation.
 
-=== "NeoForge"
+Integrating your config screen is very straightforward: just implement [`UkulibAPI`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/api/UkulibAPI.html).
 
-    wow 2
+```java title="UkulibIntegration.java"
+import net.uku3lig.ukulib.api.UkulibAPI;
+
+public class UkulibIntegration implements UkulibAPI {
+    @Override
+    public UnaryOperator<Screen> supplyConfigScreen() {
+        return (parent) -> new MyModConfigScreen(parent, /* other params if needed */); // (1)
+    }
+}
+```
+
+1. We use a lambda that provides the parent screen to ensure that when the user presses "Done" or <kbd>Esc</kbd>, we go back to the screen they were previously on.
+
+Next, we need to tell ukulib that the integration class is available, which is done differently depending on the platform.
+
+=== ":fabric: Fabric"
+
+    In your `fabric.mod.json`, add your class to the list of ukulib entrypoints:
+
+    ```json title="fabric.mod.json"
+    {
+      "entrypoints": {
+        "ukulib": ["org.example.yourmod.UkulibIntegration"]
+      }
+    }
+    ```
+
+=== ":neoforge: NeoForge"
+
+    In your mod class, register your integration class as an extension point:
+
+    ```java title="MyModNeoForge.java"
+    import net.uku3lig.ukulib.neoforge.UkulibNFProvider;
+
+    @Mod(value = "mymod", dist = Dist.CLIENT)
+    public class MyModNeoForge {
+        public MyModNeoForge(ModContainer container) {
+            container.registerExtensionPoint(UkulibNFProvider.class, UkulibIntegration::new);
+        }
+    }
+    ```
+
+    !!! note
+
+        You may notice that we are using a separate `UkulibNFProvider` class here and using a lambda instead of just instantiating `UkulibIntegration`: this is due to NeoForge requiring extension points to implement `IExtensionPoint`, which is not available in the platform-independent code of ukulib, where `UkulibAPI` resides.
+
+And that's it! Your mod should now appear in the list of ukulib mods and its config screen should be accessible via Mod Menu/NeoForge's mod list!
+
+[^1]: This techincally isn't native on Fabric since it doesn't provide anything for it, so ukulib relies on [Mod Menu](https://modrinth.com/mod/modmenu) instead, which is basically as good as it gets.
