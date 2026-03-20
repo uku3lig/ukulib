@@ -28,6 +28,8 @@ CyclingOption.ofBoolean(
 );
 ```
 
+You can find a list of widgets and their usages on the [Widgets](widgets.md) page.
+
 ## Config screen types
 
 ### Vanilla-like config screen
@@ -36,13 +38,73 @@ CyclingOption.ofBoolean(
 
 [`AbstractConfigScreen`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/screen/AbstractConfigScreen.html) implements a vanilla-like config screen, similar do what you would find in most option screens in-game.
 
+Only a singular constructor and method need to be implemented:
+
+```java title="MyModConfigScreen.java"
+public class MyModConfigScreen extends AbstractConfigScreen<MyModConfig> {
+    protected MyModConfigScreen(Screen parent) {
+        super("mymod.config.title", parent, MyMod.getManager());
+    }
+
+    @Override
+    protected WidgetCreator[] getWidgets(MyModConfig config) {
+        return new WidgetCreator[]{
+            CyclingOption.ofBoolean("mymod.option.enableMeowing", config.isMeowingEnabled(), config::setMeowingEnabled),
+        };
+    }
+}
+```
+
+The constructor takes 3 arguments: a translation key for the screen's title, the parent/previous screen, and a config manager. `getWidgets` supplies you with an instance of your config, to avoid having to repeatedly call the manager and to make the function "pure".
+
 ### Tabbed config screen
 
 ![TabbedConfigScreen example](../assets/tabbed-screen.png){ width=520 style="margin-inline:auto;display:block" }
 
+[`TabbedConfigScreen`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/screen/TabbedConfigScreen.html) implements a config screen with mutliple tabs, similar to the world creation screen. Using it is a bit more cumbersome, as you'll need to create classes extending [`ButtonTab`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/option/widget/ButtonTab.html).
+
+!!! tip
+
+    `TabbedConfigScreen` accepts any class that extends Minecraft's `Tab`, which means you can make your own more complex tabs and integrate them with the rest of the config screen seamlessly!
+
+```java title="MyModConfigScreen.java"
+public class MyModConfigScreen extends TabbedConfigScreen<MyModConfig> {
+    public MyModConfigScreen(Screen parent) {
+        super("mymod.config.title", parent, TotemCounter.getManager());
+    }
+
+    @Override
+    protected Tab[] getTabs(MyModConfig config) {
+        return new Tab[]{ new TabOne(), new TabTwo() };
+    }
+
+    public class TabOne extends ButtonTab<MyModConfig> {
+        public TabOne() {
+            super("mymod.config.tabOne", MyModConfigScreen.this.manager);
+        }
+
+        @Override
+        public WidgetCreator[] getWidgets(MyModConfig config) {
+            return new WidgetCreator[]{ /* ... */ };
+        }
+    }
+
+    public class TabTwo extends ButtonTab<MyModConfig> {
+        public TabTwo() {
+            super("mymod.config.tabTwo", MyModConfigScreen.this.manager);
+        }
+
+        @Override
+        public WidgetCreator[] getWidgets(MyModConfig config) {
+            return new WidgetCreator[]{ /* ... */ };
+        }
+    }
+}
+```
+
 ## Displaying the screen
 
-Every ukulib config screen class extends Minecraft's `Screen`, so you can just add a button somewhere into the screen of your choice and call `#!java Minecraft.getMinecraft().setScreen(new ModConfigScreen(parent))`.
+Every ukulib config screen class extends Minecraft's `Screen`, so you can just add a button somewhere into the screen of your choice and call `#!java Minecraft.getMinecraft().setScreen(new MyModConfigScreen(parent))`.
 
 However, for convenience's sake, ukulib provides methods to access the config screens easily, either via the "uku button" or your platform's native[^1] configuration implementation.
 
@@ -54,7 +116,7 @@ import net.uku3lig.ukulib.api.UkulibAPI;
 public class UkulibIntegration implements UkulibAPI {
     @Override
     public UnaryOperator<Screen> supplyConfigScreen() {
-        return (parent) -> new MyModConfigScreen(parent, /* other params if needed */); // (1)
+        return (parent) -> new MyModConfigScreen(parent, /* other params if needed */); // (1)!
     }
 }
 ```
