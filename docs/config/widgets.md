@@ -85,6 +85,21 @@ new TypedInputOption<Integer>(
 
 ## Interactive position selection
 
+![PositionSelectScreen example](../assets/position-select.png){ width=520 style="margin-inline:auto;display:block" }
+
+When making a client-side mod with HUD/UI elements, it may sometimes be desirable to make that element have its position be configurable. You can always use the more "traditional" method of having a `Position` enum or let the user enter coordinates by hand.
+
+ukulib provides [`PositionSelectScreen`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/screen/PositionSelectScreen.html), an abstract class that you can extend for a pretty configuration screen.
+
+The only method which needs to be implemented is `draw`, which draws your element on the screen. When the user clicks clicks the "Default" button, `x` and `y` are set to -1 and `drawDefault` is called instead, which you can override to compute a default value for x and y, and then call `draw` with those values. You can see a real-world example in [TotemCounter](https://github.com/uku3lig/totemcounter/blob/3a4fbceecfc0dbf0b26f8a95d1c39f339ec9d64d/src/main/java/net/uku3lig/totemcounter/config/DisplayPositionSelectScreen.java).
+
+When your position selection screen is fully implemented, you can easily display it with a [`ScreenOpenButton`]:
+
+```java title="MyModConfigScreen.java"
+// in case you just need to name your button "Position", ukulib already provides a translation key for it
+new ScreenOpenButton("ukulib.position", parent -> new MyPositionSelectionScreen(parent, config))
+```
+
 ## Wide widgets
 
 In the case of config screens with more than one column of widgets, you can force a widget to take up the entire width by calling `.wide()` on it:
