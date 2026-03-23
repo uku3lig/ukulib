@@ -8,6 +8,7 @@ nav:
       - Introduction: config/index.md
       - Configuration screens: config/config-screen.md
       - Widgets: config/widgets.md
+  - Utils: utils.md
 markdown_extensions:
   - admonition
   - attr_list

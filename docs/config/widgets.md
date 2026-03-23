@@ -39,6 +39,56 @@ However, its behavior can be fine-tuned with two more options: `maxLength` (self
 
 Having a validation function set will prevent the user from saving their changes to the config if the value they put in is invalid, by disabling the "Done" button and showing a tooltip indicating what's wrong. (Note: it currently isn't possible to customize the message displayed in the tooltip). The screen can also be forcibly exited by pressing <kbd>Esc</kbd>, but modifications will not be saved.
 
+```java title="Validated InputOption example"
+new InputOption(
+    // usual options: translation key, initial value, setter
+    "mymod.config.playerName",
+    config.getPlayerName(),
+    config::setPlayerName,
+    // this is the validator function, string -> boolean
+    // in this example we check that the string is alphanumeric (including dashes and underscores)
+    value -> value.toLowerCase(Locale.ROOT).matches("[a-z0-9_-]+"),
+    // this is the maximum length of the string
+    // it's automatically checked by ukulib so no need to include it in the above function
+    16
+);
+```
+
+### `TypedInputOption`
+
+Sometimes the only type of widget for your need is a text input box, but the value you want to be configurable is not a string. This is where [`TypedInputOption`](https://maven.uku3lig.net/javadoc/releases/net/uku3lig/ukulib-common/latest/.cache/unpack/net/uku3lig/ukulib/config/option/TypedInputOption.html) comes in, which allows you to easily convert between a value and its string representation.
+
+It takes the same arguments as `InputOption`, except for an additional parameter: a function converting a string to an `Optional<T>`. The optional should be empty if the conversion fails. Furthermore, the `initialValue` parameter is a string, to force the developer to handle the `T -> String` conversion; the simplest way is to use `#!String.valueOf()`.
+
+```java title="TypedInputOption example"
+private Optional<Integer> convert(String value) {
+    try {
+        return Optional.of(Integer.parseInt(value));
+    } catch (Exception e) {
+        return Optional.empty();
+    }
+}
+
+// ...
+
+new TypedInputOption<Integer>(
+    "mymod.config.maxCount",
+    // the value is just an integer, so the default string representation suffices
+    String.valueOf(config.getMaxCount()),
+    config::setMaxCount,
+    // conversion function
+    s -> convert(s),
+    // you can still use a validator! instead of a string, the function will validate the converted value directly
+    v -> v > 0
+);
+```
+
 ## Interactive position selection
 
 ## Wide widgets
+
+In the case of config screens with more than one column of widgets, you can force a widget to take up the entire width by calling `.wide()` on it:
+
+```java
+new SimpleButton(/* ... */).wide()
+```
