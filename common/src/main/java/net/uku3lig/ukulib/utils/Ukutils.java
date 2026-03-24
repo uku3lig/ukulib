@@ -187,7 +187,7 @@ public class Ukutils {
             setter.accept(newValue);
 
             if (client.player != null) {
-                client.player.displayClientMessage(message.copy().append(" ").append(newValue ? ON : OFF), true);
+                client.player.sendOverlayMessage(message.copy().append(" ").append(newValue ? ON : OFF));
             }
         };
 

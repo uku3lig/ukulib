@@ -3,7 +3,7 @@ package net.uku3lig.ukulib.config.impl;
 import com.mojang.blaze3d.platform.NativeImage;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.Tooltip;
@@ -91,10 +91,10 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
         }
 
         @Override
-        public void renderContent(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void extractContent(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             int x = (EntrypointList.this.getWidth() - this.button.getWidth()) / 2;
             button.setPosition(x, this.getContentY());
-            button.render(graphics, mouseX, mouseY, deltaTicks);
+            button.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
 
             graphics.blit(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }

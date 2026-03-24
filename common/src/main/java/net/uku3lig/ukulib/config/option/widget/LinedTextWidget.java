@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.config.option.widget;
 
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.StringWidget;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
@@ -32,15 +32,15 @@ public class LinedTextWidget extends StringWidget {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.renderWidget(graphics, mouseX, mouseY, delta);
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        super.extractWidgetRenderState(graphics, mouseX, mouseY, delta);
         if (drawLine) {
             // draw a line before the text
             int lineWidth = (this.width - this.getFont().width(this.getMessage())) / 2 - (2 * this.padding);
             int lineY = this.getY() + this.height / 2;
 
-            graphics.hLine(this.getX() + this.padding, this.getX() + this.padding + lineWidth, lineY, 0xFFFFFFFF);
-            graphics.hLine(this.getX() + this.width - this.padding - lineWidth, this.getX() + this.width - this.padding, lineY, 0xFFFFFFFF);
+            graphics.horizontalLine(this.getX() + this.padding, this.getX() + this.padding + lineWidth, lineY, 0xFFFFFFFF);
+            graphics.horizontalLine(this.getX() + this.width - this.padding - lineWidth, this.getX() + this.width - this.padding, lineY, 0xFFFFFFFF);
         }
     }
 }

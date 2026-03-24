@@ -1,7 +1,7 @@
 package net.uku3lig.ukulib.config.option.widget;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -118,13 +118,13 @@ public class WidgetCreatorList extends ContainerObjectSelectionList<WidgetCreato
 
 
         @Override
-        public void renderContent(@NotNull GuiGraphics graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void extractContent(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
             int leftOffset = 0;
             int left = WidgetCreatorList.this.getWidth() / 2 - 155;
 
             for (var widget : this.widgets) {
                 widget.setPosition(left + leftOffset, this.getContentY());
-                widget.render(graphics, mouseX, mouseY, deltaTicks);
+                widget.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
                 leftOffset += 160;
             }
         }

@@ -1,6 +1,6 @@
 package net.uku3lig.ukulib.config.screen;
 
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.input.KeyEvent;
@@ -108,7 +108,7 @@ public abstract class PositionSelectScreen extends CloseableScreen {
 
     /**
      * Draws the screen and all the components in it.
-     * Called in {@link PositionSelectScreen#render(GuiGraphics, int, int, float)}.
+     * Called in {@link PositionSelectScreen#extractRenderState(GuiGraphicsExtractor, int, int, float)}.
      *
      * @param graphics The drawable helper
      * @param mouseX   The x position of the mouse
@@ -117,27 +117,27 @@ public abstract class PositionSelectScreen extends CloseableScreen {
      * @param x        The x position of the element
      * @param y        The y position of the element
      */
-    protected abstract void draw(GuiGraphics graphics, int mouseX, int mouseY, float delta, int x, int y);
+    protected abstract void draw(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta, int x, int y);
 
     /**
      * Draws the screen and all the components in it, in their default position.
-     * Called in {@link PositionSelectScreen#render(GuiGraphics, int, int, float)}.
+     * Called in {@link PositionSelectScreen#extractRenderState(GuiGraphicsExtractor, int, int, float)}.
      *
      * @param graphics The drawable helper
      * @param mouseX   The x position of the mouse
      * @param mouseY   The y position of the mouse
      * @param delta    The delta time
      */
-    protected void drawDefault(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+    protected void drawDefault(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         draw(graphics, mouseX, mouseY, delta, 5, 5);
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.render(graphics, mouseX, mouseY, delta);
-        graphics.drawCenteredString(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
-        graphics.drawCenteredString(this.font, Component.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFFFF55);
-        graphics.drawCenteredString(this.font, Component.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFFFF);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
+        super.extractRenderState(graphics, mouseX, mouseY, delta);
+        graphics.centeredText(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
+        graphics.centeredText(this.font, Component.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFFFF55);
+        graphics.centeredText(this.font, Component.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFFFF);
 
         if (x == -1 || y == -1) {
             drawDefault(graphics, mouseX, mouseY, delta);

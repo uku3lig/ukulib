@@ -2,9 +2,9 @@ package net.uku3lig.ukulib.mixin;
 
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.PlayerFaceRenderer;
+import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.options.OptionsScreen;
 import net.minecraft.client.renderer.RenderPipelines;
@@ -15,7 +15,7 @@ import net.minecraft.world.entity.player.PlayerSkin;
 import net.uku3lig.ukulib.config.impl.ModListScreen;
 import net.uku3lig.ukulib.config.impl.UkulibConfig;
 import net.uku3lig.ukulib.utils.PlatformUkutils;
-import org.jetbrains.annotations.NotNull;
+import org.jspecify.annotations.NonNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
@@ -72,13 +72,13 @@ public class MixinOptionsScreen extends Screen {
     }
 
     @Override
-    public void render(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
-        super.render(graphics, mouseX, mouseY, deltaTicks);
+    public void extractRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+        super.extractRenderState(graphics, mouseX, mouseY, a);
 
         // if no mod provides an ukulib config screen, the button isn't created and causes a NPE
         if (this.ukulibButton != null) {
             if (this.playerSkin != null) {
-                PlayerFaceRenderer.draw(graphics, this.playerSkin, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 16);
+                PlayerFaceExtractor.extractRenderState(graphics, this.playerSkin, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 16);
             } else {
                 // i have to use the long method because idk mojank stuff, drawGuiTexture doesn't work here
                 graphics.blit(RenderPipelines.GUI_TEXTURED, DEFAULT_ICON, this.ukulibButton.getX() + 2, this.ukulibButton.getY() + 2, 0, 0, 16, 16, 16, 16);

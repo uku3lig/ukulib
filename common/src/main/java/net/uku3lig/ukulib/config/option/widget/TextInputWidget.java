@@ -4,7 +4,7 @@ import com.mojang.blaze3d.platform.cursor.CursorTypes;
 import lombok.Getter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.components.WidgetSprites;
@@ -369,7 +369,7 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
     }
 
     @Override
-    public void renderWidget(@NotNull GuiGraphics graphics, int mouseX, int mouseY, float deltaTicks) {
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
         if (this.isVisible()) {
             if (this.drawsBackground()) {
                 Identifier identifier = TEXTURES.get(this.isActive(), this.isFocused());
@@ -387,7 +387,7 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
             if (!string.isEmpty()) {
                 String string2 = bl ? string.substring(0, j) : string;
                 FormattedCharSequence orderedText = this.format(string2);
-                graphics.drawString(this.font, orderedText, k, this.textY, i, textShadow);
+                graphics.text(this.font, orderedText, k, this.textY, i, textShadow);
                 k += this.font.width(orderedText) + 1;
             }
 
@@ -401,14 +401,14 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
             }
 
             if (!string.isEmpty() && bl && j < string.length()) {
-                graphics.drawString(this.font, this.format(string.substring(j)), k, this.textY, i, textShadow);
+                graphics.text(this.font, this.format(string.substring(j)), k, this.textY, i, textShadow);
             }
 
             boolean canSuggestionBeRendered = this.font.width(string + suggestion) < this.getInnerWidth();
             if (!this.suggestion.isBlank() && canSuggestionBeRendered) {
                 // render the suggestion (if possible)
                 int x = this.getX() + this.getWidth() - 4 - this.font.width(suggestion);
-                graphics.drawString(this.font, this.suggestion, x, this.textY, CommonColors.GRAY, textShadow);
+                graphics.text(this.font, this.suggestion, x, this.textY, CommonColors.GRAY, textShadow);
             }
 
             if (l != j) {
@@ -420,7 +420,7 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
                 if (bl3) {
                     graphics.fill(m, this.textY - 1, m + 1, this.textY + 1 + 9, i);
                 } else {
-                    graphics.drawString(this.font, HORIZONTAL_CURSOR, m, this.textY, i, textShadow);
+                    graphics.text(this.font, HORIZONTAL_CURSOR, m, this.textY, i, textShadow);
                 }
             }
 
