@@ -85,7 +85,7 @@ You can look at some of my mods for concrete examples (eg. [armor-hud](https://g
 ## Development versions
 
 [![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/uku3lig/ukulib/build.yml?branch=main)](https://github.com/uku3lig/ukulib/actions)
-[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.uku3lig.net%2Fsnapshots%2Fnet%2Fuku3lig%2Fukulib-common%2Fmaven-metadata.xml)](https://maven.uku3lig.net/#/snapshots/net/uku3lig)
+[![Maven metadata URL](https://img.shields.io/maven-metadata/v?metadataUrl=https%3A%2F%2Fmaven.uku3lig.net%2Fsnapshots%2Fnet%2Fuku3lig%2Fukulib-common%2Fmaven-metadata.xml&strategy=latestProperty)](https://maven.uku3lig.net/#/snapshots/net/uku3lig)
 
 Dev versions are published on every commit and follow roughly the same versioning scheme, with the addition of a `-build.XXX` suffix. These versions are published to the [**snapshots** repository](https://maven.uku3lig.net/#/snapshots/net/uku3lig) of my maven repo, so make sure to change the url in your build.gradle if you want to use them.
 
