@@ -3,30 +3,19 @@ plugins {
     id("com.modrinth.minotaur")
 }
 
-val commonJava: Configuration = configurations.create("commonJava") {
-    isCanBeResolved = true
-}
-val commonResources: Configuration = configurations.create("commonResources") {
-    isCanBeResolved = true
-}
+val common = project(":common")
+val commonCompileJava = common.tasks.getByName<JavaCompile>(common.sourceSets["main"].compileJavaTaskName)
+val commonProcessResources =
+    common.tasks.getByName<ProcessResources>(common.sourceSets["main"].processResourcesTaskName)
 
 dependencies {
-    compileOnly(project(path = ":common"))
-
-    commonJava(project(path = ":common", configuration = "commonJava"))
-    commonResources(project(path = ":common", configuration = "commonResources"))
-}
-
-sourceSets.apply {
-    main {
-        compileClasspath += commonJava
-        runtimeClasspath += commonJava
-    }
+    implementation(common)
 }
 
 tasks {
     processResources {
-        from(commonResources)
+        from(commonProcessResources.destinationDir)
+        dependsOn(commonProcessResources)
 
         inputs.property("version", version)
 
@@ -38,7 +27,7 @@ tasks {
     jar {
         duplicatesStrategy = DuplicatesStrategy.FAIL
         from(rootDir.resolve("LICENSE"))
-        from(commonJava)
+        from(commonCompileJava.destinationDirectory)
     }
 }
 

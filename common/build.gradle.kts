@@ -17,38 +17,6 @@ dependencies {
     annotationProcessor("io.github.llamalad7:mixinextras-common:0.5.1")
 }
 
-fun exportSourceSetJava() {
-    val configuration = configurations.create("commonJava") {
-        isCanBeResolved = true
-        isCanBeConsumed = true
-    }
-
-    val compileTask = tasks.getByName<JavaCompile>(sourceSets["main"].compileJavaTaskName)
-    artifacts.add(configuration.name, compileTask.destinationDirectory) {
-        builtBy(compileTask)
-    }
-}
-
-fun exportSourceSetResources() {
-    val configuration = configurations.create("commonResources") {
-        isCanBeResolved = true
-        isCanBeConsumed = true
-    }
-
-    val compileTask = tasks.getByName<ProcessResources>(sourceSets["main"].processResourcesTaskName)
-    compileTask.apply {
-        exclude("**/README.txt")
-        exclude("/*.accesswidener")
-    }
-
-    artifacts.add(configuration.name, compileTask.destinationDir) {
-        builtBy(compileTask)
-    }
-}
-
-exportSourceSetJava()
-exportSourceSetResources()
-
 tasks.javadoc {
     exclude(
         "net/uku3lig/ukulib/config/impl/UkulibConfig.java",
