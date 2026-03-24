@@ -9,6 +9,10 @@ nav:
       - Configuration screens: config/config-screen.md
       - Widgets: config/widgets.md
   - Utils: utils.md
+plugins:
+  - search
+  - auto_maven_version:
+      metadata_url: https://maven.uku3lig.net/releases/net/uku3lig/ukulib-common/maven-metadata.xml
 markdown_extensions:
   - admonition
   - attr_list

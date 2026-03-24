@@ -1,0 +1,10 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "auto-maven-version-plugin"
+version = "0.1.0"
+
+[project.entry-points."mkdocs.plugins"]
+auto_maven_version = "plugin:AutoMavenVersionPlugin"

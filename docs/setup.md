@@ -15,7 +15,7 @@ The easiest way to find the matching ukulib version for your mod is to go to [th
 If your project defines its dependecy versions in a `gradle.properties` file, you can simply add a new line to it:
 
 ```properties title="gradle.properties"
-ukulib_version=2.0.0+26.1
+ukulib_version=%MAVEN_VERSION%
 ```
 
 You will also need to add [my Maven repository](https://maven.uku3lig.net) to your repositories:
@@ -47,7 +47,7 @@ You will also need to add it as a dependency in your `fabric.mod.json`:
 {
   "depends": {
     // other dependencies like minecraft, fabric loader, etc
-    "ukulib": "^2.0.0"
+    "ukulib": "^%MAVEN_SHORT%"
   }
 }
 ```
@@ -68,7 +68,7 @@ You will also need to add it to your `neoforge.mods.toml`:
 [[dependencies.yourmodid]]
 modId = "ukulib"
 type = "required"
-versionRange = "[2.0.0,3)"
+versionRange = "[%MAVEN_SHORT%,3)"
 ordering = "NONE"
 side = "CLIENT"
 ```
