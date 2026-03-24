@@ -4,11 +4,13 @@ on:
   push:
     branches:
       - "main"
-      - "feat/docs" # TODO remove
-
     paths:
       - "mkdocs.yml"
       - "docs/**"
+
+  release:
+    types:
+      - published
 
   workflow_dispatch:
 

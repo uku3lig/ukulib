@@ -8,8 +8,10 @@ import logging
 
 log = logging.getLogger(f"mkdocs.plugins.{__name__}")
 
+
 class AutoMavenVersionPluginConfig(base.Config):
     metadata_url = c.Type(str)
+
 
 class AutoMavenVersionPlugin(BasePlugin[AutoMavenVersionPluginConfig]):
     def on_files(self, files: Files, config):
@@ -21,4 +23,6 @@ class AutoMavenVersionPlugin(BasePlugin[AutoMavenVersionPluginConfig]):
 
         for file in files:
             if file.is_documentation_page() and "%MAVEN" in file.content_string:
-                file.content_string = file.content_string.replace("%MAVEN_VERSION%", latest_ver).replace("%MAVEN_SHORT%", short_ver) 
+                file.content_string = file.content_string.replace(
+                    "%MAVEN_VERSION%", latest_ver
+                ).replace("%MAVEN_SHORT%", short_ver)
