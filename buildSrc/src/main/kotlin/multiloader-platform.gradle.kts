@@ -4,12 +4,18 @@ plugins {
 }
 
 val common = project(":common")
-val commonCompileJava = common.tasks.getByName<JavaCompile>(common.sourceSets["main"].compileJavaTaskName)
+val commonMain = common.sourceSets["main"]
+val commonCompileJava = common.tasks.getByName<JavaCompile>(commonMain.compileJavaTaskName)
 val commonProcessResources =
-    common.tasks.getByName<ProcessResources>(common.sourceSets["main"].processResourcesTaskName)
+    common.tasks.getByName<ProcessResources>(commonMain.processResourcesTaskName)
 
 dependencies {
     implementation(common)
+}
+
+sourceSets.main {
+    runtimeClasspath += commonMain.runtimeClasspath
+    compileClasspath += commonMain.compileClasspath
 }
 
 tasks {

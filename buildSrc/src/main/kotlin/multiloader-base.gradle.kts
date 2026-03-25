@@ -27,6 +27,10 @@ tasks.withType<GenerateModuleMetadata>().configureEach {
     enabled = false
 }
 
+tasks.jar {
+    destinationDirectory.set(file(rootProject.layout.buildDirectory).resolve("libs"))
+}
+
 repositories {
     mavenCentral()
 }

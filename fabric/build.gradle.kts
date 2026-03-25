@@ -9,6 +9,17 @@ repositories {
     }
 }
 
+loom {
+    runs.named("client") {
+        client()
+
+        configName = "fabric - Client"
+        runDir = "../run"
+        appendProjectPathToConfigName = false
+        ideConfigGenerated(true)
+    }
+}
+
 dependencies {
     minecraft("com.mojang:minecraft:${BuildConfig.MINECRAFT_VERSION}")
     implementation("net.fabricmc:fabric-loader:${BuildConfig.FABRIC_LOADER_VERSION}")

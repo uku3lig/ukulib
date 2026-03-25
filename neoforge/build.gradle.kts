@@ -9,6 +9,7 @@ neoForge {
     runs {
         create("client") {
             client()
+            gameDirectory = rootProject.file("run")
         }
     }
 
