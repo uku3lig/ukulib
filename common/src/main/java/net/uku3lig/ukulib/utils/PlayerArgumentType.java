@@ -1,4 +1,4 @@
-package net.uku3lig.ukulib.fabric;
+package net.uku3lig.ukulib.utils;
 
 import com.mojang.brigadier.StringReader;
 import com.mojang.brigadier.arguments.ArgumentType;
@@ -7,8 +7,8 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.exceptions.SimpleCommandExceptionType;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.multiplayer.ClientPacketListener;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
@@ -21,10 +21,7 @@ import java.util.stream.Stream;
 
 /**
  * An argument type which represents players. Can only be used in client commands.
- *
- * @deprecated Use the platform-independent {@link net.uku3lig.ukulib.utils.PlayerArgumentType} instead.
  */
-@Deprecated(forRemoval = true)
 public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.PlayerSelector> {
     /**
      * The exception thrown when the selected player is not found.
@@ -48,10 +45,13 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
      * @return The player entity
      * @throws CommandSyntaxException if the player is not found
      */
-    public static Player getPlayer(String name, CommandContext<FabricClientCommandSource> context) throws CommandSyntaxException {
+    public static Player getPlayer(String name, CommandContext<SharedSuggestionProvider> context) throws CommandSyntaxException {
         PlayerSelector selector = context.getArgument(name, PlayerSelector.class);
+        ClientLevel level = Minecraft.getInstance().level;
 
-        return context.getSource().getLevel().players().stream()
+        if (level == null) throw PLAYER_NOT_FOUND_EXCEPTION.create();
+
+        return level.players().stream()
                 .filter(p -> p.getScoreboardName().equalsIgnoreCase(selector.name) || p.getStringUUID().equalsIgnoreCase(selector.name))
                 .findFirst()
                 .orElseThrow(PLAYER_NOT_FOUND_EXCEPTION::create);
