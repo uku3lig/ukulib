@@ -51,7 +51,7 @@ public class Ukutils {
      * @return The generated button
      */
     public static Button doneButton(int width, int height, Screen parent) {
-        return Button.builder(CommonComponents.GUI_DONE, _ -> Minecraft.getInstance().setScreen(parent))
+        return Button.builder(CommonComponents.GUI_DONE, _ -> Minecraft.getInstance().gui.setScreen(parent))
                 .bounds(width / 2 - 100, height - 27, 200, 20)
                 .build();
     }
@@ -141,7 +141,7 @@ public class Ukutils {
      * @param body  The body of the message
      */
     public static void sendToast(Component title, @Nullable Component body) {
-        ToastManager toastManager = Minecraft.getInstance().getToastManager();
+        ToastManager toastManager = Minecraft.getInstance().gui.toastManager();
         SystemToast.addOrUpdate(toastManager, SystemToast.SystemToastId.NARRATOR_TOGGLE, title, body);
     }
 

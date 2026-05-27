@@ -37,6 +37,6 @@ public class ScreenOpenButton implements WidgetCreator {
      * Opens the new screen.
      */
     private void openScreen() {
-        Minecraft.getInstance().setScreen(opener.apply(Minecraft.getInstance().screen));
+        Minecraft.getInstance().gui.setScreen(opener.apply(Minecraft.getInstance().gui.screen()));
     }
 }

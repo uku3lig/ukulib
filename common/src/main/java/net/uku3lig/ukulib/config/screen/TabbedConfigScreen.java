@@ -2,6 +2,7 @@ package net.uku3lig.ukulib.config.screen;
 
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.tabs.MenuTabBar;
 import net.minecraft.client.gui.components.tabs.Tab;
 import net.minecraft.client.gui.components.tabs.TabManager;
 import net.minecraft.client.gui.components.tabs.TabNavigationBar;
@@ -54,7 +55,7 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     protected void init() {
         super.init();
-        this.tabWidget = TabNavigationBar.builder(this.tabManager, this.width)
+        this.tabWidget = MenuTabBar.builder(this.tabManager, this.width)
                 .addTabs(applyConfigChecked(this::getTabs, new Tab[0]))
                 .build();
         this.addRenderableWidget(this.tabWidget);
@@ -75,7 +76,7 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
     @Override
     protected void repositionElements() {
         if (this.tabWidget != null) {
-            this.tabWidget.updateWidth(this.width);
+            this.tabWidget.arrangeElements(this.width);
             int i = this.tabWidget.getRectangle().bottom();
             ScreenRectangle screenRect = new ScreenRectangle(0, i, this.width, this.height - 36 - i);
             this.tabManager.setTabArea(screenRect);

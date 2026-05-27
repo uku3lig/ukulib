@@ -35,7 +35,7 @@ public final class ModListScreen extends CloseableScreen {
         entrypointList.addAll(PlatformUkutils.INSTANCE.getConfigMods(), this);
 
         LinearLayout footer = this.layout.addToFooter(LinearLayout.horizontal().spacing(8));
-        footer.addChild(Button.builder(Component.translatable("ukulib.config.title"), _ -> this.minecraft.setScreen(new UkulibConfigScreen(this))).build());
+        footer.addChild(Button.builder(Component.translatable("ukulib.config.title"), _ -> this.minecraft.gui.setScreen(new UkulibConfigScreen(this))).build());
         footer.addChild(Button.builder(CommonComponents.GUI_DONE, _ -> this.onClose()).build());
 
         this.layout.visitWidgets(this::addRenderableWidget);

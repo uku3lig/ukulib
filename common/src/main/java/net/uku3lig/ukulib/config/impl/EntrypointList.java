@@ -56,7 +56,7 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
         private final Identifier iconPath;
 
         public ModEntry(ModMeta mod, UnaryOperator<Screen> operator, int width, Screen parent) {
-            button = Button.builder(Component.literal(mod.name()), _ -> minecraft.setScreen(operator.apply(parent)))
+            button = Button.builder(Component.literal(mod.name()), _ -> minecraft.gui.setScreen(operator.apply(parent)))
                     .bounds(width / 2 - 100, 0, 200, ICON_SIZE)
                     .tooltip(Tooltip.create(Component.literal(mod.description())))
                     .build();

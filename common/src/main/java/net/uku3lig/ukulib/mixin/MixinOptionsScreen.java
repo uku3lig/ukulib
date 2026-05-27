@@ -58,7 +58,7 @@ public class MixinOptionsScreen extends Screen {
         }
 
         this.ukulibButton = this.addRenderableWidget(
-                new Button.Builder(Component.empty(), _ -> Minecraft.getInstance().setScreen(new ModListScreen(this)))
+                new Button.Builder(Component.empty(), _ -> Minecraft.getInstance().gui.setScreen(new ModListScreen(this)))
                         .size(20, 20)
                         .build()
         );

@@ -80,7 +80,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
                 return mapper.apply(manager.getConfig());
             } catch (Exception e2) {
                 log.error("Error while getting options with the default config, this is a bug", e2);
-                Minecraft.getInstance().setScreen(new BrokenConfigScreen(parent));
+                Minecraft.getInstance().gui.setScreen(new BrokenConfigScreen(parent));
             }
         }
 
@@ -91,7 +91,7 @@ public abstract class BaseConfigScreen<T extends Serializable> extends Closeable
     protected void init() {
         this.doneButton = Button.builder(CommonComponents.GUI_DONE, _ -> this.onClose()).build();
         this.resetButton = Button.builder(Component.translatable("ukulib.option.reset"), _ -> {
-            Minecraft.getInstance().setScreen(parent);
+            Minecraft.getInstance().gui.setScreen(parent);
             manager.resetConfig();
             manager.saveConfig();
             Ukutils.sendToast(Component.translatable("ukulib.option.reset.success"), null);

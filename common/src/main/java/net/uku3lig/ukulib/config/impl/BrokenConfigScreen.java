@@ -90,7 +90,7 @@ public class BrokenConfigScreen extends CloseableScreen {
                     if (apiRes.success && apiRes.url != null) {
                         log.info("Uploaded logs to {}", apiRes.url);
 
-                        Minecraft.getInstance().setScreen(new ConfirmLinkScreen(confirmed -> {
+                        Minecraft.getInstance().gui.setScreen(new ConfirmLinkScreen(confirmed -> {
                             if (confirmed) Util.getPlatform().openUri(apiRes.url);
                             this.onClose();
                         }, apiRes.url, true));
