@@ -70,7 +70,7 @@ The constructor takes 3 arguments: a translation key for the screen's title, the
 ```java title="MyModConfigScreen.java"
 public class MyModConfigScreen extends TabbedConfigScreen<MyModConfig> {
     public MyModConfigScreen(Screen parent) {
-        super("mymod.config.title", parent, TotemCounter.getManager());
+        super("mymod.config.title", parent, MyMod.getManager());
     }
 
     @Override
