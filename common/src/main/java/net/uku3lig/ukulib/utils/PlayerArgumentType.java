@@ -45,7 +45,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
      * @return The player entity
      * @throws CommandSyntaxException if the player is not found
      */
-    public static Player getPlayer(String name, CommandContext<SharedSuggestionProvider> context) throws CommandSyntaxException {
+    public static <S> Player getPlayer(String name, CommandContext<S> context) throws CommandSyntaxException {
         PlayerSelector selector = context.getArgument(name, PlayerSelector.class);
         ClientLevel level = Minecraft.getInstance().level;
 
