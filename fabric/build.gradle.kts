@@ -13,10 +13,10 @@ loom {
     runs.named("client") {
         client()
 
-        configName = "fabric - Client"
-        runDir = "../run"
-        appendProjectPathToConfigName = false
-        ideConfigGenerated(true)
+        displayName = "fabric - Client"
+        runDirectory = file("../run")
+        appendProjectPathToDisplayName = false
+        generateRunConfig = true
     }
 }
 
