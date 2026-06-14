@@ -19,7 +19,10 @@ import net.uku3lig.ukulib.utils.ModMeta;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 /**
@@ -66,7 +69,7 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
             this.iconPath = mod.icon()
                     .flatMap(icon -> {
                         try {
-                            NativeImage image = NativeImage.read(Objects.requireNonNull(icon.get()));
+                            NativeImage image = icon.get();
                             return Optional.of(new DynamicTexture(identifier::toString, image));
                         } catch (IOException e) {
                             log.warn("Failed to load icon from mod jar", e);

@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.fabric;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.fabricmc.fabric.api.client.keymapping.v1.KeyMappingHelper;
 import net.fabricmc.loader.api.FabricLoader;
 import net.fabricmc.loader.api.ModContainer;
@@ -11,9 +12,11 @@ import net.uku3lig.ukulib.api.UkulibAPI;
 import net.uku3lig.ukulib.utils.ModMeta;
 import net.uku3lig.ukulib.utils.PlatformUkutils;
 
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.function.UnaryOperator;
 
 public class FabricPlatformUkutils implements PlatformUkutils {
@@ -48,7 +51,7 @@ public class FabricPlatformUkutils implements PlatformUkutils {
 
     private static ModMeta containerToMeta(ModContainer container) {
         ModMetadata metadata = container.getMetadata();
-        var logo = metadata.getIconPath(32).flatMap(container::findPath).map(IoSupplier::create);
+        Optional<IoSupplier<NativeImage>> logo = metadata.getIconPath(32).flatMap(container::findPath).map(p -> () -> NativeImage.read(Files.newInputStream(p)));
         return new ModMeta(metadata.getId(), metadata.getName(), metadata.getDescription(), logo);
     }
 }

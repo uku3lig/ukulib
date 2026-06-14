@@ -1,5 +1,7 @@
 package net.uku3lig.ukulib.neoforge;
 
+import com.mojang.blaze3d.platform.NativeImage;
+import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -17,6 +19,7 @@ import net.uku3lig.ukulib.utils.ModMeta;
 import net.uku3lig.ukulib.utils.PlatformUkutils;
 import org.jetbrains.annotations.NotNull;
 
+import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.util.LinkedHashMap;
@@ -24,6 +27,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.UnaryOperator;
 
+@Slf4j
 public class NeoForgePlatformUkutils implements PlatformUkutils {
     @Override
     public Path getConfigPath(String name) {
@@ -63,7 +67,7 @@ public class NeoForgePlatformUkutils implements PlatformUkutils {
 
     private ModMeta fromNeoForge(ModContainer container) {
         IModInfo info = container.getModInfo();
-        Optional<IoSupplier<@NotNull InputStream>> logo = Optional.empty();
+        Optional<IoSupplier<@NotNull NativeImage>> logo = Optional.empty();
 
         if (info.getLogoFile().isPresent()) {
             final Pack.ResourcesSupplier resourcePack = ResourcePackLoader.getPackFor(container.getModId())
@@ -74,7 +78,14 @@ public class NeoForgePlatformUkutils implements PlatformUkutils {
 
             try (PackResources packResources = resourcePack.openPrimary(packInfo)) {
                 IoSupplier<@NotNull InputStream> logoResource = packResources.getRootResource(info.getLogoFile().get().split("[/\\\\]"));
-                logo = Optional.ofNullable(logoResource);
+                if (logoResource != null) {
+                    try {
+                        NativeImage image = NativeImage.read(logoResource.get());
+                        logo = Optional.of(() -> image);
+                    } catch (IOException e) {
+                        log.warn("Failed to load icon from mod jar", e);
+                    }
+                }
             }
         }
 

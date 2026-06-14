@@ -1,9 +1,9 @@
 package net.uku3lig.ukulib.utils;
 
+import com.mojang.blaze3d.platform.NativeImage;
 import net.minecraft.server.packs.resources.IoSupplier;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.InputStream;
 import java.util.Optional;
 
 /**
@@ -12,7 +12,7 @@ import java.util.Optional;
  * @param id          The unique identifier of the mod
  * @param name        The fancy display name of the mod
  * @param description The description of the mod
- * @param icon        An optional supplier to a stream, containing the icon of the mod
+ * @param icon        An optional supplier to the icon of the mod
  */
-public record ModMeta(String id, String name, String description, Optional<IoSupplier<@NotNull InputStream>> icon) {
+public record ModMeta(String id, String name, String description, Optional<IoSupplier<@NotNull NativeImage>> icon) {
 }
