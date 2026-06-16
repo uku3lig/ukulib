@@ -42,6 +42,7 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
      *
      * @param name    The name of the argument
      * @param context The command context
+     * @param <S>     The command context source type
      * @return The player entity
      * @throws CommandSyntaxException if the player is not found
      */
