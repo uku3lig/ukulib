@@ -14,14 +14,14 @@ description = "small utility library used in my mods"
 [[dependencies.ukulib]]
 modId = "minecraft"
 type = "required"
-versionRange = "[26.1-snapshot,)"
+versionRange = "[26.2,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.ukulib]]
 modId = "neoforge"
 type = "required"
-versionRange = "[26.1.0.0-alpha,)"
+versionRange = "[26.2.0.0-beta,)"
 ordering = "NONE"
 side = "CLIENT"
 
