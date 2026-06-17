@@ -23,6 +23,7 @@ public class MixinPauseScreen extends Screen {
 
     @Inject(method = "createPauseMenu", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getSingleplayerServer()Lnet/minecraft/client/server/IntegratedServer;"))
     public void addUkuButton(CallbackInfo ci, @Local(name = "iconButtonRow") LinearLayout iconButtonRow) {
+        this.ukulibButton = null;
         if (PlatformUkutils.INSTANCE.getConfigMods().isEmpty()) return;
         if (!UkulibConfig.get().isButtonInOptions()) return;
 
