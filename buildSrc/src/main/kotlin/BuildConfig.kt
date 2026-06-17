@@ -9,7 +9,7 @@ object BuildConfig {
     const val TOML4J_VERSION: String = "0.7.2"
     const val MODMENU_VERSION: String = "20.0.0-beta.2"
 
-    const val MOD_VERSION: String = "2.1.0"
+    const val MOD_VERSION: String = "2.1.1"
 
     const val MODRINTH_PROJECT_ID: String = "Y8uFrUil"
 
