@@ -28,3 +28,6 @@ jobs:
         run: ./gradlew modrinth -Pbuild.release=true
         env:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
+
+  publish_docs:
+    uses: ./.github/workflows/docs.yml

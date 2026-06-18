@@ -8,9 +8,7 @@ on:
       - "mkdocs.yml"
       - "docs/**"
 
-  release:
-    types:
-      - published
+  workflow_call:
 
   workflow_dispatch:
 
