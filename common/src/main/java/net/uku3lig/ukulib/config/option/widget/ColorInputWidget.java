@@ -40,7 +40,7 @@ public class ColorInputWidget extends TextInputWidget {
         super.extractWidgetRenderState(graphics, mouseX, mouseY, delta);
         if (!this.isVisible()) return;
 
-        convert(this.getText(), this.allowAlpha).ifPresent(color -> {
+        convert(this.getValue(), this.allowAlpha).ifPresent(color -> {
             int x = this.getX() + this.width + 2;
             int y = this.getY();
             int size = this.height;
