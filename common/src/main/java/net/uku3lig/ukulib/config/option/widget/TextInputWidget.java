@@ -22,7 +22,7 @@ import net.minecraft.resources.Identifier;
 import net.minecraft.util.*;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLKeycode;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -259,15 +259,15 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
     public boolean keyPressed(@NotNull KeyEvent input) {
         if (this.isActive() && this.isFocused()) {
             switch (input.key()) {
-                case GLFW.GLFW_KEY_BACKSPACE -> {
+                case SDLKeycode.SDLK_BACKSPACE -> {
                     this.erase(-1, input.hasControlDown());
                     return true;
                 }
-                case GLFW.GLFW_KEY_DELETE -> {
+                case SDLKeycode.SDLK_DELETE -> {
                     this.erase(1, input.hasControlDown());
                     return true;
                 }
-                case GLFW.GLFW_KEY_RIGHT -> {
+                case SDLKeycode.SDLK_RIGHT -> {
                     if (input.hasControlDown()) {
                         this.setCursor(this.getWordSkipPosition(1), input.hasShiftDown());
                     } else {
@@ -276,7 +276,7 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
 
                     return true;
                 }
-                case GLFW.GLFW_KEY_LEFT -> {
+                case SDLKeycode.SDLK_LEFT -> {
                     if (input.hasControlDown()) {
                         this.setCursor(this.getWordSkipPosition(-1), input.hasShiftDown());
                     } else {
@@ -285,11 +285,11 @@ public class TextInputWidget extends AbstractWidget implements CheckedOption {
 
                     return true;
                 }
-                case GLFW.GLFW_KEY_HOME -> {
+                case SDLKeycode.SDLK_HOME -> {
                     this.setCursorToStart(input.hasShiftDown());
                     return true;
                 }
-                case GLFW.GLFW_KEY_END -> {
+                case SDLKeycode.SDLK_END -> {
                     this.setCursorToEnd(input.hasShiftDown());
                     return true;
                 }

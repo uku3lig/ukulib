@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.glfw.GLFW;
+import org.lwjgl.sdl.SDLKeycode;
 
 import java.util.function.BiConsumer;
 
@@ -86,13 +86,13 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     @Override
     public boolean keyPressed(@NotNull KeyEvent input) {
         if (!super.keyPressed(input)) {
-            int amount = input.modifiers() == GLFW.GLFW_MOD_SHIFT ? 10 : 1;
+            int amount = input.hasShiftDown() ? 10 : 1;
 
             switch (input.key()) {
-                case GLFW.GLFW_KEY_RIGHT -> x += amount;
-                case GLFW.GLFW_KEY_LEFT -> x -= amount;
-                case GLFW.GLFW_KEY_DOWN -> y += amount;
-                case GLFW.GLFW_KEY_UP -> y -= amount;
+                case SDLKeycode.SDLK_RIGHT -> x += amount;
+                case SDLKeycode.SDLK_LEFT -> x -= amount;
+                case SDLKeycode.SDLK_DOWN -> y += amount;
+                case SDLKeycode.SDLK_UP -> y -= amount;
                 default -> {
                     return false;
                 }
