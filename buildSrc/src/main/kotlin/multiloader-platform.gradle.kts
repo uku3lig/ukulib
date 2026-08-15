@@ -10,7 +10,7 @@ val commonProcessResources =
     common.tasks.getByName<ProcessResources>(commonMain.processResourcesTaskName)
 
 dependencies {
-    implementation(common)
+    implementation(project(":common"))
 }
 
 sourceSets.main {
