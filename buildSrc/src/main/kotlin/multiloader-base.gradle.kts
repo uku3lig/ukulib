@@ -48,8 +48,10 @@ publishing {
 
     repositories {
         val isReleaseBuild = project.hasProperty("build.release")
-        val mavenUsername: String? by project // reads from ORG_GRADLE_PROJECT_mavenUsername
-        val mavenPassword: String? by project // reads from ORG_GRADLE_PROJECT_mavenPassword
+        val mavenUsername =
+            project.findProperty("mavenUsername") as String? // reads from ORG_GRADLE_PROJECT_mavenUsername
+        val mavenPassword =
+            project.findProperty("mavenPassword") as String? // reads from ORG_GRADLE_PROJECT_mavenPassword
 
         maven {
             name = "Uku"
