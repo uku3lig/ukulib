@@ -1,6 +1,7 @@
 package net.uku3lig.ukulib.config.impl;
 
 import com.google.gson.Gson;
+import com.mojang.blaze3d.Blaze3D;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
@@ -11,7 +12,6 @@ import net.minecraft.client.gui.screens.ConfirmLinkScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Util;
 import net.uku3lig.ukulib.config.screen.CloseableScreen;
 import net.uku3lig.ukulib.utils.Ukutils;
 
@@ -88,12 +88,13 @@ public class BrokenConfigScreen extends CloseableScreen {
                     APIResponse apiRes = GSON.fromJson(res.body(), APIResponse.class);
 
                     if (apiRes.success && apiRes.url != null) {
-                        log.info("Uploaded logs to {}", apiRes.url);
+                        URI uri = URI.create(apiRes.url);
+                        log.info("Uploaded logs to {}", uri);
 
                         Minecraft.getInstance().gui.setScreen(new ConfirmLinkScreen(confirmed -> {
-                            if (confirmed) Util.getPlatform().openUri(apiRes.url);
+                            if (confirmed) Blaze3D.openUri(uri);
                             this.onClose();
-                        }, apiRes.url, true));
+                        }, uri, true));
                     } else {
                         log.error("Error while uploading logs to mclo.gs: {}", apiRes.error);
                         Ukutils.sendToast(Component.translatable("ukulib.brokenConfig.uploadError"), Component.literal(apiRes.error));
