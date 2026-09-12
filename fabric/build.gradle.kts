@@ -52,9 +52,6 @@ tasks.javadoc {
     )
 }
 
-/*
 modrinth {
     loaders.add("quilt")
 }
-
- */
