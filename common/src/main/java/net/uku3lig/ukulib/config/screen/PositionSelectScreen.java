@@ -1,5 +1,6 @@
 package net.uku3lig.ukulib.config.screen;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
@@ -10,7 +11,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.jetbrains.annotations.NotNull;
-import org.lwjgl.sdl.SDLKeycode;
 
 import java.util.function.BiConsumer;
 
@@ -89,10 +89,10 @@ public abstract class PositionSelectScreen extends CloseableScreen {
             int amount = input.hasShiftDown() ? 10 : 1;
 
             switch (input.key()) {
-                case SDLKeycode.SDLK_RIGHT -> x += amount;
-                case SDLKeycode.SDLK_LEFT -> x -= amount;
-                case SDLKeycode.SDLK_DOWN -> y += amount;
-                case SDLKeycode.SDLK_UP -> y -= amount;
+                case InputConstants.KEY_RIGHT -> x += amount;
+                case InputConstants.KEY_LEFT -> x -= amount;
+                case InputConstants.KEY_DOWN -> y += amount;
+                case InputConstants.KEY_UP -> y -= amount;
                 default -> {
                     return false;
                 }
