@@ -21,6 +21,17 @@ neoForge {
     }
 }
 
+repositories {
+    maven {
+        name = "Maven for PR #3403" // https://github.com/neoforged/NeoForge/pull/3403
+        url = uri("https://prmaven.neoforged.net/NeoForge/pr3403")
+        content {
+            includeModule("net.neoforged", "neoforge")
+            includeModule("net.neoforged", "testframework")
+        }
+    }
+}
+
 dependencies {
     implementation("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
     jarJar("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")

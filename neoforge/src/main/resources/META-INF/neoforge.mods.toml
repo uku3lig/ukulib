@@ -7,7 +7,8 @@ modId = "ukulib"
 displayName = "ukulib"
 version = "${version}"
 
-logoFile = "assets/ukulib/icon.png"
+iconFile = "assets/ukulib/icon.png"
+bannerFile = "assets/ukulib/icon.png"
 authors = "uku"
 description = "small utility library used in my mods"
 
