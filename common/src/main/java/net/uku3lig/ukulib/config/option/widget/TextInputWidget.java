@@ -19,7 +19,7 @@ import java.util.function.Predicate;
  */
 public class TextInputWidget extends EditBox implements CheckedOption {
     private static final int TEXT_COLOR = 0xFFE0E0E0;
-    private static final int INVALID_COLOR = 0xFFFF0000;
+    private static final int INVALID_COLOR = 0xFFDF5050;
 
     private final Font font;
     private final String suggestion;
