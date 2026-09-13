@@ -74,4 +74,26 @@ public class TextInputWidget extends EditBox implements CheckedOption {
             graphics.text(this.font, this.suggestion, x, accessor.getTextY(), CommonColors.GRAY, accessor.getTextShadow());
         }
     }
+
+    /**
+     * Get the text value contained within the input box.
+     *
+     * @return The text value.
+     * @deprecated Due to internal changes in how {@link TextInputWidget} works, prefer {@link TextInputWidget#getValue()}.
+     */
+    @Deprecated(since = "2.2.0", forRemoval = true)
+    public String getText() {
+        return this.getValue();
+    }
+
+    /**
+     * Set the text value contained within the input box.
+     *
+     * @param text The text to set.
+     * @deprecated Due to internal changes in how {@link TextInputWidget} works, prefer {@link TextInputWidget#setValue(String)}.
+     */
+    @Deprecated(since = "2.2.0", forRemoval = true)
+    public void setText(String text) {
+        this.setValue(text);
+    }
 }
