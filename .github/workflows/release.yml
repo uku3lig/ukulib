@@ -30,4 +30,5 @@ jobs:
           MODRINTH_TOKEN: ${{ secrets.MODRINTH_TOKEN }}
 
   publish_docs:
+    needs: build
     uses: ./.github/workflows/docs.yml
