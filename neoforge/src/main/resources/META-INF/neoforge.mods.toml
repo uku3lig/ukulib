@@ -1,6 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[4,)"
 license = "MPL-2.0"
+issueTrackerURL = "https://github.com/uku3lig/ukulib/issues"
 
 [[mods]]
 modId = "ukulib"
@@ -11,18 +12,19 @@ iconFile = "assets/ukulib/icon.png"
 bannerFile = "assets/ukulib/icon.png"
 authors = "uku"
 description = "small utility library used in my mods"
+displayURL = "https://uku3lig.github.io/ukulib"
 
 [[dependencies.ukulib]]
 modId = "minecraft"
 type = "required"
-versionRange = "[26.2,)"
+versionRange = "[26.3,)"
 ordering = "NONE"
 side = "CLIENT"
 
 [[dependencies.ukulib]]
 modId = "neoforge"
 type = "required"
-versionRange = "[26.2.0.0-beta,)"
+versionRange = "[26.3.0.0-beta,)"
 ordering = "NONE"
 side = "CLIENT"
 
