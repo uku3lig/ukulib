@@ -27,7 +27,7 @@ public class UkuButtonRenderer {
         String username = UkulibConfig.get().getHeadName();
         fetchSkinTextures(username).thenAccept(t -> playerSkin = t);
 
-        return new Button.Builder(Component.empty(), _ -> Minecraft.getInstance().gui.setScreen(new ModListScreen(parent)))
+        return Button.builder(Component.empty(), _ -> Minecraft.getInstance().gui.setScreen(new ModListScreen(parent)))
                 .size(20, 20)
                 .build();
     }

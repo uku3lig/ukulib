@@ -11,8 +11,10 @@ import net.minecraft.client.gui.layouts.LinearLayout;
 import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.config.compat.NamedTab;
 import net.uku3lig.ukulib.config.option.CheckedOption;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,19 +47,53 @@ public abstract class TabbedConfigScreen<T extends Serializable> extends BaseCon
 
     /**
      * The list of tabs to be displayed.
+     * If {@link #addTabs(MenuTabBar.Builder, Serializable)} is overridden, this method has no effect.
      *
      * @param config The config
      * @return An array of tabs
      * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
+     * @deprecated Tabs don't carry name information anymore, use {@link #addTabs(MenuTabBar.Builder, Serializable)}
      */
-    protected abstract Tab[] getTabs(T config);
+    @Deprecated(forRemoval = true, since = "2.3.0")
+    protected Tab[] getTabs(T config) {
+        return new Tab[0];
+    }
+
+    /**
+     * Adds tabs to the screen. Takes precedence over {@link #getTabs(Serializable)}.
+     *
+     * @param builder The tab bar builder
+     * @param config  The config
+     * @see net.uku3lig.ukulib.config.option.widget.ButtonTab
+     */
+    protected void addTabs(MenuTabBar.Builder builder, T config) {
+    }
 
     @Override
     protected void init() {
         super.init();
-        this.tabWidget = MenuTabBar.builder(this.tabManager, this.width)
-                .addTabs(applyConfigChecked(this::getTabs, new Tab[0]))
-                .build();
+        var builder = MenuTabBar.builder(this.tabManager, this.width);
+        // slightly hacky but whatever. works.
+        applyConfigChecked((c) -> {
+            this.addTabs(builder, c);
+            return null;
+        }, null);
+
+        // we assume the method isn't overridden, therefore we fall back to the old method
+        if (builder.build().getTabs().isEmpty()) {
+            log.warn("Using deprecated method `getTabs` for {}, please update to `addTabs`", getClass().getSimpleName());
+            Tab[] tabs = applyConfigChecked(this::getTabs, new Tab[0]);
+            for (Tab tab : tabs) {
+                Component name = tab instanceof NamedTab namedTab && namedTab.getName() != null
+                        ? namedTab.getName()
+                        : Component.literal(tab.getClass().getSimpleName().replace("Tab", ""));
+
+                builder.addTab(name, tab);
+            }
+        }
+
+
+        this.tabWidget = builder.build();
         this.addRenderableWidget(this.tabWidget);
         this.tabWidget.selectTab(0, false);
 
