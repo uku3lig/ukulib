@@ -8,7 +8,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,8 +75,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubleClick) {
         if (!super.mouseClicked(click, doubleClick)) {
-            this.x = (int) Mth.clamp(click.x(), 0, this.width);
-            this.y = (int) Mth.clamp(click.y(), 0, this.height);
+            this.x = (int) Math.clamp(click.x(), 0, this.width);
+            this.y = (int) Math.clamp(click.y(), 0, this.height);
         }
 
         return true;
@@ -99,8 +98,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
             }
 
             // make sure they are within bounds
-            this.x = Mth.clamp(x, 0, this.width);
-            this.y = Mth.clamp(y, 0, this.height);
+            this.x = Math.clamp(x, 0, this.width);
+            this.y = Math.clamp(y, 0, this.height);
         }
 
         return true;

@@ -81,7 +81,7 @@ public class DoubleSlider extends AbstractSliderButton {
      */
     private double fixedValue() {
         double fixed = Mth.map(this.value, 0, 1, this.min, this.max);
-        double next = Mth.ceil(fixed / this.step) * this.step;
-        return Mth.clamp(next, this.min, this.max);
+        double next = Math.ceil(fixed / this.step) * this.step;
+        return Math.clamp(next, this.min, this.max);
     }
 }

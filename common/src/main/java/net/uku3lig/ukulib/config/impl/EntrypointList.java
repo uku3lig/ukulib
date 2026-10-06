@@ -12,7 +12,7 @@ import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.uku3lig.ukulib.utils.ModMeta;
@@ -70,7 +70,7 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
                     .flatMap(icon -> {
                         try {
                             NativeImage image = icon.get();
-                            return Optional.of(new DynamicTexture(identifier::toString, image));
+                            return Optional.of(TextureResources.from2dImage(identifier::toString, image));
                         } catch (IOException e) {
                             log.warn("Failed to load icon from mod jar", e);
                             return Optional.empty();
