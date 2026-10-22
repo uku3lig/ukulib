@@ -6,13 +6,6 @@ plugins {
 neoForge {
     version = BuildConfig.NEOFORGE_VERSION
 
-    runs {
-        create("client") {
-            client()
-            gameDirectory = rootProject.file("run")
-        }
-    }
-
     mods {
         create(rootProject.name) {
             sourceSet(sourceSets["main"])

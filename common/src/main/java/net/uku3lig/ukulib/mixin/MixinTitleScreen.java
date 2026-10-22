@@ -30,7 +30,7 @@ public abstract class MixinTitleScreen extends Screen {
     protected abstract int getHorizontalPosition(int currentButton, int numberOfButtons, int buttonWidth);
 
     @Unique
-    private Button ukulibButton = null;
+    private Button ukulib$ukulibButton = null;
 
     @Definition(id = "numberOfButtons", local = @Local(type = int.class, name = "numberOfButtons"))
     @Expression("numberOfButtons = ?")
@@ -48,19 +48,19 @@ public abstract class MixinTitleScreen extends Screen {
 
     @Inject(method = "init", at = @At(value = "INVOKE", shift = At.Shift.AFTER, ordinal = 1, target = "Lnet/minecraft/client/gui/components/SpriteIconButton;setPosition(II)V"))
     public void addUkuButton(CallbackInfo ci, @Local(name = "numberOfButtons") int numberOfButtons, @Local(name = "currentButton") LocalIntRef currentButton, @Local(name = "topPos") int topPos) {
-        this.ukulibButton = null;
+        this.ukulib$ukulibButton = null;
         if (PlatformUkutils.INSTANCE.getConfigMods().isEmpty()) return;
         if (!UkulibConfig.get().isButtonInOptions()) return;
 
         currentButton.set(currentButton.get() + 1);
 
-        this.ukulibButton = this.addRenderableWidget(UkuButtonRenderer.fetchSkinAndBuild(this));
-        this.ukulibButton.setPosition(this.getHorizontalPosition(currentButton.get(), numberOfButtons, 20), topPos);
+        this.ukulib$ukulibButton = this.addRenderableWidget(UkuButtonRenderer.fetchSkinAndBuild(this));
+        this.ukulib$ukulibButton.setPosition(this.getHorizontalPosition(currentButton.get(), numberOfButtons, 20), topPos);
     }
 
     @Inject(method = "extractRenderState", at = @At("TAIL"))
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci, @Local(name = "widgetFade") float widgetFade) {
-        UkuButtonRenderer.extract(graphics, this.ukulibButton, ARGB.white(widgetFade));
+        UkuButtonRenderer.extract(graphics, this.ukulib$ukulibButton, ARGB.white(widgetFade));
     }
 
     protected MixinTitleScreen(Component title) {

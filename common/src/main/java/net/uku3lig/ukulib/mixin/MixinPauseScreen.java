@@ -19,21 +19,21 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(PauseScreen.class)
 public class MixinPauseScreen extends Screen {
     @Unique
-    private Button ukulibButton = null;
+    private Button ukulib$ukulibButton = null;
 
-    @Inject(method = "createPauseMenu", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Minecraft;getSingleplayerServer()Lnet/minecraft/client/server/IntegratedServer;"))
+    @Inject(method = "createPauseMenu", at = @At(value = "INVOKE", shift = At.Shift.AFTER, ordinal = 3, target = "Lnet/minecraft/client/gui/layouts/GridLayout$RowHelper;addChild(Lnet/minecraft/client/gui/layouts/LayoutElement;)Lnet/minecraft/client/gui/layouts/LayoutElement;"))
     public void addUkuButton(CallbackInfo ci, @Local(name = "iconButtonRow") LinearLayout iconButtonRow) {
-        this.ukulibButton = null;
+        this.ukulib$ukulibButton = null;
         if (PlatformUkutils.INSTANCE.getConfigMods().isEmpty()) return;
         if (!UkulibConfig.get().isButtonInOptions()) return;
 
-        this.ukulibButton = UkuButtonRenderer.fetchSkinAndBuild(this);
-        iconButtonRow.addChild(ukulibButton);
+        this.ukulib$ukulibButton = UkuButtonRenderer.fetchSkinAndBuild(this);
+        iconButtonRow.addChild(ukulib$ukulibButton);
     }
 
     @Inject(method = "extractRenderState", at = @At("TAIL"))
     public void extractRenderState(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a, CallbackInfo ci) {
-        UkuButtonRenderer.extract(graphics, this.ukulibButton);
+        UkuButtonRenderer.extract(graphics, this.ukulib$ukulibButton);
     }
 
     protected MixinPauseScreen(Component title) {
