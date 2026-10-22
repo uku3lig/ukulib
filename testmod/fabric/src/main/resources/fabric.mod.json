@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 1,
+  "id": "ukulib-test",
+  "version": "0.0.0",
+  "name": "ukulib test",
+  "authors": [
+    "uku"
+  ],
+  "license": "MPL-2.0",
+  "environment": "client",
+  "entrypoints": {
+    "ukulib": [
+      "net.uku3lig.ukulibtest.TestUkulibIntegration"
+    ]
+  },
+  "depends": {
+    "ukulib": "*"
+  }
+}
