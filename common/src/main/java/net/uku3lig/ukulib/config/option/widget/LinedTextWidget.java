@@ -1,15 +1,16 @@
 package net.uku3lig.ukulib.config.option.widget;
 
+import net.minecraft.client.gui.ActiveTextCollector;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
-import net.minecraft.client.gui.components.StringWidget;
+import net.minecraft.client.gui.components.AbstractStringWidget;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * A text widget that can have a line before the text.
  */
-public class LinedTextWidget extends StringWidget {
+public class LinedTextWidget extends AbstractStringWidget {
     private final boolean drawLine;
     private final int padding;
 
@@ -29,6 +30,16 @@ public class LinedTextWidget extends StringWidget {
         super(x, y, width, height, message, font);
         this.drawLine = drawLine;
         this.padding = padding;
+    }
+
+    @Override
+    public void visitLines(ActiveTextCollector output) {
+        Component message = this.getMessage();
+        Font font = this.getFont();
+        int textWidth = font.width(message);
+        int x = this.getX() + (this.getWidth() - textWidth) / 2;
+        int y = this.getY() + (this.getHeight() - font.lineHeight) / 2 + 1;
+        output.accept(x, y, message.getVisualOrderText());
     }
 
     @Override
