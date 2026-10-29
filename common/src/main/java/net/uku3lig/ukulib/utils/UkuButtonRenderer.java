@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
 
 @Slf4j
 public class UkuButtonRenderer {
-    private static final Identifier DEFAULT_ICON = Identifier.fromNamespaceAndPath("ukulib", "uku.png");
+    public static final Identifier DEFAULT_ICON = Identifier.fromNamespaceAndPath("ukulib", "uku.png");
     private static PlayerSkin playerSkin;
 
     public static Button fetchSkinAndBuild(Screen parent) {
