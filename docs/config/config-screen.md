@@ -137,6 +137,23 @@ Next, we need to tell ukulib that the integration class is available, which is d
     }
     ```
 
+=== ":forge: Forge"
+
+    ukulib lists the mods that register Forge's own config screen extension, so `UkulibIntegration` is not used on Forge. In your mod class, register a screen factory:
+
+    ```java title="MyModForge.java"
+    import net.minecraftforge.client.ConfigScreenHandler;
+    import net.minecraftforge.fml.ModLoadingContext;
+
+    @Mod("mymod")
+    public class MyModForge {
+        public MyModForge() {
+            ModLoadingContext.get().registerExtensionPoint(ConfigScreenHandler.ConfigScreenFactory.class,
+                    () -> new ConfigScreenHandler.ConfigScreenFactory(parent -> new MyModConfigScreen(parent)));
+        }
+    }
+    ```
+
 === ":neoforge: NeoForge"
 
     In your mod class, register your integration class as an extension point:
@@ -155,6 +172,18 @@ Next, we need to tell ukulib that the integration class is available, which is d
     !!! note
 
         You may notice that we are using a separate `UkulibNFProvider` class here and using a lambda instead of just instantiating `UkulibIntegration`: this is due to NeoForge requiring extension points to implement `IExtensionPoint`, which is not available in the platform-independent code of ukulib, where `UkulibAPI` resides.
+
+=== ":featurecreep: FeatureCreep"
+
+    FeatureCreep finds your integration class through Java's `ServiceLoader`. Create a `META-INF/services/net.uku3lig.ukulib.api.UkulibAPI` file in your resources, and list your class in it:
+
+    ```text title="META-INF/services/net.uku3lig.ukulib.api.UkulibAPI"
+    org.example.yourmod.UkulibIntegration
+    ```
+
+    !!! note
+
+        The integration class must be inside your mod's own jar. ukulib ignores `UkulibAPI` providers that come from other jars on the classpath.
 
 And that's it! Your mod should now appear in the list of ukulib mods and its config screen should be accessible via Mod Menu/NeoForge's mod list!
 

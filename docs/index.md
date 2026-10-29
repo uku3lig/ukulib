@@ -21,7 +21,7 @@ hide: [navigation]
 
 ## Features
 
-- Compatible with both Fabric and NeoForge
+- Compatible with Fabric, MinecraftForge, NeoForge, and FeatureCreep
 - Simple but comprehensive and powerful configuration system, with utilities and widgets for config screens
 - Various Minecraft related utilities
 - ... and more to come!

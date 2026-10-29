@@ -5,6 +5,8 @@ object BuildConfig {
     const val FABRIC_LOADER_VERSION: String = "0.19.5"
     const val FABRIC_API_VERSION: String = "0.160.5+26.3"
     const val NEOFORGE_VERSION: String = "26.3.0.0-beta"
+    const val FORGE_VERSION: String = "26.3-66.1.0"
+    const val FEATURECREEP_VERSION: String = "12.4"
 
     const val TOML4J_VERSION: String = "0.7.2"
     const val MODMENU_VERSION: String = "21.0.0-beta.1"

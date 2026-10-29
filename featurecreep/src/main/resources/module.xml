@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module xmlns="urn:jboss:module:1.9" name="ukulib">
+    <properties>
+        <property name="FeatureCreep-Mod-Id" value="ukulib"/>
+        <property name="FeatureCreep-Name" value="ukulib"/>
+        <property name="FeatureCreep-Description" value="small utility library used in my mods"/>
+        <property name="FeatureCreep-Icon" value="assets/ukulib/icon.png"/>
+        <property name="FeatureCreep-Visibility" value="public"/>
+        <property name="FeatureCreep-Auto-Dependencies" value="true"/>
+        <property name="FeatureCreep-Host-Fallback" value="true"/>
+        <property name="FeatureCreep-Side" value="client"/>
+        <property name="FeatureCreep-Runnable" value="false"/>
+        <property name="FeatureCreep-Nested-Jars" value="private"/>
+        <property name="Module-Version" value="${version}"/>
+        <property name="FeatureCreep-Target-Game" value="minecraft"/>
+        <property name="FeatureCreep-Target-Version" value="${minecraftVersion}"/>
+        <property name="FeatureCreep-Target-Version-Range" value="[26.3,26.4)"/>
+        <property name="FeatureCreep-Loader-Version-Range" value="[12,)"/>
+        <property name="FeatureCreep-Config-Api-Version" value="1"/>
+        <property name="MixinConfigs" value="ukulib-common.mixins.json"/>
+    </properties>
+    <resources>
+        <resource-root path="."/>
+    </resources>
+</module>

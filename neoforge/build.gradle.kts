@@ -26,6 +26,12 @@ dependencies {
     jarJar("com.moandjiezana.toml:toml4j:${BuildConfig.TOML4J_VERSION}")
 }
 
+tasks.named<JavaExec>("runClient") {
+    doFirst {
+        delete(fileTree(rootProject.file("run/mods")))
+    }
+}
+
 tasks.jar {
     destinationDirectory.set(file(rootProject.layout.buildDirectory).resolve("libs"))
 }

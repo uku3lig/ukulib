@@ -2,7 +2,7 @@
   "required": true,
   "minVersion": "0.8",
   "package": "net.uku3lig.ukulib.mixin",
-  "compatibilityLevel": "JAVA_25",
+  "compatibilityLevel": "JAVA_21",
   "injectors": {
     "defaultRequire": 1
   },

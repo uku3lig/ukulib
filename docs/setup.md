@@ -52,6 +52,18 @@ You will also need to add it as a dependency in your `fabric.mod.json`:
 }
 ```
 
+### MinecraftForge
+
+Add ukulib to your dependencies:
+
+```groovy title="build.gradle"
+dependencies {
+    implementation("net.uku3lig:ukulib-forge:${project.property("ukulib_version")}")
+}
+```
+
+Add `ukulib` as a required client dependency in `META-INF/mods.toml`.
+
 ### NeoForge
 
 Add ukulib to your dependencies:
@@ -71,6 +83,24 @@ type = "required"
 versionRange = "[%MAVEN_SHORT%,3)"
 ordering = "NONE"
 side = "CLIENT"
+```
+
+### FeatureCreep
+
+Add ukulib to your dependencies:
+
+```kotlin title="build.gradle.kts"
+dependencies {
+    implementation("net.uku3lig:ukulib-featurecreep:${project.property("ukulib_version")}")
+}
+```
+
+You will also need to add it to your `module.xml`:
+
+```xml title="module.xml"
+<dependencies>
+    <module name="ukulib" version-range="[%MAVEN_SHORT%,3)"/>
+</dependencies>
 ```
 
 ## Multi-loader
