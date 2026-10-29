@@ -22,6 +22,6 @@ tasks.javadoc {
         "net/uku3lig/ukulib/config/impl/UkulibConfig.java",
         "net/uku3lig/ukulib/mixin/*",
         "net/uku3lig/ukulib/utils/Services.java",
-        "net/uku3lig/ukulib/utils/UkuButtonRenderer.java"
+        "net/uku3lig/ukulib/utils/UkuButton.java"
     )
 }
