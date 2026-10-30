@@ -23,6 +23,10 @@ tasks.jar {
     enabled = false
 }
 
+tasks.javadoc {
+    enabled = false
+}
+
 repositories {
     mavenCentral()
 }
