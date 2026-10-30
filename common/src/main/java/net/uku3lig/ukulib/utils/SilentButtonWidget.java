@@ -1,9 +1,9 @@
 package net.uku3lig.ukulib.utils;
 
-import net.minecraft.client.gui.GuiGraphicsExtractor;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.sounds.SoundManager;
+import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
  * A button that doesn't make noise.
  */
 @SuppressWarnings("unused")
-public class SilentButtonWidget extends Button {
+public class SilentButtonWidget extends Button.Plain {
     /**
      * Creates a new silent button
      *
@@ -43,15 +43,11 @@ public class SilentButtonWidget extends Button {
         // don't play anything
     }
 
-    @Override
-    protected void extractContents(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float deltaTicks) {
-    }
-
     /**
      * A silent button builder
      */
     public static class Builder {
-        private final net.minecraft.network.chat.Component message;
+        private final Component message;
         private final OnPress onPress;
         @Nullable
         private Tooltip tooltip;
@@ -67,7 +63,7 @@ public class SilentButtonWidget extends Button {
          * @param message The text of the button
          * @param onPress The action to be done when the button is pressed
          */
-        public Builder(net.minecraft.network.chat.Component message, OnPress onPress) {
+        public Builder(Component message, OnPress onPress) {
             this.narrationSupplier = Button.DEFAULT_NARRATION;
             this.message = message;
             this.onPress = onPress;

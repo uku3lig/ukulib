@@ -61,9 +61,9 @@ public class TextInputWidget extends EditBox implements CheckedOption {
     }
 
     @Override
-    public void extractWidgetRenderState(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    public void extractWidgetRenderState(@NonNull GuiGraphicsExtractor graphics) {
         this.setTextColor(this.isValid() ? TEXT_COLOR : INVALID_COLOR);
-        super.extractWidgetRenderState(graphics, mouseX, mouseY, a);
+        super.extractWidgetRenderState(graphics);
 
         EditBoxAccessor accessor = (EditBoxAccessor) this;
 
