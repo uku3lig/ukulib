@@ -1,7 +1,8 @@
 package net.uku3lig.ukulibtest;
 
-import net.minecraft.client.gui.components.tabs.Tab;
+import net.minecraft.client.gui.components.tabs.MenuTabBar;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.network.chat.Component;
 import net.minecraft.util.StringUtil;
 import net.uku3lig.ukulib.config.option.ColorOption;
 import net.uku3lig.ukulib.config.option.CyclingOption;
@@ -17,13 +18,14 @@ public class TestTabbedConfigScreen extends TabbedConfigScreen<TestConfig> {
     }
 
     @Override
-    protected Tab[] getTabs(TestConfig config) {
-        return new Tab[] { new SimpleTab(), new ComplexTab() };
+    protected void addTabs(MenuTabBar.Builder builder, TestConfig config) {
+        builder.addTab(Component.literal("Simple"), new SimpleTab());
+        builder.addTab(Component.literal("Complex"), new ComplexTab());
     }
 
     public class SimpleTab extends ButtonTab<TestConfig> {
         protected SimpleTab() {
-            super("Simple", TestTabbedConfigScreen.this.manager);
+            super(TestTabbedConfigScreen.this.manager);
         }
 
         @Override
@@ -37,7 +39,7 @@ public class TestTabbedConfigScreen extends TabbedConfigScreen<TestConfig> {
 
     public class ComplexTab extends ButtonTab<TestConfig> {
         protected ComplexTab() {
-            super("Complex", TestTabbedConfigScreen.this.manager);
+            super(TestTabbedConfigScreen.this.manager);
         }
 
         @Override

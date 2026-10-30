@@ -4,6 +4,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.ContainerObjectSelectionList;
 import net.minecraft.client.gui.components.Tooltip;
@@ -11,8 +12,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
-import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.uku3lig.ukulib.utils.ModMeta;
@@ -70,7 +70,7 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
                     .flatMap(icon -> {
                         try {
                             NativeImage image = icon.get();
-                            return Optional.of(new DynamicTexture(identifier::toString, image));
+                            return Optional.of(TextureResources.from2dImage(identifier::toString, image));
                         } catch (IOException e) {
                             log.warn("Failed to load icon from mod jar", e);
                             return Optional.empty();
@@ -94,12 +94,12 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
         }
 
         @Override
-        public void extractContent(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void extractContent(@NotNull GuiGraphicsExtractor graphics, boolean hovered) {
             int x = (EntrypointList.this.getWidth() - this.button.getWidth()) / 2;
             button.setPosition(x, this.getContentY());
-            button.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+            button.extractRenderState(graphics);
 
-            graphics.blit(RenderPipelines.GUI_TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
+            graphics.blit(GuiPipeline.TEXTURED, this.iconPath, button.getX() - ICON_SIZE - 5, this.getContentY(), 0, 0, ICON_SIZE, ICON_SIZE, ICON_SIZE, ICON_SIZE);
         }
     }
 }

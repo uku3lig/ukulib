@@ -3,10 +3,10 @@ package net.uku3lig.ukulib.utils;
 import lombok.extern.slf4j.Slf4j;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphicsExtractor;
+import net.minecraft.client.gui.GuiPipeline;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.PlayerFaceExtractor;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.RenderPipelines;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.Services;
@@ -29,13 +29,13 @@ public class UkuButton extends Button {
     }
 
     @Override
-    protected void extractContents(@NonNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float a) {
+    protected void extractContents(@NonNull GuiGraphicsExtractor graphics) {
         this.extractDefaultSprite(graphics);
         if (playerSkin != null) {
             PlayerFaceExtractor.extractRenderState(graphics, playerSkin, this.getX() + 2, this.getY() + 2, 16, ARGB.white(this.alpha));
         } else {
             // i have to use the long method because idk mojank stuff, drawGuiTexture doesn't work here
-            graphics.blit(RenderPipelines.GUI_TEXTURED, DEFAULT_ICON, this.getX() + 2, this.getY() + 2, 0, 0, 16, 16, 16, 16, ARGB.white(this.alpha));
+            graphics.blit(GuiPipeline.TEXTURED, DEFAULT_ICON, this.getX() + 2, this.getY() + 2, 0, 0, 16, 16, 16, 16, ARGB.white(this.alpha));
         }
     }
 

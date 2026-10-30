@@ -74,13 +74,14 @@ public class MyModConfigScreen extends TabbedConfigScreen<MyModConfig> {
     }
 
     @Override
-    protected Tab[] getTabs(MyModConfig config) {
-        return new Tab[]{ new TabOne(), new TabTwo() };
+    protected void addTabs(MenuTabBar.Builder builder, MyModConfig config) {
+        builder.addTab(Component.translatable("mymod.config.tabOne"), new TabOne())
+                .addTab(Component.translatable("mymod.config.tabTwo"), new TabTwo());
     }
 
     public class TabOne extends ButtonTab<MyModConfig> {
         public TabOne() {
-            super("mymod.config.tabOne", MyModConfigScreen.this.manager);
+            super(MyModConfigScreen.this.manager);
         }
 
         @Override
@@ -91,7 +92,7 @@ public class MyModConfigScreen extends TabbedConfigScreen<MyModConfig> {
 
     public class TabTwo extends ButtonTab<MyModConfig> {
         public TabTwo() {
-            super("mymod.config.tabTwo", MyModConfigScreen.this.manager);
+            super(MyModConfigScreen.this.manager);
         }
 
         @Override
@@ -101,6 +102,11 @@ public class MyModConfigScreen extends TabbedConfigScreen<MyModConfig> {
     }
 }
 ```
+
+!!! warn
+
+In Minecraft 26.4, Mojang removed the `title` field from the `Tab` class. A compatibility shim exists to make the
+deprecated `getTabs` method work, but you should migrate to `addTabs`.
 
 ## Displaying the screen
 
