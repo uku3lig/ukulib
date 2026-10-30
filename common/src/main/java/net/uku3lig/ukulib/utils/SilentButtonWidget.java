@@ -1,11 +1,10 @@
 package net.uku3lig.ukulib.utils;
 
 import net.minecraft.client.gui.components.Button;
-import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import org.jspecify.annotations.NonNull;
 
 /**
  * A button that doesn't make noise.
@@ -34,8 +33,8 @@ public class SilentButtonWidget extends Button.Plain {
      * @param onPress The action to be done when the button is pressed
      * @return A new builder
      */
-    public static net.uku3lig.ukulib.utils.SilentButtonWidget.Builder silentBuilder(net.minecraft.network.chat.Component message, OnPress onPress) {
-        return new net.uku3lig.ukulib.utils.SilentButtonWidget.Builder(message, onPress);
+    public static SilentButtonWidget.Builder<?> silentBuilder(Component message, OnPress onPress) {
+        return new SilentButtonWidget.Builder<>(message, onPress);
     }
 
     @Override
@@ -46,108 +45,14 @@ public class SilentButtonWidget extends Button.Plain {
     /**
      * A silent button builder
      */
-    public static class Builder {
-        private final Component message;
-        private final OnPress onPress;
-        @Nullable
-        private Tooltip tooltip;
-        private int x;
-        private int y;
-        private int width = 150;
-        private int height = 20;
-        private CreateNarration narrationSupplier;
-
-        /**
-         * Creates a builder for a silent button
-         *
-         * @param message The text of the button
-         * @param onPress The action to be done when the button is pressed
-         */
-        public Builder(Component message, OnPress onPress) {
-            this.narrationSupplier = Button.DEFAULT_NARRATION;
-            this.message = message;
-            this.onPress = onPress;
+    public static class Builder<B extends Builder<B>> extends Button.Builder<B> {
+        protected Builder(Component message, OnPress onPress) {
+            super(message, onPress);
         }
 
-        /**
-         * Sets the position
-         *
-         * @param x The x position
-         * @param y The y position
-         * @return The modified builder
-         */
-        public net.uku3lig.ukulib.utils.SilentButtonWidget.Builder position(int x, int y) {
-            this.x = x;
-            this.y = y;
-            return this;
-        }
-
-        /**
-         * Sets the width
-         *
-         * @param width The width
-         * @return The modified builder
-         */
-        public net.uku3lig.ukulib.utils.SilentButtonWidget.Builder width(int width) {
-            this.width = width;
-            return this;
-        }
-
-        /**
-         * Sets the size
-         *
-         * @param width  The width
-         * @param height The height
-         * @return The modified builder
-         */
-        public net.uku3lig.ukulib.utils.SilentButtonWidget.Builder size(int width, int height) {
-            this.width = width;
-            this.height = height;
-            return this;
-        }
-
-        /**
-         * Sets the dimensions
-         *
-         * @param x      The x position
-         * @param y      The y position
-         * @param width  The width
-         * @param height The height
-         * @return The modified builder
-         */
-        public net.uku3lig.ukulib.utils.SilentButtonWidget.Builder dimensions(int x, int y, int width, int height) {
-            return this.position(x, y).size(width, height);
-        }
-
-        /**
-         * Sets the tooltip
-         *
-         * @param tooltip The tooltip
-         * @return The modified builder
-         */
-        public net.uku3lig.ukulib.utils.SilentButtonWidget.Builder tooltip(@Nullable Tooltip tooltip) {
-            this.tooltip = tooltip;
-            return this;
-        }
-
-        /**
-         * Sets the narration supplier
-         *
-         * @param narrationSupplier The narration supplier
-         * @return The modified builder
-         */
-        public net.uku3lig.ukulib.utils.SilentButtonWidget.Builder narrationSupplier(CreateNarration narrationSupplier) {
-            this.narrationSupplier = narrationSupplier;
-            return this;
-        }
-
-        /**
-         * Build the button
-         *
-         * @return The button
-         */
-        public SilentButtonWidget build() {
-            SilentButtonWidget buttonWidget = new SilentButtonWidget(this.x, this.y, this.width, this.height, this.message, this.onPress, this.narrationSupplier);
+        @Override
+        public @NonNull SilentButtonWidget build() {
+            SilentButtonWidget buttonWidget = new SilentButtonWidget(this.x, this.y, this.width, this.height, this.message, this.onPress, this.createNarration);
             buttonWidget.setTooltip(this.tooltip);
             return buttonWidget;
         }
