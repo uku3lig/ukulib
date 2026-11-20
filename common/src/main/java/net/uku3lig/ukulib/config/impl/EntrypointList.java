@@ -12,6 +12,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.layouts.HeaderAndFooterLayout;
 import net.minecraft.client.gui.narration.NarratableEntry;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.texture.ExternalTextureProvider;
 import net.minecraft.client.renderer.texture.TextureResources;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -77,7 +78,7 @@ final class EntrypointList extends ContainerObjectSelectionList<EntrypointList.@
                         }
                     })
                     .map(tex -> {
-                        Minecraft.getInstance().getTextureManager().register(identifier, tex);
+                        Minecraft.getInstance().getTextureManager().registerProvider(identifier, new ExternalTextureProvider(tex));
                         return identifier;
                     })
                     .orElse(UNKNOWN_ICON);

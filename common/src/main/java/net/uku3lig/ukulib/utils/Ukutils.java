@@ -16,7 +16,6 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.Identifier;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.util.FormattedCharSequence;
-import net.uku3lig.ukulib.mixin.TextureManagerAccessor;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector2i;
@@ -151,12 +150,12 @@ public class Ukutils {
      * @param texture The texture to check
      * @return Whether the texture exists
      */
+    @Deprecated(since = "2.3.0")
     @Contract("null -> false")
     public static boolean textureExists(Identifier texture) {
-        TextureManagerAccessor textureManager = (TextureManagerAccessor) Minecraft.getInstance().getTextureManager();
         ResourceManager resourceManager = Minecraft.getInstance().getResourceManager();
 
-        return texture != null && (textureManager.getByPath().containsKey(texture) || resourceManager.getResource(texture).isPresent());
+        return texture != null && resourceManager.getResource(texture).isPresent();
     }
 
     /**

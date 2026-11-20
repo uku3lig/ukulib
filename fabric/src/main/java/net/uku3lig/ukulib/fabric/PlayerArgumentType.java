@@ -10,7 +10,7 @@ import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import net.fabricmc.fabric.api.client.command.v2.FabricClientCommandSource;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientPacketListener;
-import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.commands.suggestions.SuggestionContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 
@@ -67,9 +67,9 @@ public class PlayerArgumentType implements ArgumentType<PlayerArgumentType.Playe
         ClientPacketListener listener = Minecraft.getInstance().getConnection();
         if (listener != null) {
             Stream<String> names = listener.getOnlinePlayers().stream().map(p -> p.getProfile().name());
-            return SharedSuggestionProvider.suggest(names, builder);
+            return SuggestionContext.suggest(names, builder);
         } else {
-            return SharedSuggestionProvider.suggest(Collections.emptyList(), builder);
+            return SuggestionContext.suggest(Collections.emptyList(), builder);
         }
     }
 

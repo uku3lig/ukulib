@@ -13,7 +13,6 @@
     "EditBoxAccessor",
     "MixinMinecraft",
     "MixinPauseScreen",
-    "MixinTitleScreen",
-    "TextureManagerAccessor"
+    "MixinTitleScreen"
   ]
 }
