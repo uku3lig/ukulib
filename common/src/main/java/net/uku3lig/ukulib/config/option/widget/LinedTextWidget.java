@@ -43,8 +43,8 @@ public class LinedTextWidget extends AbstractStringWidget {
     }
 
     @Override
-    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        super.extractWidgetRenderState(graphics, mouseX, mouseY, delta);
+    public void extractWidgetRenderState(@NotNull GuiGraphicsExtractor graphics) {
+        super.extractWidgetRenderState(graphics);
         if (drawLine) {
             // draw a line before the text
             int lineWidth = (this.width - this.getFont().width(this.getMessage())) / 2 - (2 * this.padding);

@@ -8,7 +8,6 @@ import net.minecraft.client.input.KeyEvent;
 import net.minecraft.client.input.MouseButtonEvent;
 import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 import net.uku3lig.ukulib.config.ConfigManager;
 import org.jetbrains.annotations.NotNull;
 
@@ -76,8 +75,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
     @Override
     public boolean mouseClicked(@NotNull MouseButtonEvent click, boolean doubleClick) {
         if (!super.mouseClicked(click, doubleClick)) {
-            this.x = (int) Mth.clamp(click.x(), 0, this.width);
-            this.y = (int) Mth.clamp(click.y(), 0, this.height);
+            this.x = (int) Math.clamp(click.x(), 0, this.width);
+            this.y = (int) Math.clamp(click.y(), 0, this.height);
         }
 
         return true;
@@ -99,8 +98,8 @@ public abstract class PositionSelectScreen extends CloseableScreen {
             }
 
             // make sure they are within bounds
-            this.x = Mth.clamp(x, 0, this.width);
-            this.y = Mth.clamp(y, 0, this.height);
+            this.x = Math.clamp(x, 0, this.width);
+            this.y = Math.clamp(y, 0, this.height);
         }
 
         return true;
@@ -108,7 +107,7 @@ public abstract class PositionSelectScreen extends CloseableScreen {
 
     /**
      * Draws the screen and all the components in it.
-     * Called in {@link PositionSelectScreen#extractRenderState(GuiGraphicsExtractor, int, int, float)}.
+     * Called in {@link PositionSelectScreen#extractRenderState(GuiGraphicsExtractor)}.
      *
      * @param graphics The drawable helper
      * @param mouseX   The x position of the mouse
@@ -117,32 +116,34 @@ public abstract class PositionSelectScreen extends CloseableScreen {
      * @param x        The x position of the element
      * @param y        The y position of the element
      */
+    // TODO(3.0): remove mouseX mouseY delta
     protected abstract void draw(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta, int x, int y);
 
     /**
      * Draws the screen and all the components in it, in their default position.
-     * Called in {@link PositionSelectScreen#extractRenderState(GuiGraphicsExtractor, int, int, float)}.
+     * Called in {@link PositionSelectScreen#extractRenderState(GuiGraphicsExtractor)}.
      *
      * @param graphics The drawable helper
      * @param mouseX   The x position of the mouse
      * @param mouseY   The y position of the mouse
      * @param delta    The delta time
      */
+    // TODO(3.0): remove mouseX mouseY delta
     protected void drawDefault(GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
         draw(graphics, mouseX, mouseY, delta, 5, 5);
     }
 
     @Override
-    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, float delta) {
-        super.extractRenderState(graphics, mouseX, mouseY, delta);
+    public void extractRenderState(@NotNull GuiGraphicsExtractor graphics) {
+        super.extractRenderState(graphics);
         graphics.centeredText(this.font, this.title, this.width / 2, 20, 0xFFFFFFFF);
         graphics.centeredText(this.font, Component.translatable("ukulib.position.desc"), this.width / 2, this.height / 2 - 80, 0xFFFFFF55);
         graphics.centeredText(this.font, Component.translatable("ukulib.position.desc.move"), this.width / 2, this.height / 2 - 65, 0xFFFFFFFF);
 
         if (x == -1 || y == -1) {
-            drawDefault(graphics, mouseX, mouseY, delta);
+            drawDefault(graphics, graphics.mouseX(), graphics.mouseY(), graphics.deltaTracker().getRealtimeDeltaTicks());
         } else {
-            draw(graphics, mouseX, mouseY, delta, x, y);
+            draw(graphics, graphics.mouseX(), graphics.mouseY(), graphics.deltaTracker().getRealtimeDeltaTicks(), x, y);
         }
     }
 }

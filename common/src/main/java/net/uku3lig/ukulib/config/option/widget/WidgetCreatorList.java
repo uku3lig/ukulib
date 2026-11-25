@@ -118,13 +118,13 @@ public class WidgetCreatorList extends ContainerObjectSelectionList<WidgetCreato
 
 
         @Override
-        public void extractContent(@NotNull GuiGraphicsExtractor graphics, int mouseX, int mouseY, boolean hovered, float deltaTicks) {
+        public void extractContent(@NotNull GuiGraphicsExtractor graphics, boolean hovered) {
             int leftOffset = 0;
             int left = WidgetCreatorList.this.getWidth() / 2 - 155;
 
             for (var widget : this.widgets) {
                 widget.setPosition(left + leftOffset, this.getContentY());
-                widget.extractRenderState(graphics, mouseX, mouseY, deltaTicks);
+                widget.extractRenderState(graphics);
                 leftOffset += 160;
             }
         }

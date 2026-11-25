@@ -1,9 +1,11 @@
 package net.uku3lig.ukulib.config.option.widget;
 
 import net.minecraft.client.gui.components.tabs.GridLayoutTab;
+import net.minecraft.client.gui.components.tabs.MenuTabBar;
 import net.minecraft.client.gui.layouts.GridLayout;
 import net.minecraft.network.chat.Component;
 import net.uku3lig.ukulib.config.ConfigManager;
+import net.uku3lig.ukulib.config.compat.NamedTab;
 import net.uku3lig.ukulib.config.option.WidgetCreator;
 
 import java.io.Serializable;
@@ -13,21 +15,25 @@ import java.io.Serializable;
  *
  * @param <T> The type of the config
  */
-public abstract class ButtonTab<T extends Serializable> extends GridLayoutTab {
+public abstract class ButtonTab<T extends Serializable> extends GridLayoutTab implements NamedTab {
     /**
      * The config manager
      */
     protected final ConfigManager<T> manager;
+
+    private final Component title;
 
     /**
      * Creates a widget tab and adds all the {@link ButtonTab#getWidgets(Serializable) given widgets} to it
      *
      * @param title   The title of the tab
      * @param manager The config manager
+     * @deprecated Mojang removed titles from {@link net.minecraft.client.gui.components.tabs.Tab} in 26.4, the title should be specified in {@link net.uku3lig.ukulib.config.screen.TabbedConfigScreen#addTabs(MenuTabBar.Builder, Serializable)}
      */
+    @Deprecated(forRemoval = true)
     protected ButtonTab(Component title, ConfigManager<T> manager) {
-        super(title);
         this.manager = manager;
+        this.title = title;
 
         GridLayout.RowHelper helper = this.layout.rowSpacing(4).createRowHelper(1);
 
@@ -41,9 +47,20 @@ public abstract class ButtonTab<T extends Serializable> extends GridLayoutTab {
      *
      * @param key     The translation key of the title
      * @param manager The config manager
+     * @deprecated Mojang removed titles from {@link net.minecraft.client.gui.components.tabs.Tab} in 26.4, the title should be specified in {@link net.uku3lig.ukulib.config.screen.TabbedConfigScreen#addTabs(MenuTabBar.Builder, Serializable)}
      */
+    @Deprecated(forRemoval = true)
     protected ButtonTab(String key, ConfigManager<T> manager) {
         this(Component.translatable(key), manager);
+    }
+
+    /**
+     * Creates a widget tab and adds all the {@link ButtonTab#getWidgets(Serializable) given widgets} to it.
+     *
+     * @param manager The config manager
+     */
+    protected ButtonTab(ConfigManager<T> manager) {
+        this((Component) null, manager);
     }
 
     /**
@@ -53,4 +70,9 @@ public abstract class ButtonTab<T extends Serializable> extends GridLayoutTab {
      * @return The array of widgets to be displayed
      */
     protected abstract WidgetCreator[] getWidgets(T config);
+
+    @Override
+    public Component getName() {
+        return this.title;
+    }
 }

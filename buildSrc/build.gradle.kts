@@ -8,5 +8,5 @@ repositories {
 }
 
 dependencies {
-    implementation("com.modrinth.minotaur:com.modrinth.minotaur.gradle.plugin:2.9.0")
+    implementation("com.modrinth.minotaur:com.modrinth.minotaur.gradle.plugin:2.10.0")
 }
